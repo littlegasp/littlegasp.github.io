@@ -278,7 +278,7 @@ let C, seq = [], current = 0;
 
 /* ---------- load ---------- */
 const id = new URLSearchParams(location.search).get("id");
-(async () => {
+   async function start(){
   try {
     let d = DEMO;
     if (id) {
@@ -290,7 +290,7 @@ const id = new URLSearchParams(location.search).get("id");
   } catch (e) {
     $("#loaderText").textContent = "This surprise link doesn't look right. Please check it, or message @tinysurprise_co on Instagram.";
   }
-})();
+   }    setTimeout(start, 0);
 
 function build(d){
   C = {
