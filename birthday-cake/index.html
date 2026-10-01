@@ -511,9 +511,13 @@ function dodge(e){
   if (dodges >= NO_LINES.length) setTimeout(() => noBtn.querySelector(".lbl").textContent = "Okay, yes", 700);
   return true;
 }
-noBtn.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") dodge(e); });
-noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") dodge(e); });
-noBtn.addEventListener("click", e => { if (!dodge(e)) sayYes(); });
+let lastDodge = 0;
+noBtn.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" && dodge(e)) lastDodge = Date.now(); });
+noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse" && dodge(e)) lastDodge = Date.now(); });
+noBtn.addEventListener("click", e => {
+  if (Date.now() - lastDodge < 600) return; // same tap already handled
+  if (!dodge(e)) sayYes();
+});
 $("#yesBtn").addEventListener("click", sayYes);
 function sayYes(){ go("end"); burst(220); setTimeout(() => burst(140), 600); }
 
