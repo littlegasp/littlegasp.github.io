@@ -249,15 +249,15 @@ $("#fileIn").addEventListener("change", async e => {
 /* ---------- live preview ---------- */
 const pv = $("#pv");
 let stale = true, refreshT;
-function loadPreview(){ stale = false; pv.src = D.path + "?preview=1&t=" + Date.now(); }
+function loadPreview(){   stale = false; pv.src = D.path + "?preview=1&t=" + Date.now();   const b = $("#replay"); b.textContent = "↻ Restart preview"; b.classList.add("ghost"); }
 addEventListener("message", e => {
   if (e.origin !== location.origin || e.source !== pv.contentWindow) return;
   if (e.data && e.data.type === "tsc-ready") pv.contentWindow.postMessage({ type: "tsc-data", data: payload() }, location.origin);
 });
 function desktop(){ return matchMedia("(min-width:900px)").matches; }
 function changed(){
-  saveDraft(); stale = true;
-  if (desktop()){ clearTimeout(refreshT); refreshT = setTimeout(loadPreview, 1500); }
+  saveDraft();
+  if (!stale){ stale = true; const b = $("#replay"); b.textContent = "↻ Update preview"; b.classList.remove("ghost"); }
 }
 $("#replay").onclick = loadPreview;
 
