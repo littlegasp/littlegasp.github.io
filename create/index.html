@@ -374,8 +374,10 @@ async function finish(paid){
   overlay({ spin: true, title: "Payment received 🎉", text: "Creating your website and saving your photos. This takes a few seconds, please don't close this page." });
   try {
     const r = await api("complete", Object.assign({}, paid, { photos: payload().photos }));
+    const done = { link: r.link, to: state.to.trim(), email: state.email.trim() };
+    await idbPut("done:" + designKey, done);
     await setPending(null); await clearDraft();
-    showLink(r.link);
+    showLink(done);
   } catch(e){
     const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Retry";
     btn.onclick = () => finish(paid);
@@ -383,7 +385,8 @@ async function finish(paid){
   } finally { busy(false); }
 }
 
-function showLink(link){
+function showLink(done){
+  const link = done.link;
   const box = document.createElement("div"); box.className = "linkbox";
   const inp = document.createElement("input"); inp.type = "text"; inp.readOnly = true; inp.value = link; inp.setAttribute("aria-label", "Your website link");
   const copy = document.createElement("button"); copy.className = "btn small"; copy.textContent = "Copy";
@@ -397,7 +400,10 @@ function showLink(link){
     sh.onclick = () => navigator.share({ title: "A surprise for you 💌", url: link }).catch(() => {});
     row.appendChild(sh);
   }
-  overlay({ title: "It's ready 💌", text: "Open it once yourself, then send it to " + (state.to.trim() || "them") + ". We've also emailed the link to " + state.email.trim() + ".", body: [box, row] });
+  const again = document.createElement("button"); again.className = "linkbtn"; again.textContent = "Make another surprise";
+  again.style.marginTop = "14px";
+  again.onclick = async () => { await idbPut("done:" + designKey, null); location.reload(); };
+  overlay({ title: "It's ready 💌", text: "Open it once yourself, then send it to " + (done.to || "them") + ". We've also emailed the link to " + done.email + ".", body: [box, row, again] });
 }
 
 function overlay({ spin = false, title = "", text = "", body = [] }){
@@ -425,6 +431,8 @@ $("#startOver").onclick = async () => {
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
   bindFields(); renderNotes(); renderPhotos(); fitLayout();
   if (desktop()) loadPreview();
+  const done = await idbGet("done:" + designKey);
+  if (done && done.link){ showLink(done); return; }
   const pending = await getPending();
   if (pending && pending.paymentId){
     const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Finish my website";
