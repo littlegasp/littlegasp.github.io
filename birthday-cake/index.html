@@ -289,11 +289,23 @@ function waitForPreviewData(){
     parent.postMessage({ type: "tsc-ready" }, location.origin);
   });
 }
+  /* Watermark shown only inside the editor's preview */
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(232,69,122,0.32)'>PREVIEW · Tiny Surprise Co</text></svg>";
+  const wm = document.createElement("div");
+  wm.setAttribute("aria-hidden", "true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div");
+  band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(27,22,64,.88);color:#fff;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px;letter-spacing:.04em";
+  document.body.append(wm, band);
+}
 async function start(){
   try {
     let d = DEMO;
     if (isPreview) {
       d = await waitForPreviewData();
+            addWatermark();
     } else if (id) {
       const res = await fetch(API_URL + "?id=" + encodeURIComponent(id));
       d = await res.json();
