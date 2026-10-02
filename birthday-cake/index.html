@@ -353,7 +353,7 @@ function go(name){
   $("#dots").setAttribute("aria-label", `Step ${current+1} of ${seq.length}`);
   window.scrollTo(0,0);
   const h = document.querySelector(`[data-scene="${name}"]`).querySelector("h1,h2");
-  if (h) h.focus({preventScroll:true});
+  if (h && !isPreview) h.focus({preventScroll:true});
   if (name === "letter") $("#letter").classList.add("reveal");
 }
 document.querySelectorAll("[data-next]").forEach(b => b.addEventListener("click", () => {
