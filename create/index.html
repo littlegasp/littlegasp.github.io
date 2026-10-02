@@ -61,6 +61,17 @@ textarea{min-height:170px;resize:vertical}
 .toast{position:fixed;left:50%;bottom:calc(var(--payH,110px) + 16px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;z-index:20;max-width:90vw;text-align:center}
 .restore{background:var(--butter);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
 .linkbtn{border:0;background:none;font:700 .92rem var(--body);color:var(--berry-dark);cursor:pointer;text-decoration:underline}
+.ov{position:fixed;inset:0;background:rgba(27,22,64,.62);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
+.ov[hidden]{display:none}
+.ov .card{background:var(--card);border-radius:22px;padding:26px 22px;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 50px rgba(27,22,64,.35)}
+.ov h2{margin:0 0 6px;font-size:1.7rem}
+.ov .sub{margin:0 auto 14px;max-width:32ch}
+.linkbox{display:flex;gap:8px;margin:12px 0}
+.linkbox input{flex:1;min-width:0;font-size:14px}
+.ov .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.spin{width:38px;height:38px;border-radius:50%;border:4px solid var(--bg);border-top-color:var(--berry);margin:8px auto 14px;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.spin{animation-duration:3s}}
 </style>
 </head>
 <body>
@@ -132,6 +143,11 @@ textarea{min-height:170px;resize:vertical}
   </section>
 </main>
 
+<div class="ov" id="ov" hidden role="dialog" aria-modal="true" aria-labelledby="ovTitle">
+  <div class="card"><div id="ovSpin" class="spin" hidden></div><h2 id="ovTitle"></h2><p class="sub" id="ovText"></p><div id="ovBody"></div></div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <div class="paybar">
   <div class="in">
     <div class="pricebox" id="pricebox"></div>
@@ -142,6 +158,7 @@ textarea{min-height:170px;resize:vertical}
 
 <script>
 /* ================= SETTINGS ================= */
+const API_URL = "https://script.google.com/macros/s/AKfycbzvhIqDkLH6nIPGvZLbtg2I5NbkB5FsZstcxQZAr7p7UdgQSN5Xq1dnOReBZgEbRMjD/exec";   // same /exec URL as in the birthday template
 const DESIGNS = {
   "birthday-cake": {
     name: "Birthday Cake",
@@ -306,16 +323,90 @@ function check(){
   need("#f-email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email.trim()), "Add a valid email so we can send your link");
   return errs;
 }
-$("#payBtn").onclick = () => {
+/* ---------- payment + delivery ---------- */
+async function api(action, data){
+  if (/PASTE_/.test(API_URL)) throw new Error("API_URL is not set in the editor");
+  const r = await fetch(API_URL, { method: "POST", body: JSON.stringify(Object.assign({ action }, data)) });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || "Something went wrong");
+  return j;
+}
+function getPending(){ return idbGet("pending:" + designKey); }
+function setPending(v){ return idbPut("pending:" + designKey, v); }
+async function idbGet(k){ try { const db = await idb(); return await new Promise(res => { const r = db.transaction("drafts").objectStore("drafts").get(k); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); }); } catch(e){ return null; } }
+async function idbPut(k, v){ try { const db = await idb(); const st = db.transaction("drafts","readwrite").objectStore("drafts"); v === null ? st.delete(k) : st.put(v, k); } catch(e){} }
+
+const payBtn = $("#payBtn");
+function busy(on, label){ payBtn.disabled = on; payBtn.textContent = on ? label : "💌 Unlock your link"; }
+
+payBtn.onclick = async () => {
   const errs = check();
   if (errs.length){
-    showTab("write");
-    toast(errs[0][1]);
+    showTab("write"); toast(errs[0][1]);
     setTimeout(() => errs[0][0].focus(), 50);
     return;
   }
-  toast("Looks great! Payments get connected in the next step of the build.");
+  if (typeof Razorpay === "undefined"){ toast("Payment couldn't load. Check your internet and try again."); return; }
+  busy(true, "Preparing secure payment…");
+  let order;
+  try {
+    const content = payload(); delete content.photos;
+    order = await api("createOrder", { design: designKey, email: state.email.trim(), content });
+  } catch(e){ busy(false); toast("Couldn't start payment: " + e.message); return; }
+
+  const rzp = new Razorpay({
+    key: order.keyId, order_id: order.orderId, amount: order.amount, currency: "INR",
+    name: order.brand, description: D.name + " surprise website",
+    prefill: { email: state.email.trim() },
+    theme: { color: "#E8457A" },
+    handler: async resp => {
+      const paid = { orderId: resp.razorpay_order_id, paymentId: resp.razorpay_payment_id, signature: resp.razorpay_signature };
+      await setPending(paid);
+      finish(paid);
+    },
+    modal: { ondismiss: () => busy(false) }
+  });
+  rzp.on("payment.failed", r => { busy(false); toast("Payment failed: " + ((r.error && r.error.description) || "please try again") + ". No money was taken for this attempt."); });
+  rzp.open();
 };
+
+async function finish(paid){
+  overlay({ spin: true, title: "Payment received 🎉", text: "Creating your website and saving your photos. This takes a few seconds, please don't close this page." });
+  try {
+    const r = await api("complete", Object.assign({}, paid, { photos: payload().photos }));
+    await setPending(null); await clearDraft();
+    showLink(r.link);
+  } catch(e){
+    const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Retry";
+    btn.onclick = () => finish(paid);
+    overlay({ title: "Almost there", text: "Your payment is safe, but we couldn't finish creating your website (" + e.message + "). Tap Retry. If it keeps failing, email tinysurpriseco.orders@gmail.com with your payment ID " + paid.paymentId + ".", body: [btn] });
+  } finally { busy(false); }
+}
+
+function showLink(link){
+  const box = document.createElement("div"); box.className = "linkbox";
+  const inp = document.createElement("input"); inp.type = "text"; inp.readOnly = true; inp.value = link; inp.setAttribute("aria-label", "Your website link");
+  const copy = document.createElement("button"); copy.className = "btn small"; copy.textContent = "Copy";
+  copy.onclick = async () => { try { await navigator.clipboard.writeText(link); copy.textContent = "Copied ✓"; } catch(e){ inp.select(); } };
+  box.append(inp, copy);
+  const row = document.createElement("div"); row.className = "row";
+  const open = document.createElement("a"); open.className = "btn ghost small"; open.href = link; open.target = "_blank"; open.rel = "noopener"; open.textContent = "Open it";
+  row.appendChild(open);
+  if (navigator.share){
+    const sh = document.createElement("button"); sh.className = "btn ghost small"; sh.textContent = "Share";
+    sh.onclick = () => navigator.share({ title: "A surprise for you 💌", url: link }).catch(() => {});
+    row.appendChild(sh);
+  }
+  overlay({ title: "It's ready 💌", text: "Open it once yourself, then send it to " + (state.to.trim() || "them") + ". We've also emailed the link to " + state.email.trim() + ".", body: [box, row] });
+}
+
+function overlay({ spin = false, title = "", text = "", body = [] }){
+  $("#ovSpin").hidden = !spin;
+  $("#ovTitle").textContent = title;
+  $("#ovText").textContent = text;
+  const b = $("#ovBody"); b.innerHTML = ""; body.forEach(n => b.appendChild(n));
+  $("#ov").hidden = false;
+}
 
 let toastT;
 function toast(msg){
@@ -334,6 +425,12 @@ $("#startOver").onclick = async () => {
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
   bindFields(); renderNotes(); renderPhotos(); fitLayout();
   if (desktop()) loadPreview();
+  const pending = await getPending();
+  if (pending && pending.paymentId){
+    const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Finish my website";
+    btn.onclick = () => finish(pending);
+    overlay({ title: "Welcome back", text: "Your payment went through but your website wasn't finished. Tap below to complete it. You won't be charged again.", body: [btn] });
+  }
 })();
 </script>
 </body>
