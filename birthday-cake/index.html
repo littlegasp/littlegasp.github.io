@@ -253,7 +253,7 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
 
 <script>
 /* ============ SETUP: paste your Apps Script Web app URL ============ */
-const API_URL = "https://script.google.com/macros/s/AKfycbzvhIqDkLH6nIPGvZLbtg2I5NbkB5FsZstcxQZAr7p7UdgQSN5Xq1dnOReBZgEbRMjD/exec";
+const API_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
 /* =================================================================== */
 
 /* Shown when the page is opened without ?id= (use it for Instagram demos) */
@@ -278,10 +278,23 @@ let C, seq = [], current = 0;
 
 /* ---------- load ---------- */
 const id = new URLSearchParams(location.search).get("id");
-   async function start(){
+const isPreview = new URLSearchParams(location.search).has("preview");
+/* Preview mode: the editor page sends the buyer's content into this frame. */
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => {
+      if (e.origin !== location.origin) return;
+      if (e.data && e.data.type === "tsc-data") res(e.data.data);
+    });
+    parent.postMessage({ type: "tsc-ready" }, location.origin);
+  });
+}
+async function start(){
   try {
     let d = DEMO;
-    if (id) {
+    if (isPreview) {
+      d = await waitForPreviewData();
+    } else if (id) {
       const res = await fetch(API_URL + "?id=" + encodeURIComponent(id));
       d = await res.json();
       if (!d || d.error) throw new Error(d && d.error);
@@ -290,7 +303,8 @@ const id = new URLSearchParams(location.search).get("id");
   } catch (e) {
     $("#loaderText").textContent = "This surprise link doesn't look right. Please check it, or message @tinysurprise_co on Instagram.";
   }
-   }    setTimeout(start, 0);
+}
+setTimeout(start, 0); // run after the whole script has loaded
 
 function build(d){
   C = {
