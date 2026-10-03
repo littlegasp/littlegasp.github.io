@@ -18,15 +18,25 @@
   --rose:#E8457A; --marigold:#F59E1B; --cream:#FFF4D6; --ink-cream:#EFE6FF;
   --serif:"Cormorant Garamond", "Times New Roman", Georgia, serif;
   --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --c:min(58vw,230px);           /* channi diameter */
+  --c:min(calc(58 * var(--vw)),230px);           /* channi diameter */
   --m:calc(var(--c) * .8);        /* moon diameter = channi window */
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:inherit}
+/* ===== Phone-shaped stage: full screen on phones, centred 9:16 column on laptops ===== */
+html{--vh:1vh;--vw:1vw}
+@supports (height:1dvh){ html{--vh:1dvh} }
+html{--vw:min(1vw, calc(.5625 * var(--vh)))}
+#backdrop{position:fixed;inset:-40px;z-index:0;background:radial-gradient(ellipse at 50% 30%,#2A1F5C,#0E0A24 70%);
+  background-size:cover;background-position:center;filter:blur(28px) brightness(.62) saturate(1.15)}
+#stage{position:relative;z-index:1;width:calc(100 * var(--vw));height:calc(100 * var(--vh));margin:0 auto;overflow:hidden;
+  transform:translateZ(0);background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,var(--sky-low) 100%);
+  box-shadow:0 0 0 1px rgba(232,181,74,.18),0 30px 80px rgba(0,0,0,.6)}
+#stage > main{height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 html{height:100%;background:var(--sky-top)}
-body{margin:0;min-height:100%;font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink-cream);
+body{margin:0;height:100%;overflow:hidden;font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink-cream);
   background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,var(--sky-low) 100%) fixed;
   -webkit-tap-highlight-color:transparent;overflow-x:hidden}
 canvas.layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
@@ -34,21 +44,21 @@ canvas.layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 #petals{z-index:30}
 
 /* moon */
-.moon{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 8vh);width:var(--m);height:var(--m);margin-left:calc(var(--m) / -2);
+.moon{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + calc(8 * var(--vh)));width:var(--m);height:var(--m);margin-left:calc(var(--m) / -2);
   border-radius:50%;z-index:1;pointer-events:none;
   background:radial-gradient(circle at 38% 35%,#FFFDF4 0%,var(--moon) 45%,#F1DDA8 100%);
   box-shadow:0 0 40px 10px rgba(255,236,180,.35),0 0 120px 40px rgba(255,220,150,.18);
-  transform:translateY(75vh);opacity:0;transition:transform 3.4s cubic-bezier(.22,.8,.3,1),opacity 1.6s ease}
+  transform:translateY(calc(75 * var(--vh)));opacity:0;transition:transform 3.4s cubic-bezier(.22,.8,.3,1),opacity 1.6s ease}
 .moon::before,.moon::after{content:"";position:absolute;border-radius:50%;background:rgba(214,190,140,.28)}
 .moon::before{width:22%;height:22%;left:58%;top:28%}
 .moon::after{width:13%;height:13%;left:30%;top:60%}
 .moon.up{transform:translateY(0);opacity:1}
 .moon.away{opacity:0;transition:opacity .8s ease}
-.moon.small{transform:translateY(-4vh) scale(.42);opacity:.85;transition:transform 1.6s ease,opacity 1.2s ease}
+.moon.small{transform:translateY(calc(-4 * var(--vh))) scale(.42);opacity:.85;transition:transform 1.6s ease,opacity 1.2s ease}
 
 /* rooftops */
 .roofs{position:fixed;left:0;right:0;bottom:0;z-index:2;pointer-events:none;opacity:.95;transition:opacity 1.2s ease}
-.roofs svg{display:block;width:100%;height:auto;max-height:26vh}
+.roofs svg{display:block;width:100%;height:auto;max-height:calc(26 * var(--vh))}
 .roofs.dim{opacity:.28}
 .lamp{animation:lamp 2.6s ease-in-out infinite alternate}
 .lamp:nth-child(2n){animation-delay:-1.1s}.lamp:nth-child(3n){animation-delay:-.6s}
@@ -61,19 +71,19 @@ canvas.layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .corner.tr{top:calc(env(safe-area-inset-top,0px) + 6px);right:6px;transform:scaleX(-1)}
 
 /* scenes */
-main{position:relative;z-index:5;max-width:440px;margin:0 auto;min-height:100vh;min-height:100dvh;display:flex}
+main{position:relative;z-index:5;max-width:440px;margin:0 auto;min-height:calc(100 * var(--vh));min-height:100dvh;display:flex}
 .scene{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;
-  padding:calc(8vh + var(--m) + (var(--c) - var(--m)) / 2 + 26px) 22px 40px}
-.scene.center{justify-content:center;padding-top:calc(8vh + 96px)}
+  padding:calc(calc(8 * var(--vh)) + var(--m) + (var(--c) - var(--m)) / 2 + 26px) 22px 40px}
+.scene.center{justify-content:center;padding-top:calc(calc(8 * var(--vh)) + 96px)}
 .scene.center[data-scene="open"]{padding-top:72px}
 .scene[hidden]{display:none}
 h1,h2{font-family:var(--serif);font-weight:600;margin:0;line-height:1.05;color:var(--gold-soft)}
-h1{font-size:clamp(2.6rem,12vw,3.4rem)}
-h2{font-size:clamp(1.9rem,8.4vw,2.4rem)}
+h1{font-size:clamp(2.6rem,calc(12 * var(--vw)),3.4rem)}
+h2{font-size:clamp(1.9rem,calc(8.4 * var(--vw)),2.4rem)}
 h1:focus,h2:focus{outline:none}
 p{margin:0}
 .sub{color:#CFC4EE;max-width:30ch}
-.name{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--gold);font-size:clamp(3.2rem,15vw,4.4rem);line-height:1}
+.name{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--gold);font-size:clamp(3.2rem,calc(15 * var(--vw)),4.4rem);line-height:1}
 .for{font-family:var(--serif);font-style:italic;font-size:1.35rem;color:var(--gold-soft);margin-bottom:-10px}
 
 .btn{appearance:none;border:0;cursor:pointer;font:700 1.02rem/1 var(--body);padding:16px 28px;border-radius:999px;
@@ -215,7 +225,7 @@ body.art-frame .frame-art{display:block;position:relative;width:100%;height:auto
 /* chain + tassel make the frame tall: size it by screen height so the button stays on screen, and centre the first/last frame */
 body.art-frame{--fw:clamp(128px,calc((100svh - 452px) * .41),260px)}
 body.art-frame .frame{transform-origin:50% 0;flex-basis:var(--fw)}
-body.art-frame .strip{padding:6px calc((min(100vw,440px) - var(--fw)) / 2) 10px}
+body.art-frame .strip{padding:6px calc((calc(100 * var(--vw)) - var(--fw)) / 2) 10px}
 
 /* second background for the later scenes */
 #bg2{position:fixed;inset:0;z-index:0;background:var(--sky-top) center bottom / cover no-repeat;opacity:0;transition:opacity 1.4s ease}
@@ -228,12 +238,12 @@ body:is([data-scene="ask"],[data-scene="finale"]) #bg2::after{opacity:1}
 /* props: thali, lanterns, corners (each shows only on the scenes listed) */
 .decor{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
 .decor > *{position:absolute;opacity:0;transition:opacity 1s ease}
-.d-thali{left:-5vw;bottom:calc(env(safe-area-inset-bottom,0px) - 1vh);width:min(50vw,230px);filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
-.d-lantern{right:3vw;bottom:calc(env(safe-area-inset-bottom,0px) + 2vh);width:min(18vw,84px);filter:drop-shadow(0 0 22px rgba(255,186,90,.55))}
-.d-hang{left:7vw;top:0;width:min(11vw,48px);transform-origin:50% 0;animation:sway 4.6s ease-in-out infinite}
-.d-hang .str{display:block;width:1.5px;height:12vh;margin:0 auto;background:linear-gradient(var(--gold-deep),var(--gold))}
+.d-thali{left:calc(-5 * var(--vw));bottom:calc(env(safe-area-inset-bottom,0px) - calc(1 * var(--vh)));width:min(calc(50 * var(--vw)),230px);filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+.d-lantern{right:calc(3 * var(--vw));bottom:calc(env(safe-area-inset-bottom,0px) + calc(2 * var(--vh)));width:min(calc(18 * var(--vw)),84px);filter:drop-shadow(0 0 22px rgba(255,186,90,.55))}
+.d-hang{left:calc(7 * var(--vw));top:0;width:min(calc(11 * var(--vw)),48px);transform-origin:50% 0;animation:sway 4.6s ease-in-out infinite}
+.d-hang .str{display:block;width:1.5px;height:calc(12 * var(--vh));margin:0 auto;background:linear-gradient(var(--gold-deep),var(--gold))}
 .d-hang img{display:block;width:100%;filter:drop-shadow(0 0 16px rgba(255,186,90,.6))}
-.d-corner{top:env(safe-area-inset-top,0px);width:min(30vw,130px)}
+.d-corner{top:env(safe-area-inset-top,0px);width:min(calc(30 * var(--vw)),130px)}
 .d-corner.l{left:0}.d-corner.r{right:0;transform:scaleX(-1)}
 body.art-thali:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]) .d-thali,
 body.art-lantern:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]) .d-lantern,
@@ -258,7 +268,7 @@ body.art-card .note p{color:var(--maroon-deep);font-size:1.35rem;text-shadow:non
 /* parchment scroll for the letter (stretches to any letter length).
    The rolled ends + paisley corners (top/bottom --scroll-slice px of scroll.webp, which is 900x1374) are drawn unstretched
    in ::before/::after at --scroll-edge tall; only the plain middle stretches. (border-image left hairline seams through the text.) */
-:root{ --scroll-slice:289; --scroll-edge:calc((min(100vw,440px) - 44px) * var(--scroll-slice) / 900); --scroll-pad:4px 58px; }
+:root{ --scroll-slice:289; --scroll-edge:calc((calc(100 * var(--vw)) - 44px) * var(--scroll-slice) / 900); --scroll-pad:4px 58px; }
 body.art-scroll .scroll{box-shadow:none;border-radius:0;border:solid transparent;border-width:var(--scroll-edge) 0;padding:var(--scroll-pad);
   background:var(--scroll-img) center / 100% calc(100% * 1374 / (1374 - 2 * var(--scroll-slice))) no-repeat padding-box;
   filter:drop-shadow(0 18px 34px rgba(0,0,0,.5))}
@@ -268,7 +278,7 @@ body.art-scroll .scroll::before{top:calc(-1 * var(--scroll-edge))}
 body.art-scroll .scroll::after{bottom:calc(-1 * var(--scroll-edge));background-position:center bottom}
 body.art-scroll .scroll .orn{display:none}
 
-@media (max-height:640px){ :root{--c:min(50vw,190px)} .scene{gap:12px} }
+@media (max-height:640px){ :root{--c:min(calc(50 * var(--vw)),190px)} .scene{gap:12px} }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   .reveal p{opacity:1}
@@ -276,6 +286,8 @@ body.art-scroll .scroll .orn{display:none}
 </style>
 </head>
 <body>
+<div id="backdrop" aria-hidden="true"></div>
+<div id="stage">
 <div id="bg" aria-hidden="true"></div>
 <div id="bg2" aria-hidden="true"></div>
 <canvas id="sky" class="layer" aria-hidden="true"></canvas>
@@ -405,7 +417,7 @@ body.art-scroll .scroll .orn{display:none}
   <!-- 6. Finale -->
   <section class="scene center" data-scene="finale" hidden>
     <h1 tabindex="-1">Happy Karwa Chauth</h1>
-    <p class="name" style="font-size:clamp(2.4rem,11vw,3.2rem)" data-to>Priya</p>
+    <p class="name" style="font-size:clamp(2.4rem,calc(11 * var(--vw)),3.2rem)" data-to>Priya</p>
     <p class="sub msg" id="finaleMsg"></p>
     <p class="sub msg" id="finaleNum" hidden></p>
     <button class="btn ghost" id="replay">Watch again</button>
@@ -413,6 +425,7 @@ body.art-scroll .scroll .orn{display:none}
   </section>
 </main>
 
+</div><!-- /stage -->
 <script>
 /* ===== Backend: must be the SAME web app URL used in /birthday-cake/ and /create/ ===== */
 const API_URL = "https://script.google.com/macros/s/AKfycbzvhIqDkLH6nIPGvZLbtg2I5NbkB5FsZstcxQZAr7p7UdgQSN5Xq1dnOReBZgEbRMjD/exec";
@@ -463,6 +476,8 @@ const DEMO = {
   yesReply: "It's a date. I've already got your favourite sweets."
 };
 
+const STAGE = document.getElementById("stage");
+const W = () => STAGE.clientWidth, H = () => STAGE.clientHeight;
 const qs = new URLSearchParams(location.search);
 const id = (qs.get("id") || "").trim();
 const isPreview = qs.has("preview");
@@ -476,15 +491,15 @@ let C = DEMO;
 /* ---------- starry sky ---------- */
 const sky = $("#sky"), sx = sky.getContext("2d");
 let stars = [];
-function sizeCanvas(cv, ctx){ const r = Math.min(devicePixelRatio || 1, 2); cv.width = innerWidth * r; cv.height = innerHeight * r; ctx.setTransform(r,0,0,r,0,0); }
+function sizeCanvas(cv, ctx){ const r = Math.min(devicePixelRatio || 1, 2); cv.width = W() * r; cv.height = H() * r; ctx.setTransform(r,0,0,r,0,0); }
 function makeStars(){
   sizeCanvas(sky, sx);
-  const n = Math.round(innerWidth * innerHeight / 3800);
-  stars = Array.from({length:n}, () => ({ x: Math.random()*innerWidth, y: Math.random()*innerHeight*.78,
+  const n = Math.round(W() * H() / 3800);
+  stars = Array.from({length:n}, () => ({ x: Math.random()*W(), y: Math.random()*H()*.78,
     r: Math.random()*1.3 + .25, p: Math.random()*Math.PI*2, s: .6 + Math.random()*1.6 }));
 }
 function drawSky(t){
-  sx.clearRect(0,0,innerWidth,innerHeight);
+  sx.clearRect(0,0,W(),H());
   for (const st of stars){
     const a = reduce ? .7 : .35 + .65 * (0.5 + 0.5*Math.sin(st.p + t/1000*st.s));
     sx.globalAlpha = a; sx.fillStyle = st.r > 1.2 ? "#F3D58E" : "#FFFFFF";
@@ -508,18 +523,18 @@ function rainPetals(ms){
 }
 function petalTick(now){
   if (now < petalUntil && petals.length < 110) for (let i=0;i<2;i++) petals.push({
-    x: Math.random()*innerWidth, y: -12, vx: (Math.random()-.5)*.6, vy: .9 + Math.random()*1.4,
+    x: Math.random()*W(), y: -12, vx: (Math.random()-.5)*.6, vy: .9 + Math.random()*1.4,
     r: Math.random()*6.283, vr: (Math.random()-.5)*.08, w: 5 + Math.random()*5, h: 3 + Math.random()*3,
     c: PCOL[(Math.random()*PCOL.length)|0], sw: Math.random()*6.283 });
-  px.clearRect(0,0,innerWidth,innerHeight);
+  px.clearRect(0,0,W(),H());
   petals.forEach(p => {
     p.sw += .03; p.x += p.vx + Math.sin(p.sw)*.6; p.y += p.vy; p.r += p.vr;
     px.save(); px.translate(p.x,p.y); px.rotate(p.r); px.fillStyle = p.c;
     px.beginPath(); px.ellipse(0,0,p.w,p.h,0,0,6.283); px.fill(); px.restore();
   });
-  petals = petals.filter(p => p.y < innerHeight + 20);
+  petals = petals.filter(p => p.y < H() + 20);
   if (petals.length || now < petalUntil) requestAnimationFrame(petalTick);
-  else { petalRun = false; px.clearRect(0,0,innerWidth,innerHeight); }
+  else { petalRun = false; px.clearRect(0,0,W(),H()); }
 }
 
 /* ---------- music: soft plucked melody + drone, made in code (no audio files) ---------- */
@@ -579,7 +594,7 @@ function go(name){
   scenes.forEach(s => s.hidden = s.dataset.scene !== name);
   const dots = $("#dots"); [...dots.children].forEach((d,i) => d.classList.toggle("on", i === idx));
   dots.setAttribute("aria-label", `Step ${idx+1} of ${flow.length}`);
-  if (!isAuto){ window.scrollTo(0,0); const h = sceneEl(name).querySelector("h1,h2"); if (h) h.focus({preventScroll:true}); }
+  if (!isAuto){ STAGE.querySelector("main").scrollTo(0,0); const h = sceneEl(name).querySelector("h1,h2"); if (h) h.focus({preventScroll:true}); }
   onEnter[name] && onEnter[name]();
 }
 function next(){ go(flow[current + 1]); }
@@ -760,7 +775,7 @@ function addWatermark(){
   wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
   const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
   band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(94,15,39,.92);color:#FFF4D6;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px calc(9px + env(safe-area-inset-bottom,0px));letter-spacing:.04em";
-  document.body.append(wm, band);
+  wm.style.position = band.style.position = "absolute"; STAGE.append(wm, band);
 }
 function waitForPreviewData(){
   return new Promise(res => {
