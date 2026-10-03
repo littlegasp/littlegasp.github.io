@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#140F33">
+<title>Happy Karwa Chauth</title>
+<link rel="icon" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky-top:#140F33; --sky-mid:#22184F; --sky-low:#3A1F4E;
+  --gold:#E8B54A; --gold-soft:#F3D58E; --gold-deep:#B98A2C;
+  --moon:#FFF4D6; --maroon:#8E1B3A; --maroon-deep:#5E0F27;
+  --rose:#E8457A; --marigold:#F59E1B; --cream:#FFF4D6; --ink-cream:#EFE6FF;
+  --serif:"Cormorant Garamond", "Times New Roman", Georgia, serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --c:min(calc(58 * var(--vw)),230px);           /* channi diameter */
+  --m:calc(var(--c) * .8);        /* moon diameter = channi window */
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+/* ===== Phone-shaped stage: full screen on phones, centred 9:16 column on laptops ===== */
+html{--vh:1vh;--vw:1vw}
+@supports (height:1dvh){ html{--vh:1dvh} }
+html{--vw:min(1vw, calc(.5625 * var(--vh)))}
+#backdrop{position:fixed;inset:-40px;z-index:0;background:radial-gradient(ellipse at 50% 30%,#2A1F5C,#0E0A24 70%);
+  background-size:cover;background-position:center;filter:blur(28px) brightness(.62) saturate(1.15)}
+#stage{position:relative;z-index:1;width:calc(100 * var(--vw));height:calc(100 * var(--vh));margin:0 auto;overflow:hidden;
+  transform:translateZ(0);background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,var(--sky-low) 100%);
+  box-shadow:0 0 0 1px rgba(232,181,74,.18),0 30px 80px rgba(0,0,0,.6)}
+#stage > main{height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+html{height:100%;background:var(--sky-top)}
+body{margin:0;height:100%;overflow:hidden;font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink-cream);
+  background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,var(--sky-low) 100%) fixed;
+  -webkit-tap-highlight-color:transparent;overflow-x:hidden}
+canvas.layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#sky{z-index:0}
+#petals{z-index:30}
+
+/* moon */
+.moon{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + calc(8 * var(--vh)));width:var(--m);height:var(--m);margin-left:calc(var(--m) / -2);
+  border-radius:50%;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at 38% 35%,#FFFDF4 0%,var(--moon) 45%,#F1DDA8 100%);
+  box-shadow:0 0 40px 10px rgba(255,236,180,.35),0 0 120px 40px rgba(255,220,150,.18);
+  transform:translateY(calc(75 * var(--vh)));opacity:0;transition:transform 3.4s cubic-bezier(.22,.8,.3,1),opacity 1.6s ease}
+.moon::before,.moon::after{content:"";position:absolute;border-radius:50%;background:rgba(214,190,140,.28)}
+.moon::before{width:22%;height:22%;left:58%;top:28%}
+.moon::after{width:13%;height:13%;left:30%;top:60%}
+.moon.up{transform:translateY(0);opacity:1}
+.moon.away{opacity:0;transition:opacity .8s ease}
+.moon.small{transform:translateY(calc(-4 * var(--vh))) scale(.42);opacity:.85;transition:transform 1.6s ease,opacity 1.2s ease}
+
+/* rooftops */
+.roofs{position:fixed;left:0;right:0;bottom:0;z-index:2;pointer-events:none;opacity:.95;transition:opacity 1.2s ease}
+.roofs svg{display:block;width:100%;height:auto;max-height:calc(26 * var(--vh))}
+.roofs.dim{opacity:.28}
+.lamp{animation:lamp 2.6s ease-in-out infinite alternate}
+.lamp:nth-child(2n){animation-delay:-1.1s}.lamp:nth-child(3n){animation-delay:-.6s}
+@keyframes lamp{from{opacity:.55}to{opacity:1}}
+
+/* mehendi corners */
+.corner{position:fixed;width:88px;height:88px;z-index:3;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+.corner.show{opacity:.85}
+.corner.tl{top:calc(env(safe-area-inset-top,0px) + 6px);left:6px}
+.corner.tr{top:calc(env(safe-area-inset-top,0px) + 6px);right:6px;transform:scaleX(-1)}
+
+/* scenes */
+main{position:relative;z-index:5;max-width:440px;margin:0 auto;min-height:calc(100 * var(--vh));min-height:100dvh;display:flex}
+.scene{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;
+  padding:calc(calc(8 * var(--vh)) + var(--m) + (var(--c) - var(--m)) / 2 + 26px) 22px 40px}
+.scene.center{justify-content:center;padding-top:calc(calc(8 * var(--vh)) + 96px)}
+.scene.center[data-scene="open"]{padding-top:72px}
+.scene[hidden]{display:none}
+h1,h2{font-family:var(--serif);font-weight:600;margin:0;line-height:1.05;color:var(--gold-soft)}
+h1{font-size:clamp(2.6rem,calc(12 * var(--vw)),3.4rem)}
+h2{font-size:clamp(1.9rem,calc(8.4 * var(--vw)),2.4rem)}
+h1:focus,h2:focus{outline:none}
+p{margin:0}
+.sub{color:#CFC4EE;max-width:30ch}
+.name{font-family:var(--serif);font-style:italic;font-weight:500;color:var(--gold);font-size:clamp(3.2rem,calc(15 * var(--vw)),4.4rem);line-height:1}
+.for{font-family:var(--serif);font-style:italic;font-size:1.35rem;color:var(--gold-soft);margin-bottom:-10px}
+
+.btn{appearance:none;border:0;cursor:pointer;font:700 1.02rem/1 var(--body);padding:16px 28px;border-radius:999px;
+  background:var(--gold);color:var(--sky-top);box-shadow:0 0 0 1px rgba(255,255,255,.25) inset,0 6px 22px rgba(232,181,74,.35);
+  transition:transform .1s ease,box-shadow .2s ease,opacity .4s ease;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.btn:active{transform:scale(.97)}
+.btn.ghost{background:transparent;color:var(--gold-soft);box-shadow:inset 0 0 0 1.5px var(--gold)}
+.btn:focus-visible,.channi:focus-visible,.diya:focus-visible,.icon-btn:focus-visible{outline:3px solid var(--gold-soft);outline-offset:4px}
+.btn[hidden]{display:none}
+.glow-in{animation:glowin .9s ease both}
+@keyframes glowin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.fade-in{animation:fadein 1s ease both}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+/* channi */
+.raise{position:relative;flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;min-height:calc(var(--c) + 60px)}
+.channi{appearance:none;border:0;background:none;padding:0;cursor:grab;width:var(--c);height:var(--c);position:relative;touch-action:none;
+  border-radius:50%;transition:transform .5s cubic-bezier(.2,.9,.3,1.2);z-index:6}
+.channi.dragging{transition:none;cursor:grabbing}
+.channi .view{position:absolute;left:10%;top:10%;width:80%;height:80%;border-radius:50%;overflow:hidden}
+.vmoon,.vphoto{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;opacity:0;transition:opacity 1.2s ease}
+.vmoon{background:radial-gradient(circle at 38% 35%,#FFFDF4 0%,var(--moon) 45%,#F1DDA8 100%)}
+.vphoto{object-fit:cover}
+.vph{display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:1.6rem;color:var(--maroon);
+  background:radial-gradient(circle at 40% 35%,#FFF7E3,#F2D9A6)}
+.channi.moonlit .vmoon{opacity:1}
+.channi.revealed .vphoto{opacity:1}
+.channi .rim{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mesh{transition:opacity 1.4s ease}
+.channi.revealed .mesh{opacity:.18}
+.channi.revealed{filter:drop-shadow(0 0 26px rgba(243,213,142,.55))}
+.hint[hidden]{display:none}
+.ctl{display:grid;place-items:center}.ctl>*{grid-area:1/1}
+.hint{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.92rem;color:var(--gold-soft);transition:opacity .4s}
+.hint svg{animation:nudge 1.4s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateY(4px)}50%{transform:translateY(-4px)}}
+
+/* diyas */
+.note{min-height:112px;width:100%;display:flex;align-items:center;justify-content:center}
+.note p{font-family:var(--serif);font-size:1.5rem;line-height:1.25;color:var(--cream);max-width:24ch;font-style:italic}
+.note p.swap{animation:glowin .7s ease both}
+.diyas{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 4px;padding:8px 0 4px;width:100%}
+.diya{appearance:none;border:0;background:none;padding:0;cursor:pointer;width:62px;height:76px;position:relative;
+  transform:translateY(var(--y,0))}
+.diya svg{width:100%;height:100%;overflow:visible;display:block}
+.diya .flame{opacity:0;transform-box:fill-box;transform-origin:50% 100%;transition:opacity .3s}
+.diya.lit .flame{opacity:1;animation:flick .18s ease-in-out infinite alternate}
+.diya:nth-child(2n).lit .flame{animation-duration:.21s}
+.diya .halo{opacity:0;transition:opacity .6s}
+.diya.lit .halo{opacity:1}
+@keyframes flick{from{transform:scale(1,1) rotate(1.5deg)}to{transform:scale(.88,1.1) rotate(-2deg)}}
+.cloth{width:100%;height:10px;border-radius:6px;background:linear-gradient(90deg,var(--maroon-deep),var(--maroon),var(--maroon-deep));
+  box-shadow:inset 0 2px 0 var(--gold-deep),inset 0 -2px 0 var(--gold-deep);margin-top:-6px}
+.count{font-size:.92rem;color:#CFC4EE}
+
+/* memories */
+.strip{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;width:calc(100% + 44px);margin:0 -22px;padding:36px 18% 10px;
+  scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.frame{flex:0 0 82%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;margin:0;
+  animation:sway 5s ease-in-out infinite;transform-origin:50% -30px}
+.frame:nth-child(2n){animation-delay:-2.4s}
+@keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
+.arch{position:relative;width:100%;aspect-ratio:3/4;border-radius:50% 50% 10px 10px / 34% 34% 10px 10px;overflow:hidden;
+  border:3px solid var(--gold);box-shadow:0 0 0 5px var(--sky-mid),0 0 0 6px rgba(232,181,74,.6),0 18px 40px rgba(0,0,0,.35)}
+.arch::before{content:"";position:absolute;left:50%;top:-34px;width:1.5px;height:34px;background:var(--gold)}
+.arch img,.arch .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.arch img{display:block}
+.ph{display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:1.3rem;color:rgba(255,244,214,.8);
+  background:radial-gradient(circle at 50% 30%,#4A2C6E,#24174D)}
+.frame figcaption{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--cream);line-height:1.2;max-width:22ch}
+.dots2{display:flex;gap:6px}.dots2 span{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.3}
+.dots2 span.on{opacity:1}
+
+/* letter */
+.scroll{position:relative;width:100%;background:var(--cream);color:#3B1530;border-radius:6px;padding:34px 26px 30px;text-align:left;
+  box-shadow:0 20px 50px rgba(0,0,0,.4)}
+.scroll::before{content:"";position:absolute;inset:8px;border:1.5px solid var(--gold-deep);border-radius:3px;pointer-events:none;
+  box-shadow:inset 0 0 0 4px var(--cream),inset 0 0 0 5.5px var(--maroon)}
+.scroll .orn{position:absolute;width:46px;height:46px;pointer-events:none}
+.scroll .orn.a{top:4px;left:4px}.scroll .orn.b{top:4px;right:4px;transform:scaleX(-1)}
+.scroll .orn.c{bottom:4px;left:4px;transform:scaleY(-1)}.scroll .orn.d{bottom:4px;right:4px;transform:scale(-1,-1)}
+.scroll p{font-family:var(--serif);font-size:1.32rem;line-height:1.45;margin:0 0 .7em;position:relative}
+.scroll p.sign{text-align:right;font-style:italic;margin:1em 0 0}
+.reveal p{opacity:0;animation:ink .8s ease forwards;animation-delay:calc(var(--i) * .75s + .2s)}
+@keyframes ink{to{opacity:1}}
+
+/* ask */
+.ask{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+/* chrome */
+.dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:20}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--gold);opacity:.25;transition:opacity .3s,width .3s}
+.dots span.on{opacity:.9;width:20px;border-radius:4px}
+.icon-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);right:10px;z-index:21;width:44px;height:44px;border-radius:50%;border:0;
+  background:rgba(255,244,214,.12);color:var(--gold-soft);font-size:1.1rem;cursor:pointer;backdrop-filter:blur(6px)}
+.icon-btn[hidden]{display:none}
+.made{font-size:.8rem;color:#A99BD6;margin-top:6px}
+.made a{color:var(--gold-soft)}
+.msg{max-width:30ch}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ===== Painted artwork layer =====
+   Each piece is used only after its image loads (body gets art-* class),
+   otherwise the drawn version stays. Tune the --vars below to fit the artwork. */
+:root{
+  --moon-zoom:144%;            /* moon.webp: how much to enlarge so the disc fills the circle */
+  --hole:76%;                  /* channi.webp: size of the empty centre, as % of the ring */
+  --win-top:20%; --win-side:12%; --win-bottom:31%;   /* frame.webp: the photo window inside the frame */
+  --wick-x:27px; --wick-y:13px; /* diya.webp: nudge the flame onto the wick */
+}
+#bg{position:fixed;inset:0;z-index:0;background:var(--sky-top) center bottom / cover no-repeat;opacity:0;transition:opacity 1.2s ease}
+body.art-bg #bg{opacity:1}
+body.art-bg #sky{opacity:.55}
+body.art-bg .roofs,body.art-bg .corner{display:none}
+body.art-bg .scene h1,body.art-bg .scene h2,body.art-bg .scene .sub,body.art-bg .scene .name{text-shadow:0 2px 14px rgba(10,6,30,.85)}
+body.art-bg .scene :is(.made,.hint,.count,figcaption){text-shadow:0 1px 3px rgba(10,6,30,.95),0 0 12px rgba(10,6,30,.9)}
+body.art-bg .scene .made{color:#DCD3F7}
+body.art-moon .moon,body.art-moon .vmoon{background:#000 var(--moon-img) center / var(--moon-zoom) no-repeat}
+body.art-moon .moon::before,body.art-moon .moon::after{display:none}
+.ring-art{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;display:none}
+body.art-channi .ring-art{display:block}
+body.art-channi .ringvec{display:none}
+body.art-channi .channi .view{left:calc((100% - var(--hole)) / 2);top:calc((100% - var(--hole)) / 2);width:var(--hole);height:var(--hole)}
+.diya .art{position:absolute;left:0;right:0;bottom:2px;width:100%;height:auto;display:none;pointer-events:none}
+body.art-diya .diya .art{display:block}
+body.art-diya .diya .bowl{display:none}
+body.art-diya .diya{width:60px;height:auto;aspect-ratio:64/84}   /* keep this ratio: --wick-x/y are measured in it */
+body.art-diya .diyas:has(> :nth-child(6)){gap:6px 3px}
+body.art-diya .diyas:has(> :nth-child(6)) .diya{width:51px}    /* 6 reasons still fit one row at 375px */
+body.art-diya .flame-pos,body.art-diya .diya .halo{transform:translate(var(--wick-x),var(--wick-y))}
+.frame-art{display:none}
+body.art-frame .arch{border:0;border-radius:0;box-shadow:none;aspect-ratio:auto;overflow:visible;background:none}
+body.art-frame .arch::before{display:none}
+body.art-frame .arch > img:not(.frame-art),body.art-frame .arch > .ph{inset:var(--win-top) var(--win-side) var(--win-bottom);
+  width:calc(100% - 2 * var(--win-side));height:calc(100% - var(--win-top) - var(--win-bottom));   /* imgs don't stretch to insets */
+  border-radius:50% 50% 4px 4px / 26% 26% 4px 4px}
+body.art-frame .frame-art{display:block;position:relative;width:100%;height:auto;pointer-events:none}
+/* chain + tassel make the frame tall: size it by screen height so the button stays on screen, and centre the first/last frame */
+body.art-frame{--fw:clamp(128px,calc((100svh - 452px) * .41),260px)}
+body.art-frame .frame{transform-origin:50% 0;flex-basis:var(--fw)}
+body.art-frame .strip{padding:6px calc((calc(100 * var(--vw)) - var(--fw)) / 2) 10px}
+
+/* second background for the later scenes */
+#bg2{position:fixed;inset:0;z-index:0;background:var(--sky-top) center bottom / cover no-repeat;opacity:0;transition:opacity 1.4s ease}
+body.art-bg2:is([data-scene="diyas"],[data-scene="photos"],[data-scene="letter"],[data-scene="ask"],[data-scene="finale"]) #bg2{opacity:1}
+/* the question and finale text sit on the lit palace: dim that band so it stays readable */
+#bg2::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1s ease;
+  background:linear-gradient(180deg,rgba(10,6,30,0) 26%,rgba(10,6,30,.68) 40%,rgba(10,6,30,.68) 76%,rgba(10,6,30,0) 90%)}
+body:is([data-scene="ask"],[data-scene="finale"]) #bg2::after{opacity:1}
+
+/* props: thali, lanterns, corners (each shows only on the scenes listed) */
+.decor{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.decor > *{position:absolute;opacity:0;transition:opacity 1s ease}
+.d-thali{left:calc(-5 * var(--vw));bottom:calc(env(safe-area-inset-bottom,0px) - calc(1 * var(--vh)));width:min(calc(50 * var(--vw)),230px);filter:drop-shadow(0 6px 18px rgba(0,0,0,.5))}
+.d-lantern{right:calc(3 * var(--vw));bottom:calc(env(safe-area-inset-bottom,0px) + calc(2 * var(--vh)));width:min(calc(18 * var(--vw)),84px);filter:drop-shadow(0 0 22px rgba(255,186,90,.55))}
+.d-hang{left:calc(7 * var(--vw));top:0;width:min(calc(11 * var(--vw)),48px);transform-origin:50% 0;animation:sway 4.6s ease-in-out infinite}
+.d-hang .str{display:block;width:1.5px;height:calc(12 * var(--vh));margin:0 auto;background:linear-gradient(var(--gold-deep),var(--gold))}
+.d-hang img{display:block;width:100%;filter:drop-shadow(0 0 16px rgba(255,186,90,.6))}
+.d-corner{top:env(safe-area-inset-top,0px);width:min(calc(30 * var(--vw)),130px)}
+.d-corner.l{left:0}.d-corner.r{right:0;transform:scaleX(-1)}
+body.art-thali:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]) .d-thali,
+body.art-lantern:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]) .d-lantern,
+body.art-lantern:is([data-scene="open"],[data-scene="moon"],[data-scene="photos"],[data-scene="finale"]) .d-hang,
+body.art-corner:is([data-scene="open"],[data-scene="finale"]) .d-corner{opacity:1}
+body.art-corner .corner{display:none}
+@media (max-height:780px){ body.art-thali[data-scene="finale"] .d-thali{opacity:0} }   /* short phones: the finale text reaches down to it */
+
+/* red cloth under the diyas */
+.altar{position:relative;width:100%;isolation:isolate;padding-bottom:8px}
+body.art-cloth .altar::before{content:"";position:absolute;z-index:-1;left:-22px;right:-22px;top:28px;bottom:-60px;
+  background:var(--cloth-img) center top / 100% auto no-repeat;
+  -webkit-mask:linear-gradient(#000 55%,transparent 92%);mask:linear-gradient(#000 55%,transparent 92%)}
+body.art-cloth .cloth{display:none}
+body.art-cloth .count{margin-top:34px}   /* clear of the cloth's gold border */
+
+/* note card behind each diya note */
+body.art-card .note{width:min(88%,330px);min-height:0;aspect-ratio:4/3;padding:12% 13%;background:var(--card-img) center / 100% 100% no-repeat;
+  filter:drop-shadow(0 10px 24px rgba(0,0,0,.45))}
+body.art-card .note p{color:var(--maroon-deep);font-size:1.35rem;text-shadow:none}
+
+/* parchment scroll for the letter (stretches to any letter length).
+   The rolled ends + paisley corners (top/bottom --scroll-slice px of scroll.webp, which is 900x1374) are drawn unstretched
+   in ::before/::after at --scroll-edge tall; only the plain middle stretches. (border-image left hairline seams through the text.) */
+:root{ --scroll-slice:289; --scroll-edge:calc((calc(100 * var(--vw)) - 44px) * var(--scroll-slice) / 900); --scroll-pad:4px 58px; }
+body.art-scroll .scroll{box-shadow:none;border-radius:0;border:solid transparent;border-width:var(--scroll-edge) 0;padding:var(--scroll-pad);
+  background:var(--scroll-img) center / 100% calc(100% * 1374 / (1374 - 2 * var(--scroll-slice))) no-repeat padding-box;
+  filter:drop-shadow(0 18px 34px rgba(0,0,0,.5))}
+body.art-scroll .scroll::before,body.art-scroll .scroll::after{content:"";display:block;position:absolute;inset:auto;left:0;right:0;
+  height:calc(var(--scroll-edge) + 1px);border:0;border-radius:0;box-shadow:none;background:var(--scroll-img) center top / 100% auto no-repeat}
+body.art-scroll .scroll::before{top:calc(-1 * var(--scroll-edge))}
+body.art-scroll .scroll::after{bottom:calc(-1 * var(--scroll-edge));background-position:center bottom}
+body.art-scroll .scroll .orn{display:none}
+
+@media (max-height:640px){ :root{--c:min(calc(50 * var(--vw)),190px)} .scene{gap:12px} }
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .reveal p{opacity:1}
+}
+</style>
+</head>
+<body>
+<div id="backdrop" aria-hidden="true"></div>
+<div id="stage">
+<div id="bg" aria-hidden="true"></div>
+<div id="bg2" aria-hidden="true"></div>
+<canvas id="sky" class="layer" aria-hidden="true"></canvas>
+<div class="moon" id="moon" aria-hidden="true"></div>
+
+<div class="roofs" id="roofs" aria-hidden="true">
+  <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMax slice">
+    <path fill="#0D0A24" d="M0 120V86h18V70h10l6-8 6 8h10v16h14V60l14-14 14 14v26h12V74c0-10 8-18 18-18s18 8 18 18v12h10V66h8V54h4v12h8v20h16V72l12-10 12 10v14h10V58c0-9 7-16 16-16s16 7 16 16v28h12V76h12V64h4v12h12v10h18V68l10-8 10 8v18h14V80h12v40Z"/>
+    <g fill="#F3C460">
+      <circle class="lamp" cx="40" cy="80" r="1.6"/><circle class="lamp" cx="78" cy="72" r="1.6"/><circle class="lamp" cx="138" cy="74" r="1.8"/>
+      <circle class="lamp" cx="186" cy="76" r="1.6"/><circle class="lamp" cx="228" cy="78" r="1.6"/><circle class="lamp" cx="262" cy="66" r="1.8"/>
+      <circle class="lamp" cx="310" cy="84" r="1.6"/><circle class="lamp" cx="346" cy="78" r="1.6"/><circle class="lamp" cx="384" cy="90" r="1.6"/>
+    </g>
+    <path d="M20 96 Q110 108 200 96 T380 96" fill="none" stroke="#F3C460" stroke-width=".6" opacity=".5"/>
+    <g fill="#FFD27A"><circle class="lamp" cx="60" cy="99" r="1.3"/><circle class="lamp" cx="110" cy="102" r="1.3"/><circle class="lamp" cx="160" cy="100" r="1.3"/>
+      <circle class="lamp" cx="240" cy="99" r="1.3"/><circle class="lamp" cx="290" cy="101" r="1.3"/><circle class="lamp" cx="340" cy="98" r="1.3"/></g>
+  </svg>
+</div>
+
+<svg class="corner tl" id="cornerL" viewBox="0 0 88 88" aria-hidden="true"><g fill="none" stroke="#E8B54A" stroke-width="1.2" stroke-linecap="round">
+  <path d="M4 4h40M4 4v40"/><path d="M10 10c18 0 30 12 30 30"/><path d="M10 10c0 18 12 30 30 30"/>
+  <path d="M22 22c6-8 18-8 22 0-8 2-14 6-16 14-8-4-10-10-6-14Z"/><circle cx="48" cy="8" r="2"/><circle cx="8" cy="48" r="2"/><circle cx="56" cy="8" r="1.2"/><circle cx="8" cy="56" r="1.2"/></g></svg>
+<svg class="corner tr" id="cornerR" viewBox="0 0 88 88" aria-hidden="true"><g fill="none" stroke="#E8B54A" stroke-width="1.2" stroke-linecap="round">
+  <path d="M4 4h40M4 4v40"/><path d="M10 10c18 0 30 12 30 30"/><path d="M10 10c0 18 12 30 30 30"/>
+  <path d="M22 22c6-8 18-8 22 0-8 2-14 6-16 14-8-4-10-10-6-14Z"/><circle cx="48" cy="8" r="2"/><circle cx="8" cy="48" r="2"/><circle cx="56" cy="8" r="1.2"/><circle cx="8" cy="56" r="1.2"/></g></svg>
+
+<div class="decor" aria-hidden="true">
+  <img class="d-corner l" alt="" data-art="corner"><img class="d-corner r" alt="" data-art="corner">
+  <div class="d-hang"><span class="str"></span><img alt="" data-art="lantern"></div>
+  <img class="d-lantern" alt="" data-art="lantern">
+  <img class="d-thali" alt="" data-art="thali">
+</div>
+<nav class="dots" id="dots" aria-label="Progress"></nav>
+<button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
+<canvas id="petals" class="layer" aria-hidden="true"></canvas>
+
+<main>
+  <!-- 0. Opening -->
+  <section class="scene center" data-scene="open">
+    <p class="for">For</p>
+    <h1 class="name" tabindex="-1" data-to>Priya</h1>
+    <p class="sub">Tonight, the moon has a message for you.</p>
+    <button class="btn" id="beginBtn">Tap to begin</button>
+    <p class="made">Turn your sound on</p>
+  </section>
+
+  <!-- 1. Moonrise + channi -->
+  <section class="scene" data-scene="moon" hidden>
+    <h2 tabindex="-1" id="moonTitle">The wait is almost over…</h2>
+    <p class="sub" id="moonSub">&nbsp;</p>
+    <div class="raise">
+      <button class="channi" id="channi" aria-label="Raise the channi" hidden>
+        <span class="view"><span class="vmoon"></span><span class="vphoto vph" id="vph" data-to>Priya</span></span>
+        <svg class="rim" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <pattern id="net" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <path d="M0 0H7M0 0V7" stroke="#E8B54A" stroke-width=".9" opacity=".75"/>
+            </pattern>
+            <clipPath id="win"><circle cx="100" cy="100" r="80"/></clipPath>
+          </defs>
+          <rect class="mesh" x="20" y="20" width="160" height="160" fill="url(#net)" clip-path="url(#win)"/>
+          <g class="ringvec">
+          <circle cx="100" cy="100" r="86" fill="none" stroke="#B98A2C" stroke-width="12"/>
+          <circle cx="100" cy="100" r="86" fill="none" stroke="#E8B54A" stroke-width="7"/>
+          <circle cx="100" cy="100" r="92" fill="none" stroke="#F3D58E" stroke-width="1.2" stroke-dasharray="2 5"/>
+          <g id="beads" fill="#F3D58E"></g>
+          <g fill="#8E1B3A"><circle cx="100" cy="14" r="5"/><circle cx="186" cy="100" r="5"/><circle cx="100" cy="186" r="5"/><circle cx="14" cy="100" r="5"/></g>
+          </g>
+        </svg>
+        <img class="ring-art" alt="" data-art="channi">
+      </button>
+      <div class="hint" id="hint" hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        <span>Drag the channi up to the moon</span>
+      </div>
+      <div class="ctl">
+        <button class="btn ghost" id="raiseBtn" hidden>Raise it for me</button>
+        <button class="btn" id="toDiyas" style="visibility:hidden" data-next>Light the diyas</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Diyas -->
+  <section class="scene center" data-scene="diyas" hidden>
+    <h2 tabindex="-1">A diya for every reason</h2>
+    <p class="sub">Tap each diya to light it.</p>
+    <div class="note" aria-live="polite"><p id="noteText">&nbsp;</p></div>
+    <div class="altar">
+      <div class="diyas" id="diyas"></div>
+      <div class="cloth" aria-hidden="true"></div>
+    </div>
+    <p class="count" id="diyaCount"></p>
+    <button class="btn" id="toNext2" data-next hidden>See our moments</button>
+  </section>
+
+  <!-- 3. Memories -->
+  <section class="scene center" data-scene="photos" hidden>
+    <h2 tabindex="-1">Our moments</h2>
+    <p class="sub" id="swipeHint">Swipe to see them all.</p>
+    <div class="strip" id="strip"></div>
+    <div class="dots2" id="dots2" aria-hidden="true"></div>
+    <button class="btn" data-next>Read my letter</button>
+  </section>
+
+  <!-- 4. Letter -->
+  <section class="scene center" data-scene="letter" hidden>
+    <h2 tabindex="-1" class="sr">A letter for you</h2>
+    <article class="scroll" id="letter">
+      <svg class="orn a" viewBox="0 0 46 46" aria-hidden="true"><g fill="none" stroke="#8E1B3A" stroke-width="1.1"><path d="M6 6c14 0 24 10 24 24"/><path d="M6 6c0 14 10 24 24 24"/><path d="M14 14c4-5 12-5 15 0-5 1-9 4-10 9-5-3-7-6-5-9Z" fill="#E8B54A" fill-opacity=".35"/></g></svg>
+      <svg class="orn b" viewBox="0 0 46 46" aria-hidden="true"><g fill="none" stroke="#8E1B3A" stroke-width="1.1"><path d="M6 6c14 0 24 10 24 24"/><path d="M6 6c0 14 10 24 24 24"/><path d="M14 14c4-5 12-5 15 0-5 1-9 4-10 9-5-3-7-6-5-9Z" fill="#E8B54A" fill-opacity=".35"/></g></svg>
+      <svg class="orn c" viewBox="0 0 46 46" aria-hidden="true"><g fill="none" stroke="#8E1B3A" stroke-width="1.1"><path d="M6 6c14 0 24 10 24 24"/><path d="M6 6c0 14 10 24 24 24"/><path d="M14 14c4-5 12-5 15 0-5 1-9 4-10 9-5-3-7-6-5-9Z" fill="#E8B54A" fill-opacity=".35"/></g></svg>
+      <svg class="orn d" viewBox="0 0 46 46" aria-hidden="true"><g fill="none" stroke="#8E1B3A" stroke-width="1.1"><path d="M6 6c14 0 24 10 24 24"/><path d="M6 6c0 14 10 24 24 24"/><path d="M14 14c4-5 12-5 15 0-5 1-9 4-10 9-5-3-7-6-5-9Z" fill="#E8B54A" fill-opacity=".35"/></g></svg>
+      <div id="letterBody"></div>
+    </article>
+    <button class="btn" id="afterLetter" data-next>One last question</button>
+  </section>
+
+  <!-- 5. Question -->
+  <section class="scene center" data-scene="ask" hidden>
+    <h2 tabindex="-1" id="question"></h2>
+    <div class="ask">
+      <button class="btn" data-yes>Yes</button>
+      <button class="btn ghost" data-yes>Always yes</button>
+    </div>
+  </section>
+
+  <!-- 6. Finale -->
+  <section class="scene center" data-scene="finale" hidden>
+    <h1 tabindex="-1">Happy Karwa Chauth</h1>
+    <p class="name" style="font-size:clamp(2.4rem,calc(11 * var(--vw)),3.2rem)" data-to>Priya</p>
+    <p class="sub msg" id="finaleMsg"></p>
+    <p class="sub msg" id="finaleNum" hidden></p>
+    <button class="btn ghost" id="replay">Watch again</button>
+    <p class="made">Made with love on <a href="https://tinysurprise-co.github.io/" target="_blank" rel="noopener">Tiny Surprise Co</a></p>
+  </section>
+</main>
+
+</div><!-- /stage -->
+<script>
+/* ===== Backend: must be the SAME web app URL used in /birthday-cake/ and /create/ ===== */
+const API_URL = "https://script.google.com/macros/s/AKfycbzvhIqDkLH6nIPGvZLbtg2I5NbkB5FsZstcxQZAr7p7UdgQSN5Xq1dnOReBZgEbRMjD/exec";
+
+/* ===== Painted artwork (files in /karwa-chauth/img/). Missing files fall back to the drawn versions. ===== */
+const ART = { bg:"img/bg.webp", bg2:"img/bg2.webp", moon:"img/moon.webp", channi:"img/channi.webp", diya:"img/diya.webp",
+  frame:"img/frame.webp", thali:"img/thali.webp", lantern:"img/lantern.webp", cloth:"img/cloth.webp",
+  card:"img/card.webp", scroll:"img/scroll.webp", corner:"img/corner.webp" };
+const ART_OK = {};
+function loadArt(){
+  return Promise.all(Object.entries(ART).map(([k,src]) => new Promise(res => {
+    const im = new Image();
+    im.onload = () => { ART_OK[k] = true; res(); };
+    im.onerror = () => res();
+    im.src = src;
+  }))).then(() => {
+    if (ART_OK.bg) document.getElementById("bg").style.backgroundImage = `url(${ART.bg})`;
+    if (ART_OK.bg2) document.getElementById("bg2").style.backgroundImage = `url(${ART.bg2})`;
+    ["cloth","card","scroll"].forEach(k => ART_OK[k] && document.documentElement.style.setProperty(`--${k}-img`, `url(${ART[k]})`));
+    document.querySelectorAll("img[data-art]").forEach(im => { if (ART_OK[im.dataset.art]) im.src = ART[im.dataset.art]; });
+    if (ART_OK.moon) document.documentElement.style.setProperty("--moon-img", `url(${ART.moon})`);
+    Object.keys(ART_OK).forEach(k => document.body.classList.add("art-" + k));
+  });
+}
+
+/* Demo content (no ?id). Same fields every design uses. */
+const DEMO = {
+  to: "Priya", from: "Rohan", number: "3",
+  photos: [
+    { src: "", caption: "The night we met" },
+    { src: "", caption: "Our first trip together" },
+    { src: "", caption: "My favourite view" }
+  ],
+  reasons: [
+    "You make every wait worth it",
+    "Your laugh fixes my worst days",
+    "You remember the little things",
+    "Home is wherever you are",
+    "You believe in me, always"
+  ],
+  letter: [
+    "Priya,",
+    "Every year I watch you wait for the moon, and every year I think the same thing: I'm the lucky one.",
+    "Thank you for the patience, the prayers, and the hundred small ways you look after us.",
+    "Tonight the moon gets your attention for a minute. The rest of my life is yours."
+  ],
+  question: "Dinner on the terrace after the moon comes out?",
+  yesReply: "It's a date. I've already got your favourite sweets."
+};
+
+const STAGE = document.getElementById("stage");
+const W = () => STAGE.clientWidth, H = () => STAGE.clientHeight;
+const qs = new URLSearchParams(location.search);
+const id = (qs.get("id") || "").trim();
+const isPreview = qs.has("preview");
+const isAuto = qs.has("autoplay");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let C = DEMO;
+
+/* ---------- starry sky ---------- */
+const sky = $("#sky"), sx = sky.getContext("2d");
+let stars = [];
+function sizeCanvas(cv, ctx){ const r = Math.min(devicePixelRatio || 1, 2); cv.width = W() * r; cv.height = H() * r; ctx.setTransform(r,0,0,r,0,0); }
+function makeStars(){
+  sizeCanvas(sky, sx);
+  const n = Math.round(W() * H() / 3800);
+  stars = Array.from({length:n}, () => ({ x: Math.random()*W(), y: Math.random()*H()*.78,
+    r: Math.random()*1.3 + .25, p: Math.random()*Math.PI*2, s: .6 + Math.random()*1.6 }));
+}
+function drawSky(t){
+  sx.clearRect(0,0,W(),H());
+  for (const st of stars){
+    const a = reduce ? .7 : .35 + .65 * (0.5 + 0.5*Math.sin(st.p + t/1000*st.s));
+    sx.globalAlpha = a; sx.fillStyle = st.r > 1.2 ? "#F3D58E" : "#FFFFFF";
+    sx.beginPath(); sx.arc(st.x, st.y, st.r, 0, 6.283); sx.fill();
+  }
+  sx.globalAlpha = 1;
+  if (!reduce) requestAnimationFrame(drawSky);
+}
+makeStars(); requestAnimationFrame(drawSky);
+addEventListener("resize", () => { makeStars(); sizeCanvas(pc, px); if (reduce) drawSky(0); });
+
+/* ---------- marigold petals ---------- */
+const pc = $("#petals"), px = pc.getContext("2d");
+sizeCanvas(pc, px);
+let petals = [], petalRun = false, petalUntil = 0;
+const PCOL = ["#F59E1B","#FFB627","#F7C948","#E8457A","#FF8C1A"];
+function rainPetals(ms){
+  if (reduce) return;
+  petalUntil = performance.now() + ms;
+  if (!petalRun){ petalRun = true; requestAnimationFrame(petalTick); }
+}
+function petalTick(now){
+  if (now < petalUntil && petals.length < 110) for (let i=0;i<2;i++) petals.push({
+    x: Math.random()*W(), y: -12, vx: (Math.random()-.5)*.6, vy: .9 + Math.random()*1.4,
+    r: Math.random()*6.283, vr: (Math.random()-.5)*.08, w: 5 + Math.random()*5, h: 3 + Math.random()*3,
+    c: PCOL[(Math.random()*PCOL.length)|0], sw: Math.random()*6.283 });
+  px.clearRect(0,0,W(),H());
+  petals.forEach(p => {
+    p.sw += .03; p.x += p.vx + Math.sin(p.sw)*.6; p.y += p.vy; p.r += p.vr;
+    px.save(); px.translate(p.x,p.y); px.rotate(p.r); px.fillStyle = p.c;
+    px.beginPath(); px.ellipse(0,0,p.w,p.h,0,0,6.283); px.fill(); px.restore();
+  });
+  petals = petals.filter(p => p.y < H() + 20);
+  if (petals.length || now < petalUntil) requestAnimationFrame(petalTick);
+  else { petalRun = false; px.clearRect(0,0,W(),H()); }
+}
+
+/* ---------- music: soft plucked melody + drone, made in code (no audio files) ---------- */
+let actx, master, muted = false, tuneT, droneNodes = [];
+function ensureAudio(){
+  if (isAuto) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!actx){ actx = new AC(); master = actx.createGain(); master.gain.value = .2; master.connect(actx.destination); }
+  if (actx.state === "suspended") actx.resume();
+}
+function pluck(freq, t, dur, vol = .5){
+  [[freq,"triangle",vol],[freq*2.005,"sine",vol*.22],[freq*3,"sine",vol*.06]].forEach(([f,type,v]) => {
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0008,t+dur*2.2);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t+dur*2.3);
+  });
+}
+function drone(){
+  if (!actx || droneNodes.length) return;
+  [146.83, 220].forEach((f,i) => {           // Sa and Pa (D, A)
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = "sine"; o.frequency.value = f; g.gain.value = 0;
+    g.gain.linearRampToValueAtTime(i ? .035 : .05, actx.currentTime + 3);
+    o.connect(g); g.connect(master); o.start(); droneNodes.push(o);
+  });
+}
+/* raag-Yaman flavoured line in D: Sa Re Ga Ma# Pa Dha Ni */
+const N = {S:293.66,R:329.63,G:369.99,M:415.30,P:440,D:493.88,Ni:554.37,S2:587.33,R2:659.25,G2:739.99};
+const TUNE = [["Ni",.5],["R",.5],["G",1],["M",.5],["G",.5],["R",1],["S",2],
+  ["G",.5],["M",.5],["P",1],["D",.5],["P",.5],["M",.5],["G",.5],["R",2],
+  ["P",.5],["D",.5],["Ni",.5],["S2",1.5],["Ni",.5],["D",.5],["P",.5],["M",.5],["G",.5],["R",.5],["G",1],["S",3]];
+function playTune(){
+  if (!actx) return;
+  const beat = .5; let t = actx.currentTime + .15;
+  TUNE.forEach(([n,d]) => { pluck(N[n], t, Math.max(beat*d,.6)); t += beat*d; });
+  const total = TUNE.reduce((a,[,d]) => a+d, 0) * beat;
+  tuneT = setTimeout(playTune, (total + 1.5) * 1000);
+}
+function chime(i){ if (!actx) return; const t = actx.currentTime; pluck([N.S2,N.R2,N.G2,N.Ni,N.P][i%5], t, .9, .35); pluck([N.S2,N.R2,N.G2,N.Ni,N.P][i%5]*2, t+.06, .7, .12); }
+$("#muteBtn").addEventListener("click", e => {
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .2;
+  e.currentTarget.setAttribute("aria-pressed", muted);
+  e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+  e.currentTarget.textContent = muted ? "✕" : "♪";
+});
+
+/* ---------- scenes ---------- */
+const scenes = $$("[data-scene]");
+let flow = [], current = 0;
+function sceneEl(name){ return scenes.find(s => s.dataset.scene === name); }
+function go(name){
+  const idx = flow.indexOf(name); if (idx < 0) return;
+  current = idx;
+  document.body.dataset.scene = name;
+  scenes.forEach(s => s.hidden = s.dataset.scene !== name);
+  const dots = $("#dots"); [...dots.children].forEach((d,i) => d.classList.toggle("on", i === idx));
+  dots.setAttribute("aria-label", `Step ${idx+1} of ${flow.length}`);
+  if (!isAuto){ STAGE.querySelector("main").scrollTo(0,0); const h = sceneEl(name).querySelector("h1,h2"); if (h) h.focus({preventScroll:true}); }
+  onEnter[name] && onEnter[name]();
+}
+function next(){ go(flow[current + 1]); }
+$$("[data-next]").forEach(b => b.addEventListener("click", next));
+
+const moon = $("#moon"), roofs = $("#roofs");
+const onEnter = {
+  open(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); },
+  moon(){ moonScene(); },
+  diyas(){ moon.classList.remove("away"); moon.classList.add("up","small"); roofs.classList.add("dim"); },
+  letter(){ $("#letter").classList.add("reveal"); },
+  finale(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); rainPetals(9000); }
+};
+
+/* ---------- 1. moonrise + channi ---------- */
+const channi = $("#channi");
+(function beads(){ const g = $("#beads"); for (let i=0;i<24;i++){ const a = i/24*6.283; const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+  c.setAttribute("cx", 100 + 92*Math.cos(a)); c.setAttribute("cy", 100 + 92*Math.sin(a)); c.setAttribute("r", i%2 ? 1.8 : 2.8); g.appendChild(c); } })();
+let raised = false, moonReady = false;
+async function moonScene(){
+  ensureAudio(); drone();
+  ["cornerL","cornerR"].forEach(i => $("#"+i).classList.remove("show"));
+  requestAnimationFrame(() => moon.classList.add("up"));
+  await sleep(reduce ? 50 : 3200);
+  moonReady = true;
+  $("#moonTitle").textContent = "There it is.";
+  $("#moonSub").textContent = "Now raise the channi, the way it's done.";
+  channi.hidden = false; channi.classList.add("fade-in");
+  if (!isAuto){ $("#hint").hidden = false; $("#raiseBtn").hidden = false; }
+}
+function alignDelta(){
+  const m = moon.getBoundingClientRect(), c = channi.getBoundingClientRect();
+  const tf = getComputedStyle(channi).transform;
+  const cur = tf && tf !== "none" ? new DOMMatrix(tf).m42 : 0;
+  return (m.top + m.height/2) - (c.top + c.height/2 - cur);
+}
+let dragY0 = 0, delta = 0, dragging = false;
+channi.addEventListener("pointerdown", e => {
+  if (raised || !moonReady) return;
+  dragging = true; delta = alignDelta(); dragY0 = e.clientY;
+  channi.classList.add("dragging"); channi.setPointerCapture(e.pointerId); e.preventDefault();
+});
+channi.addEventListener("pointermove", e => {
+  if (!dragging) return;
+  const dy = Math.max(delta, Math.min(0, e.clientY - dragY0));
+  channi.style.transform = `translateY(${dy}px)`;
+  if (dy / delta > .82) finishRaise();
+});
+["pointerup","pointercancel"].forEach(ev => channi.addEventListener(ev, () => {
+  if (!dragging) return; dragging = false; channi.classList.remove("dragging");
+  if (!raised) channi.style.transform = "";
+}));
+channi.addEventListener("click", e => { if (e.detail === 0 && moonReady) finishRaise(); }); // keyboard
+$("#raiseBtn").addEventListener("click", () => moonReady && finishRaise());
+async function finishRaise(){
+  if (raised) return; raised = true; dragging = false;
+  channi.classList.remove("dragging");
+  $("#hint").style.visibility = "hidden"; $("#raiseBtn").style.visibility = "hidden";
+  delta = alignDelta();
+  channi.style.transform = `translateY(${delta}px)`;
+  await sleep(500);
+  channi.classList.add("moonlit"); moon.classList.add("away");
+  $("#moonTitle").textContent = "First, the moon…";
+  $("#moonSub").textContent = "\u00a0";
+  if (actx){ playTune(); $("#muteBtn").hidden = false; }
+  await sleep(reduce ? 50 : 1900);
+  channi.classList.add("revealed");
+  $("#moonTitle").textContent = "…and then, you.";
+  $("#moonSub").textContent = C.from ? `Happy Karwa Chauth, from ${C.from}.` : "Happy Karwa Chauth.";
+  await sleep(reduce ? 50 : 900);
+  $("#toDiyas").style.visibility = "visible"; $("#toDiyas").classList.add("glow-in");
+}
+
+/* ---------- 2. diyas ---------- */
+function diyaSVG(i){
+  return `<svg viewBox="0 0 62 76" aria-hidden="true">
+    <ellipse class="halo" cx="31" cy="30" rx="26" ry="26" fill="url(#halo${i})"/>
+    <defs><radialGradient id="halo${i}"><stop offset="0" stop-color="#FFD27A" stop-opacity=".55"/><stop offset="1" stop-color="#FFD27A" stop-opacity="0"/></radialGradient></defs>
+    <g class="flame-pos"><g class="flame"><path d="M31 18c6 8 7 15 0 22-7-7-6-14 0-22Z" fill="#FF9F1C"/><path d="M31 26c3 4 3.5 8 0 11-3.5-3-3-7 0-11Z" fill="#FFF2B8"/></g></g>
+    <g class="bowl"><path d="M31 40v4" stroke="#3B1A10" stroke-width="1.6"/>
+    <path d="M6 46c4 14 14 20 25 20s21-6 25-20c-8 3-16 4-25 4s-17-1-25-4Z" fill="#B5523B"/>
+    <path d="M6 46c8 3 16 4 25 4s17-1 25-4" fill="none" stroke="#E8B54A" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M14 54c5 4 11 5 17 5s12-1 17-5" fill="none" stroke="#E8B54A" stroke-width="1" stroke-dasharray="1.5 3" opacity=".9"/>
+    <path d="M56 46c3-1 5-3 5-5" fill="none" stroke="#B5523B" stroke-width="3" stroke-linecap="round"/></g>
+  </svg>${ART_OK.diya ? `<img class="art" src="${ART.diya}" alt="">` : ""}`;
+}
+let lit = new Set();
+function buildDiyas(){
+  const wrap = $("#diyas"); wrap.innerHTML = "";
+  const reasons = C.reasons.length ? C.reasons : ["You make every wait worth it"];
+  const n = reasons.length, mid = (n-1)/2;
+  reasons.forEach((r,i) => {
+    const b = document.createElement("button"); b.className = "diya";
+    b.style.setProperty("--y", (-(mid*mid - (i-mid)*(i-mid)) * 3) + "px");
+    b.setAttribute("aria-label", `Light diya ${i+1}`);
+    b.innerHTML = diyaSVG(i);
+    b.addEventListener("click", () => lightDiya(i, b, r));
+    wrap.appendChild(b);
+  });
+  updateCount();
+}
+function lightDiya(i, b, r){
+  b.classList.add("lit"); b.setAttribute("aria-label", r);
+  const p = $("#noteText"); p.textContent = r; p.classList.remove("swap"); void p.offsetWidth; p.classList.add("swap");
+  if (!lit.has(i)){ lit.add(i); chime(i); }
+  updateCount();
+}
+function updateCount(){
+  const n = C.reasons.length || 1;
+  $("#diyaCount").textContent = lit.size >= n ? "All lit." : `${lit.size} of ${n} lit`;
+  if (lit.size >= n){ const b = $("#toNext2"); if (b.hidden){ b.hidden = false; b.classList.add("glow-in"); } }
+}
+
+/* ---------- 3. memories ---------- */
+function buildPhotos(){
+  const strip = $("#strip"), d2 = $("#dots2"); strip.innerHTML = ""; d2.innerHTML = "";
+  C.photos.forEach((ph,i) => {
+    const f = document.createElement("figure"); f.className = "frame";
+    const a = document.createElement("div"); a.className = "arch";
+    if (ph.src){ const img = document.createElement("img"); img.src = ph.src; img.alt = ph.caption || "Photo " + (i+1); img.loading = "lazy"; a.appendChild(img); }
+    else { const d = document.createElement("div"); d.className = "ph"; d.textContent = "Your photo"; a.appendChild(d); }
+    if (ART_OK.frame){ const fr = document.createElement("img"); fr.className = "frame-art"; fr.src = ART.frame; fr.alt = ""; a.appendChild(fr); }
+    f.appendChild(a);
+    if (ph.caption){ const c = document.createElement("figcaption"); c.textContent = ph.caption; f.appendChild(c); }
+    strip.appendChild(f); d2.appendChild(document.createElement("span"));
+  });
+  $("#swipeHint").hidden = C.photos.length < 2;
+  const mark = () => { const w = strip.firstElementChild ? strip.firstElementChild.offsetWidth + 18 : 1;
+    const k = Math.round(strip.scrollLeft / w); [...d2.children].forEach((s,i) => s.classList.toggle("on", i === k)); };
+  strip.addEventListener("scroll", mark, {passive:true}); mark();
+}
+
+/* ---------- fill content ---------- */
+function apply(d){
+  const s = v => String(v == null ? "" : v).trim();
+  C = {
+    to: s(d.to) || "you", from: s(d.from), number: s(d.number),
+    photos: (Array.isArray(d.photos) ? d.photos : []).slice(0,5).map(p => ({ src: s(p && p.src), caption: s(p && p.caption) })),
+    reasons: (Array.isArray(d.reasons) ? d.reasons : []).map(s).filter(Boolean).slice(0,6),
+    letter: (Array.isArray(d.letter) ? d.letter : []).map(s).filter(Boolean),
+    question: s(d.question), yesReply: s(d.yesReply)
+  };
+  document.title = "Happy Karwa Chauth, " + C.to;
+  $$("[data-to]").forEach(el => el.textContent = C.to);
+
+  // channi reveal: first photo, else their name on moonlight
+  const first = C.photos.find(p => p.src);
+  if (first){ const img = document.createElement("img"); img.className = "vphoto"; img.src = first.src; img.alt = first.caption || C.to; $("#vph").replaceWith(img); }
+
+  buildDiyas();
+  const hasPhotos = C.photos.length > 0;
+  if (hasPhotos) buildPhotos();
+
+  const body = $("#letterBody"); body.innerHTML = "";
+  const lines = C.letter.length ? C.letter : [C.to + ",", "Happy Karwa Chauth."];
+  lines.forEach((t,i) => { const p = document.createElement("p"); p.textContent = t; p.style.setProperty("--i", i); body.appendChild(p); });
+  if (C.from){ const sg = document.createElement("p"); sg.className = "sign"; sg.style.whiteSpace = "pre-line";
+    sg.textContent = "Yours, always,\n" + C.from; sg.style.setProperty("--i", lines.length); body.appendChild(sg); }
+
+  $("#question").textContent = C.question;
+  $("#afterLetter").textContent = C.question ? "One last question" : "One more thing";
+  $("#finaleMsg").textContent = C.yesReply && C.question ? C.yesReply : (C.from ? `With all my love, ${C.from}` : "With all my love");
+  const n = parseInt(C.number, 10);
+  if (n > 0){ $("#finaleNum").hidden = false; $("#finaleNum").textContent = n === 1 ? "Our first Karwa Chauth together, and my favourite moon so far." : `${n} Karwa Chauths together, and I'd wait for every one again.`; }
+
+  flow = ["open","moon","diyas"].concat(hasPhotos ? ["photos"] : [], ["letter"], C.question ? ["ask"] : [], ["finale"]);
+  const dots = $("#dots"); dots.innerHTML = ""; flow.forEach(() => dots.appendChild(document.createElement("span")));
+}
+
+$("#beginBtn").addEventListener("click", () => { ensureAudio(); next(); });
+$$("[data-yes]").forEach(b => b.addEventListener("click", () => go("finale")));
+$("#replay").addEventListener("click", () => location.reload());
+
+/* ---------- preview watermark (editor only) ---------- */
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(243,213,142,0.30)'>PREVIEW · Tiny Surprise Co</text></svg>";
+  const wm = document.createElement("div"); wm.setAttribute("aria-hidden","true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(94,15,39,.92);color:#FFF4D6;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px calc(9px + env(safe-area-inset-bottom,0px));letter-spacing:.04em";
+  wm.style.position = band.style.position = "absolute"; STAGE.append(wm, band);
+}
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => {
+      if (e.origin !== location.origin) return;
+      if (e.data && e.data.type === "tsc-data") res(e.data.data);
+    });
+    parent.postMessage({ type: "tsc-ready" }, location.origin);
+  });
+}
+function showError(msg){
+  scenes.forEach(s => s.hidden = s.dataset.scene !== "open");
+  const s = sceneEl("open");
+  s.innerHTML = `<h2 tabindex="-1">This surprise didn't load</h2><p class="sub"></p><a class="btn ghost" href="https://www.instagram.com/tinysurprise_co/">Message @tinysurprise_co</a>`;
+  s.querySelector("p").textContent = msg;
+}
+
+/* ---------- homepage showcase: silent, loops, never steals focus ---------- */
+async function autoplay(){
+  await sleep(1600); next();
+  await sleep(reduce ? 400 : 3600);
+  await finishRaise(); await sleep(2200);
+  next(); await sleep(700);
+  for (const [i,b] of $$(".diya").entries()){ lightDiya(i, b, C.reasons[i] || ""); await sleep(650); }
+  await sleep(1200);
+  if (flow.includes("photos")){ next(); await sleep(1600); const st = $("#strip"); if (st.children[1]) st.children[1].scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); await sleep(1800); }
+  next(); await sleep(4200);
+  go("finale"); await sleep(5200);
+  location.reload();
+}
+
+const artReady = Promise.race([loadArt(), sleep(4000)]);   // never wait more than 4 s for artwork
+async function start(){
+  try {
+    let d = DEMO;
+    if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
+    else if (id){
+      const r = await fetch(API_URL + "?id=" + encodeURIComponent(id));
+      d = await r.json();
+      if (!d || d.error) throw new Error(d && d.error === "not found" ? "This link isn't active. Check that you copied the full link." : "Something went wrong loading it.");
+    }
+    await artReady;
+    apply(d);
+    go("open");
+    if (isAuto) autoplay();
+  } catch (err){
+    showError(err && err.message && !/fetch|JSON|network/i.test(err.message) ? err.message : "Check your internet connection and open the link again.");
+  }
+}
+start();
+</script>
+</body>
+</html>
