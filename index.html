@@ -37,7 +37,7 @@ body{background:linear-gradient(180deg,#FFF5F8 0%,#FDEFF4 45%,#F6EEFB 100%);over
 .glass{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--edge);box-shadow:var(--shadow)}
 
 /* header */
-header.bar{position:sticky;top:10px;z-index:20;max-width:1120px;margin:10px auto 0;padding:10px 14px 10px 20px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+header.bar{position:sticky;top:10px;z-index:20;max-width:1240px;width:calc(100% - 32px);margin:10px auto 0;padding:10px 14px 10px 20px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .bar .logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;white-space:nowrap}
 .bar .logo img{width:34px;height:34px;border-radius:10px}
 .bar nav{display:flex;align-items:center;gap:6px}
@@ -47,19 +47,20 @@ header.bar{position:sticky;top:10px;z-index:20;max-width:1120px;margin:10px auto
 .bar .cta-s:hover{background:#3a2d7a!important}
 @media(max-width:720px){.bar .hide-m{display:none}.bar .logo span{font-size:1.1rem}}
 
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
 section{padding:56px 0}
 h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .kicker{display:inline-block;font-weight:700;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--berry-dark);margin-bottom:8px}
 .sec-sub{color:var(--muted);max-width:52ch;margin:0 0 28px}
 
 /* hero */
-.hero{display:grid;gap:40px;align-items:center;padding:48px 0 30px}
-@media(min-width:960px){.hero{grid-template-columns:1fr 1.05fr}}
+.hero{display:grid;gap:48px;align-items:center;padding:56px 0 30px;text-align:left}
+.hero p{margin:0 0 28px;max-width:44ch}
+@media(min-width:1000px){.hero{grid-template-columns:1.05fr 1fr}}
 .pill{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600;font-size:.95rem}
 .pill .dot{width:9px;height:9px;border-radius:50%;background:var(--berry);box-shadow:0 0 0 0 rgba(232,69,122,.6);animation:ping 1.8s infinite}
 @keyframes ping{70%{box-shadow:0 0 0 10px rgba(232,69,122,0)}100%{box-shadow:0 0 0 0 rgba(232,69,122,0)}}
-.hero h1{font-size:clamp(2.6rem,7.5vw,4.4rem);line-height:1.02;margin:18px 0 18px}
+.hero h1{font-size:clamp(2.6rem,5.6vw,4.8rem);line-height:1.02;margin:18px 0 18px}
 .hero h1 em{font-style:normal;color:var(--berry);position:relative;white-space:nowrap}
 .hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.22em;background:rgba(255,200,87,.6);z-index:-1;border-radius:6px}
 .lead{color:#4B3F7E;font-size:1.15rem;max-width:40ch;margin:0 0 28px}
@@ -70,17 +71,17 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .facts b{color:var(--ink)}
 
 /* showcase stage */
-.stage{position:relative;border-radius:36px;padding:34px 10px 26px;min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;border-radius:36px;padding:40px 10px 30px;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .ph{position:relative;background:#1B1640;border-radius:34px;padding:8px;box-shadow:0 20px 40px rgba(27,22,64,.3)}
 .ph .scr{position:relative;overflow:hidden;border-radius:27px;background:#1B1640}
-.ph.main{width:236px;z-index:3}
-.ph.main .scr{height:470px}
+.ph.main{width:286px;z-index:3}
+.ph.main .scr{height:570px}
 .ph.main iframe{position:absolute;top:0;left:0;width:375px;border:0;transform-origin:0 0;pointer-events:none}
-.ph.side{width:180px;position:absolute;z-index:2}
-.ph.side .scr{height:356px;display:flex;align-items:center;justify-content:center}
+.ph.side{width:210px;position:absolute;z-index:2}
+.ph.side .scr{height:420px;display:flex;align-items:center;justify-content:center}
 .ph.side svg{width:78%}
-.ph.left{left:4%;transform:rotate(-9deg) translateY(16px);animation:bobL 6s ease-in-out infinite}
-.ph.right{right:4%;transform:rotate(9deg) translateY(16px);animation:bobR 7s ease-in-out infinite}
+.ph.left{left:3%;transform:rotate(-9deg) translateY(16px);animation:bobL 6s ease-in-out infinite}
+.ph.right{right:3%;transform:rotate(9deg) translateY(16px);animation:bobR 7s ease-in-out infinite}
 @keyframes bobL{50%{transform:rotate(-7deg) translateY(4px)}}
 @keyframes bobR{50%{transform:rotate(7deg) translateY(4px)}}
 .chip{position:absolute;z-index:4;border-radius:999px;padding:7px 14px;font-weight:700;font-size:.82rem;color:var(--ink);white-space:nowrap}
@@ -91,6 +92,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .float{position:absolute;z-index:4;animation:floaty 5s ease-in-out infinite}
 @keyframes floaty{50%{transform:translateY(-10px)}}
 .try{position:absolute;z-index:6;right:16px;bottom:16px;border-radius:999px;padding:9px 16px;font-weight:700;font-size:.85rem;color:var(--ink);text-decoration:none}
+@media(max-width:999px) and (min-width:621px){.stage{min-height:600px}}
 @media(max-width:620px){
   .stage{min-height:460px}
   .ph.main{width:204px}.ph.main .scr{height:404px}
@@ -124,8 +126,10 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .step::before{content:counter(s);font-family:var(--display);font-size:1.6rem;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--butter);margin-bottom:12px}
 .step:nth-child(2)::before{background:var(--mint)}.step:nth-child(3)::before{background:#F7A8C2}
 .step h3{margin:0 0 4px;font-size:1.25rem}.step p{margin:0;color:var(--muted)}
-.moments{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
-.mo{border-radius:20px;padding:18px;text-align:center}
+.moments{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.moments{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.moments{grid-template-columns:1fr}}
+.mo{border-radius:22px;padding:22px;text-align:left}
 .mo .em{font-size:2rem;line-height:1;margin-bottom:8px}
 .mo b{display:block;margin-bottom:2px}.mo span{color:var(--muted);font-size:.92rem}
 details{border-radius:18px;padding:16px 20px;margin-bottom:10px}
@@ -204,16 +208,16 @@ footer{border-top:0}
   </section>
 
   <section>
-    <span class="kicker reveal">What they'll experience</span>
+    <span class="kicker reveal">In every design</span>
     <h2 class="reveal">Not a card. A moment.</h2>
-    <p class="sec-sub reveal">Here's what happens when they open the Birthday Cake website.</p>
+    <p class="sec-sub reveal">Each design tells your story its own way, with its own little interactions. These are always yours to fill in.</p>
     <div class="moments">
-      <div class="mo glass reveal"><div class="em">🕯️</div><b>Make a wish</b><span>They light the candles and blow them out</span></div>
-      <div class="mo glass reveal" style="--d:.06s"><div class="em">🎶</div><b>Lights on</b><span>Confetti and a birthday tune play</span></div>
-      <div class="mo glass reveal" style="--d:.12s"><div class="em">📸</div><b>Your photos</b><span>A stack of polaroids with your captions</span></div>
-      <div class="mo glass reveal" style="--d:.18s"><div class="em">💌</div><b>Little notes</b><span>Cards that flip to reveal what you love</span></div>
-      <div class="mo glass reveal" style="--d:.24s"><div class="em">✍️</div><b>Your letter</b><span>Written out line by line, just for them</span></div>
-      <div class="mo glass reveal" style="--d:.30s"><div class="em">🙈</div><b>The question</b><span>A "No" button that runs away</span></div>
+      <div class="mo glass reveal"><div class="em">📸</div><b>Your photos</b><span>Up to 5 of your favourite pictures, with captions</span></div>
+      <div class="mo glass reveal" style="--d:.06s"><div class="em">💌</div><b>Little notes</b><span>Up to 6 things you love about them</span></div>
+      <div class="mo glass reveal" style="--d:.12s"><div class="em">✍️</div><b>Your letter</b><span>Written out line by line, just for them</span></div>
+      <div class="mo glass reveal" style="--d:.18s"><div class="em">✨</div><b>Interactive moments</b><span>Every design has its own playful surprises to tap through</span></div>
+      <div class="mo glass reveal" style="--d:.24s"><div class="em">🙈</div><b>A final question</b><span>Ask them anything, and let them answer</span></div>
+      <div class="mo glass reveal" style="--d:.30s"><div class="em">🔗</div><b>A private link</b><span>Opens on any phone, no app needed</span></div>
     </div>
   </section>
 
