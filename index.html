@@ -26,38 +26,7 @@
 <link rel="stylesheet" href="/style.css">
 <style>
 :root{--glass:rgba(255,255,255,.55);--glass-strong:rgba(255,255,255,.72);--edge:rgba(255,255,255,.75);--shadow:0 12px 36px rgba(42,31,92,.10)}
-body{background:linear-gradient(180deg,#FFF5F8 0%,#FDEFF4 45%,#F6EEFB 100%);overflow-x:hidden}
-/* soft colour blobs behind the glass */
-.blobs{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
-.blobs i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:drift 22s ease-in-out infinite alternate}
-.blobs i:nth-child(1){width:46vmax;height:46vmax;background:#F7A8C2;top:-14vmax;left:-12vmax}
-.blobs i:nth-child(2){width:36vmax;height:36vmax;background:#FFE3A3;top:28vh;right:-14vmax;animation-delay:-7s}
-.blobs i:nth-child(3){width:38vmax;height:38vmax;background:#BFE9DA;bottom:-18vmax;left:18vw;animation-delay:-13s}
-@keyframes drift{to{transform:translate(4vmax,3vmax) scale(1.08)}}
-.glass{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--edge);box-shadow:var(--shadow)}
 
-/* header */
-header.bar{position:sticky;top:10px;z-index:20;max-width:1240px;width:calc(100% - 32px);margin:10px auto 0;padding:10px 14px 10px 20px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.bar .logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;white-space:nowrap}
-.bar .logo img{width:34px;height:34px;border-radius:10px}
-.bar nav{display:flex;align-items:center;gap:6px}
-.bar nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:8px 12px;border-radius:999px;white-space:nowrap}
-.bar nav a:hover{background:rgba(255,255,255,.7)}
-.bar .cta-s{background:var(--ink);color:#fff!important;padding:10px 18px}
-.bar .cta-s:hover{background:#3a2d7a!important}
-.menu-btn{display:none;width:44px;height:44px;border:0;border-radius:50%;background:var(--ink);color:#fff;cursor:pointer;align-items:center;justify-content:center;flex:none}
-.menu-btn svg{width:22px;height:22px}
-.menu-btn:focus-visible{outline:3px solid var(--mint);outline-offset:3px}
-@media(max-width:720px){
-  .bar .logo span{font-size:1.1rem}
-  .menu-btn{display:inline-flex}
-  .bar nav{display:none;position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;align-items:stretch;gap:4px;padding:10px;border-radius:24px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--edge);box-shadow:var(--shadow)}
-  .bar.open nav{display:flex}
-  .bar nav a{padding:14px 16px;font-size:1.05rem}
-  .bar .cta-s{text-align:center;margin-top:4px}
-}
-
-.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
 section{padding:56px 0}
 h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .kicker{display:inline-block;font-weight:700;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--berry-dark);margin-bottom:8px}
@@ -75,8 +44,6 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.22em;background:rgba(255,200,87,.6);z-index:-1;border-radius:6px}
 .lead{color:#4B3F7E;font-size:1.15rem;max-width:40ch;margin:0 0 28px}
 .cta{display:flex;gap:12px;flex-wrap:wrap}
-.btn.dark{background:var(--ink);box-shadow:0 5px 0 #15103A}
-.btn.glassy{background:var(--glass-strong);color:var(--ink);box-shadow:0 5px 0 rgba(42,31,92,.15);border:1px solid var(--edge)}
 .facts{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px;padding-top:22px;border-top:1px solid rgba(42,31,92,.12);color:#4B3F7E;font-weight:600}
 .facts b{color:var(--ink)}
 
@@ -144,28 +111,9 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .mo{border-radius:22px;padding:22px;text-align:left}
 .mo .em{font-size:2rem;line-height:1;margin-bottom:8px}
 .mo b{display:block;margin-bottom:2px}.mo span{color:var(--muted);font-size:.92rem}
-details{border-radius:18px;padding:16px 20px;margin-bottom:10px}
-summary{cursor:pointer;font-weight:700}
-details p{margin:.6em 0 0;color:var(--muted)}
 .igbox{border-radius:30px;padding:40px 24px;text-align:center;background:linear-gradient(135deg,#2A1F5C,#4B2E7E);color:#fff;box-shadow:0 20px 50px rgba(42,31,92,.3)}
 .igbox h2{color:#fff}.igbox p{color:#E1D9FA;margin:0 0 20px}
 .igbox .btn{background:var(--butter);color:var(--ink);box-shadow:0 5px 0 #C9962E}
-footer{border-top:0}
-
-/* mobile menu */
-const bar = document.querySelector("header.bar"), menuBtn = document.getElementById("menuBtn");
-const ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
-const ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-function setMenu(open){
-  bar.classList.toggle("open", open);
-  menuBtn.setAttribute("aria-expanded", open);
-  menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-  menuBtn.innerHTML = open ? ICON_CLOSE : ICON_OPEN;
-}
-menuBtn.onclick = e => { e.stopPropagation(); setMenu(!bar.classList.contains("open")); };
-document.querySelectorAll("#nav a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-document.addEventListener("click", e => { if (!bar.contains(e.target)) setMenu(false); });
-document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
 
 /* scroll reveal */
 .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
@@ -177,21 +125,7 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(fals
 </style>
 </head>
 <body>
-<div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
-
-<header class="bar glass">
-  <a class="logo" href="/"><img src="/apple-touch-icon.png" alt=""><span>Tiny Surprise Co</span></a>
-  <nav id="nav">
-    <a href="#designs">Designs</a>
-    <a href="#how">How it works</a>
-    <a href="https://instagram.com/tinysurprise_co" target="_blank" rel="noopener">Instagram</a>
-    <a class="cta-s" href="#designs">Create a surprise</a>
-  </nav>
-  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-  </button>
-</header>
-
+<script src="/site.js"></script>
 <main class="wrap">
   <section class="hero">
     <div>
@@ -283,11 +217,6 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(fals
   </section>
 </main>
 
-<footer>
-  <nav><a href="/terms.html">Terms</a><a href="/refund.html">Refunds</a><a href="/privacy.html">Privacy</a><a href="/contact.html">Contact</a></nav>
-  <p>Tiny Surprise Co, operated by Aniket Nandkumar Gurav, Mumbai, India · <a href="mailto:tinysurpriseco.orders@gmail.com">tinysurpriseco.orders@gmail.com</a></p>
-</footer>
-
 <script>
 /* ===== DESIGNS: add one entry per design =====
    status "live" designs play in the hero and get Create/Demo buttons.
@@ -357,21 +286,6 @@ if (liveDesigns.length){
   /* with more than one live design, rotate every 40 seconds */
   if (liveDesigns.length > 1) setInterval(() => { showIdx++; playShowcase(); }, 40000);
 }
-
-/* mobile menu */
-const bar = document.querySelector("header.bar"), menuBtn = document.getElementById("menuBtn");
-const ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
-const ICON_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-function setMenu(open){
-  bar.classList.toggle("open", open);
-  menuBtn.setAttribute("aria-expanded", open);
-  menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-  menuBtn.innerHTML = open ? ICON_CLOSE : ICON_OPEN;
-}
-menuBtn.onclick = e => { e.stopPropagation(); setMenu(!bar.classList.contains("open")); };
-document.querySelectorAll("#nav a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-document.addEventListener("click", e => { if (!bar.contains(e.target)) setMenu(false); });
-document.addEventListener("keydown", e => { if (e.key === "Escape") setMenu(false); });
 
 /* scroll reveal */
 const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
