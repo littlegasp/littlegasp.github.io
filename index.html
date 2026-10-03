@@ -107,7 +107,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .tcard .ic{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
 .tcard h3{font-size:1.2rem;margin:0 0 4px}
 .tcard p{margin:0;color:var(--muted)}
-.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px} @media(max-width:999px){.dgrid{grid-template-columns:repeat(2,1fr)}} @media(max-width:620px){.dgrid{grid-template-columns:1fr}}
 .dcard{border-radius:26px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,box-shadow .3s}
 .dcard:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(42,31,92,.14)}
 .dcard .art{background:#1B1640;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative}
