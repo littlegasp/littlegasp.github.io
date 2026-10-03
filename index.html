@@ -129,12 +129,12 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 <main class="wrap">
   <section class="hero">
     <div>
-      <a class="pill glass reveal" href="/create/?d=birthday-cake"><span class="dot"></span><b>Live now</b> · Birthday Cake →</a>
+      <a class="pill glass reveal" id="livePill" href="#designs"><span class="dot"></span><b>Live now</b> · <span id="liveName">New designs</span> →</a>
       <h1 class="reveal" style="--d:.08s">Surprise websites they'll <em>actually</em> remember.</h1>
       <p class="lead reveal" style="--d:.16s">Your photos, your words and a little magic, turned into an interactive page made just for them. See it before you pay. Get your link instantly.</p>
       <div class="cta reveal" style="--d:.24s">
         <a class="btn dark" href="#designs">Create a surprise →</a>
-        <a class="btn glassy" href="/birthday-cake/" target="_blank" rel="noopener">Try the demo</a>
+        <a class="btn glassy" href="#how">How it works</a>
       </div>
       <div class="facts reveal" style="--d:.32s">
         <span>Ready in <b>5 minutes</b></span><span><b>Live preview</b> before paying</span><span>Link stays live <b>12 months</b></span>
@@ -151,7 +151,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
       <div class="ph side right"><div class="scr" id="sideR"></div><span class="chip soon">Coming soon</span></div>
 
       <span class="chip live glass">A real website, playing on its own</span>
-      <a class="try glass" href="/birthday-cake/" target="_blank" rel="noopener">Tap to try it ↗</a>
+      <a class="try glass" id="tryLink" href="#designs" target="_blank" rel="noopener">Tap to try it ↗</a>
     </div>
   </section>
 
@@ -220,9 +220,10 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 <script>
 /* ===== DESIGNS: add one entry per design =====
    status "live" designs play in the hero and get Create/Demo buttons.
+   featured: true = the design named in the "Live now" pill (use it for your newest/seasonal design).
    Prices must match the editor and the Apps Script. */
 const DESIGNS = [
-  { key: "birthday-cake", name: "Birthday Cake", status: "live", price: 149, regularPrice: 299, offer: "Launch price",
+  { key: "birthday-cake", name: "Birthday Cake", status: "live", featured: true, price: 149, regularPrice: 299, offer: "Launch price",
     text: "Candles, a wish, confetti and a birthday tune, then your photos, notes and letter unfold.",
     demo: "/birthday-cake/", art: "cake" },
   { key: "karwa-chauth", name: "Karwa Chauth Moon", status: "soon",
@@ -272,6 +273,7 @@ function playShowcase(){
   f.src = d.demo + "?autoplay=1"; f.title = d.name + " playing"; f.tabIndex = -1; f.setAttribute("aria-hidden", "true");
   f.loading = "eager";
   mainScr.innerHTML = ""; mainScr.appendChild(f); fitShow();
+  const t = document.getElementById("tryLink"); t.href = d.demo; t.setAttribute("aria-label", "Try the " + d.name + " demo");
 }
 function fitShow(){
   const f = mainScr.querySelector("iframe"); if (!f) return;
@@ -285,6 +287,13 @@ if (liveDesigns.length){
   setTimeout(playShowcase, 700);
   /* with more than one live design, rotate every 40 seconds */
   if (liveDesigns.length > 1) setInterval(() => { showIdx++; playShowcase(); }, 40000);
+}
+
+/* "Live now" pill follows the featured (or first live) design */
+const featured = DESIGNS.find(d => d.featured && d.status === "live") || liveDesigns[0];
+if (featured){
+  document.getElementById("liveName").textContent = featured.name;
+  document.getElementById("livePill").href = "/create/?d=" + encodeURIComponent(featured.key);
 }
 
 /* scroll reveal */
