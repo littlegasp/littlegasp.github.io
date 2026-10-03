@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /create/
+Sitemap: https://tinysurprise-co.github.io/sitemap.xml
