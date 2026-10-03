@@ -395,6 +395,7 @@ document.querySelectorAll("[data-next]").forEach(b => b.addEventListener("click"
 /* ---------- audio: music-box synth ---------- */
 let ctx, master, muted = false;
 function ensureAudio(){
+       if (isAuto) return;   // homepage showcase is always silent
   const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
   if (!ctx){ ctx = new AC(); master = ctx.createGain(); master.gain.value = .22; master.connect(ctx.destination); }
   if (ctx.state === "suspended") ctx.resume();
