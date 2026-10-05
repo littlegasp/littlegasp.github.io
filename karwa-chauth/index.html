@@ -76,6 +76,7 @@ main{position:relative;z-index:5;max-width:440px;margin:0 auto;min-height:calc(1
   padding:calc(calc(8 * var(--vh)) + var(--m) + (var(--c) - var(--m)) / 2 + 26px) 22px 40px}
 .scene.center{justify-content:center;padding-top:calc(calc(8 * var(--vh)) + 96px)}
 .scene.center[data-scene="open"]{padding-top:72px}
+.scene.center[data-scene="photos"]{padding-top:calc(4 * var(--vh) + 84px);padding-bottom:28px;gap:12px}
 .scene[hidden]{display:none}
 h1,h2{font-family:var(--serif);font-weight:600;margin:0;line-height:1.05;color:var(--gold-soft)}
 h1{font-size:clamp(2.6rem,calc(12 * var(--vw)),3.4rem)}
@@ -139,24 +140,31 @@ p{margin:0}
   box-shadow:inset 0 2px 0 var(--gold-deep),inset 0 -2px 0 var(--gold-deep);margin-top:-6px}
 .count{font-size:.92rem;color:#CFC4EE}
 
-/* memories */
-.strip{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;width:calc(100% + 44px);margin:0 -22px;padding:36px 18% 10px;
-  scrollbar-width:none}
-.strip::-webkit-scrollbar{display:none}
-.frame{flex:0 0 82%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;margin:0;
-  animation:sway 5s ease-in-out infinite;transform-origin:50% -30px}
-.frame:nth-child(2n){animation-delay:-2.4s}
-@keyframes sway{0%,100%{transform:rotate(-1.4deg)}50%{transform:rotate(1.4deg)}}
-.arch{position:relative;width:100%;aspect-ratio:3/4;border-radius:50% 50% 10px 10px / 34% 34% 10px 10px;overflow:hidden;
+/* memories: frames hang at different heights, all on one screen */
+.gallery{position:relative;width:calc(100% + 44px);margin:0 -22px;height:320px;flex:none}
+.hang{position:absolute;top:0;padding:0;border:0;background:none;cursor:pointer;transform:translateX(-50%)}
+.hang .sw{position:relative;display:block;height:100%;transform-origin:50% calc(-1 * var(--str,0px));animation:sway 5s ease-in-out infinite}
+.hang:nth-child(2n) .sw{animation-delay:-2.4s}.hang:nth-child(3n) .sw{animation-duration:6s}
+.hang .sw::before{content:"";position:absolute;left:50%;bottom:100%;width:1.5px;height:var(--str,0px);background:linear-gradient(var(--gold-deep),var(--gold))}
+.hang.under .sw::before{display:none}
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+.arch{display:block;position:relative;width:100%;height:100%;border-radius:50% 50% 10px 10px / 34% 34% 10px 10px;overflow:hidden;
   border:3px solid var(--gold);box-shadow:0 0 0 5px var(--sky-mid),0 0 0 6px rgba(232,181,74,.6),0 18px 40px rgba(0,0,0,.35)}
-.arch::before{content:"";position:absolute;left:50%;top:-34px;width:1.5px;height:34px;background:var(--gold)}
 .arch img,.arch .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .arch img{display:block}
-.ph{display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:1.3rem;color:rgba(255,244,214,.8);
+.ph{display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(.8rem,calc(3.4 * var(--vw)),1.2rem);line-height:1.1;color:rgba(255,244,214,.8);
   background:radial-gradient(circle at 50% 30%,#4A2C6E,#24174D)}
-.frame figcaption{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--cream);line-height:1.2;max-width:22ch}
-.dots2{display:flex;gap:6px}.dots2 span{width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.3}
-.dots2 span.on{opacity:1}
+.hang:focus-visible{outline:3px solid var(--gold-soft);outline-offset:4px;border-radius:12px}
+/* lightbox */
+.lightbox{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;
+  background:rgba(10,7,28,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fadein .35s ease both}
+.lightbox[hidden]{display:none}
+.lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:100%}
+.lb-frame{border:3px solid var(--gold);border-radius:50% 50% 12px 12px / 22% 22% 12px 12px;overflow:hidden;
+  box-shadow:0 0 0 6px rgba(20,15,51,.9),0 0 0 7.5px rgba(232,181,74,.7),0 0 60px rgba(243,213,142,.25)}
+.lb-frame img{display:block;max-width:min(calc(78 * var(--vw)),340px);max-height:calc(58 * var(--vh));width:auto;height:auto;object-fit:cover}
+.lb-frame .ph{position:static;width:min(calc(70 * var(--vw)),300px);aspect-ratio:3/4;font-size:1.5rem}
+.lightbox figcaption{font-family:var(--serif);font-style:italic;font-size:1.5rem;line-height:1.2;color:var(--cream);text-align:center;max-width:24ch}
 
 /* letter */
 .scroll{position:relative;width:100%;background:var(--cream);color:#3B1530;border-radius:6px;padding:34px 26px 30px;text-align:left;
@@ -171,8 +179,9 @@ p{margin:0}
 .reveal p{opacity:0;animation:ink .8s ease forwards;animation-delay:calc(var(--i) * .75s + .2s)}
 @keyframes ink{to{opacity:1}}
 
-/* ask */
-.ask{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+/* ask: same game as the Birthday template */
+.ask-area{position:relative;width:100%;height:230px;display:flex;justify-content:center;align-items:flex-start;gap:16px;padding-top:24px}
+#noBtn.dodging{position:absolute;transition:left .25s ease,top .25s ease}
 
 /* chrome */
 .dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:20}
@@ -200,7 +209,7 @@ body.art-bg #bg{opacity:1}
 body.art-bg #sky{opacity:.55}
 body.art-bg .roofs,body.art-bg .corner{display:none}
 body.art-bg .scene h1,body.art-bg .scene h2,body.art-bg .scene .sub,body.art-bg .scene .name{text-shadow:0 2px 14px rgba(10,6,30,.85)}
-body.art-bg .scene :is(.made,.hint,.count,figcaption){text-shadow:0 1px 3px rgba(10,6,30,.95),0 0 12px rgba(10,6,30,.9)}
+body.art-bg .scene :is(.made,.hint,.count){text-shadow:0 1px 3px rgba(10,6,30,.95),0 0 12px rgba(10,6,30,.9)}
 body.art-bg .scene .made{color:#DCD3F7}
 body.art-moon .moon,body.art-moon .vmoon{background:#000 var(--moon-img) center / var(--moon-zoom) no-repeat}
 body.art-moon .moon::before,body.art-moon .moon::after{display:none}
@@ -216,16 +225,11 @@ body.art-diya .diyas:has(> :nth-child(6)){gap:6px 3px}
 body.art-diya .diyas:has(> :nth-child(6)) .diya{width:51px}    /* 6 reasons still fit one row at 375px */
 body.art-diya .flame-pos,body.art-diya .diya .halo{transform:translate(var(--wick-x),var(--wick-y))}
 .frame-art{display:none}
-body.art-frame .arch{border:0;border-radius:0;box-shadow:none;aspect-ratio:auto;overflow:visible;background:none}
-body.art-frame .arch::before{display:none}
+body.art-frame .arch{border:0;border-radius:0;box-shadow:none;overflow:visible;background:none}
 body.art-frame .arch > img:not(.frame-art),body.art-frame .arch > .ph{inset:var(--win-top) var(--win-side) var(--win-bottom);
-  width:calc(100% - 2 * var(--win-side));height:calc(100% - var(--win-top) - var(--win-bottom));   /* imgs don't stretch to insets */
+  width:calc(100% - 2 * var(--win-side));height:calc(100% - var(--win-top) - var(--win-bottom));
   border-radius:50% 50% 4px 4px / 26% 26% 4px 4px}
-body.art-frame .frame-art{display:block;position:relative;width:100%;height:auto;pointer-events:none}
-/* chain + tassel make the frame tall: size it by screen height so the button stays on screen, and centre the first/last frame */
-body.art-frame{--fw:clamp(128px,calc((100svh - 452px) * .41),260px)}
-body.art-frame .frame{transform-origin:50% 0;flex-basis:var(--fw)}
-body.art-frame .strip{padding:6px calc((calc(100 * var(--vw)) - var(--fw)) / 2) 10px}
+body.art-frame .frame-art{display:block;position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 
 /* second background for the later scenes */
 #bg2{position:fixed;inset:0;z-index:0;background:var(--sky-top) center bottom / cover no-repeat;opacity:0;transition:opacity 1.4s ease}
@@ -386,9 +390,8 @@ body.art-scroll .scroll .orn{display:none}
   <!-- 3. Memories -->
   <section class="scene center" data-scene="photos" hidden>
     <h2 tabindex="-1">Our moments</h2>
-    <p class="sub" id="swipeHint">Swipe to see them all.</p>
-    <div class="strip" id="strip"></div>
-    <div class="dots2" id="dots2" aria-hidden="true"></div>
+    <p class="sub" id="swipeHint">Tap a photo to see it closer.</p>
+    <div class="gallery" id="gallery"></div>
     <button class="btn" data-next>Read my letter</button>
   </section>
 
@@ -408,9 +411,9 @@ body.art-scroll .scroll .orn{display:none}
   <!-- 5. Question -->
   <section class="scene center" data-scene="ask" hidden>
     <h2 tabindex="-1" id="question"></h2>
-    <div class="ask">
-      <button class="btn" data-yes>Yes</button>
-      <button class="btn ghost" data-yes>Always yes</button>
+    <div class="ask-area" id="askArea">
+      <button class="btn" id="yesBtn"><span class="lbl">Yes</span></button>
+      <button class="btn ghost" id="noBtn"><span class="lbl">No</span></button>
     </div>
   </section>
 
@@ -424,6 +427,10 @@ body.art-scroll .scroll .orn{display:none}
     <p class="made">Made with love on <a href="https://tinysurprise-co.github.io/" target="_blank" rel="noopener">Tiny Surprise Co</a></p>
   </section>
 </main>
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo">
+  <figure><div class="lb-frame"><img id="lbImg" alt=""></div><figcaption id="lbCap"></figcaption></figure>
+  <button class="btn ghost" id="lbClose">Close</button>
+</div>
 
 </div><!-- /stage -->
 <script>
@@ -516,6 +523,12 @@ const pc = $("#petals"), px = pc.getContext("2d");
 sizeCanvas(pc, px);
 let petals = [], petalRun = false, petalUntil = 0;
 const PCOL = ["#F59E1B","#FFB627","#F7C948","#E8457A","#FF8C1A"];
+function burstPetals(){            // the "Yes" celebration: a thick shower, then the normal rain
+  if (reduce) return;
+  for (let i=0;i<70;i++) petals.push({ x: Math.random()*W(), y: -10 - Math.random()*H()*.5, vx:(Math.random()-.5)*.8, vy:1.4+Math.random()*1.8,
+    r: Math.random()*6.283, vr:(Math.random()-.5)*.1, w:5+Math.random()*5, h:3+Math.random()*3, c: PCOL[(Math.random()*PCOL.length)|0], sw: Math.random()*6.283 });
+  rainPetals(9000);
+}
 function rainPetals(ms){
   if (reduce) return;
   petalUntil = performance.now() + ms;
@@ -537,47 +550,137 @@ function petalTick(now){
   else { petalRun = false; px.clearRect(0,0,W(),H()); }
 }
 
-/* ---------- music: soft plucked melody + drone, made in code (no audio files) ---------- */
-let actx, master, muted = false, tuneT, droneNodes = [];
+/* ---------- music: original romantic lo-fi arrangement, made in code (no audio files, no copyright issues) ----------
+   Intro (moonrise): tanpura + warm pad.  Full (after the channi reveal): + tabla/lo-fi beat, bass,
+   santoor-style melody, then a bansuri-style flute section.  Key of D, 78 BPM, I-vi-IV-V.
+   Optional: drop an MP3 you have the rights to at karwa-chauth/audio/theme.mp3 and it plays instead. */
+let actx, master, dry, wet, muted = false, mp3 = null;
+const BPM = 78, BEAT = 60 / BPM, BAR = 4 * BEAT;
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
 function ensureAudio(){
   if (isAuto) return;
   const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
-  if (!actx){ actx = new AC(); master = actx.createGain(); master.gain.value = .2; master.connect(actx.destination); }
+  if (!actx){
+    actx = new AC();
+    const comp = actx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3;
+    master = actx.createGain(); master.gain.value = .8; master.connect(comp); comp.connect(actx.destination);
+    dry = actx.createGain(); dry.connect(master);
+    const verb = actx.createConvolver(), len = actx.sampleRate * 2.8, ir = actx.createBuffer(2, len, actx.sampleRate);
+    for (let c = 0; c < 2; c++){ const d = ir.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.6); }
+    verb.buffer = ir; wet = actx.createGain(); wet.gain.value = .9; verb.connect(wet); wet.connect(master); wet.input = verb;
+  }
   if (actx.state === "suspended") actx.resume();
 }
-function pluck(freq, t, dur, vol = .5){
-  [[freq,"triangle",vol],[freq*2.005,"sine",vol*.22],[freq*3,"sine",vol*.06]].forEach(([f,type,v]) => {
-    const o = actx.createOscillator(), g = actx.createGain();
-    o.type = type; o.frequency.value = f;
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+.008);
-    g.gain.exponentialRampToValueAtTime(.0008,t+dur*2.2);
-    o.connect(g); g.connect(master); o.start(t); o.stop(t+dur*2.3);
+document.addEventListener("visibilitychange", () => {            // pause when the phone screen is off / tab hidden
+  if (actx) (document.hidden ? actx.suspend() : (!muted && actx.resume()));
+  if (mp3) (document.hidden ? mp3.pause() : (!muted && mp3.play().catch(()=>{})));
+});
+function out(node, send){ node.connect(dry); const s = actx.createGain(); s.gain.value = send; node.connect(s); s.connect(wet.input); }
+let noiseBuf;
+function noise(){ if (!noiseBuf){ noiseBuf = actx.createBuffer(1, actx.sampleRate, actx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i=0;i<d.length;i++) d[i] = Math.random()*2-1; } const n = actx.createBufferSource(); n.buffer = noiseBuf; return n; }
+function env(g, t, a, peak, rel){ g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(.0005, t + a + rel); }
+
+/* instruments */
+function santoor(m, t, dur, vol = .16){                   // bright hammered string with a tiny pitch glide
+  const f = hz(m);
+  [[1,"triangle",1],[2.01,"sine",.35],[3.98,"sine",.12]].forEach(([k,type,v]) => {
+    const o = actx.createOscillator(), g = actx.createGain(); o.type = type;
+    o.frequency.setValueAtTime(f*k*.992, t); o.frequency.linearRampToValueAtTime(f*k, t + .05);
+    env(g, t, .005, vol*v, Math.max(.6, dur*1.6)); o.connect(g); out(g, .45); o.start(t); o.stop(t + dur*1.6 + .7);
   });
 }
-function drone(){
-  if (!actx || droneNodes.length) return;
-  [146.83, 220].forEach((f,i) => {           // Sa and Pa (D, A)
-    const o = actx.createOscillator(), g = actx.createGain();
-    o.type = "sine"; o.frequency.value = f; g.gain.value = 0;
-    g.gain.linearRampToValueAtTime(i ? .035 : .05, actx.currentTime + 3);
-    o.connect(g); g.connect(master); o.start(); droneNodes.push(o);
-  });
+function flute(m, t, dur, vol = .11){                     // bansuri: breathy sine with delayed vibrato
+  const f = hz(m), o = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain();
+  const lfo = actx.createOscillator(), lg = actx.createGain(); lfo.frequency.value = 5.2;
+  lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f*.006, t + Math.min(.35, dur*.6)); lfo.connect(lg);
+  o.type = "sine"; o2.type = "triangle"; o.frequency.value = f; o2.frequency.value = f*2; lg.connect(o.frequency);
+  const g2 = actx.createGain(); g2.gain.value = .12; o2.connect(g2); g2.connect(g); o.connect(g);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .09); g.gain.setValueAtTime(vol, t + Math.max(.1, dur - .12)); g.gain.linearRampToValueAtTime(0, t + dur + .1);
+  const br = noise(), bf = actx.createBiquadFilter(), bg = actx.createGain(); bf.type = "bandpass"; bf.frequency.value = f*2; bf.Q.value = 2;
+  bg.gain.setValueAtTime(0, t); bg.gain.linearRampToValueAtTime(vol*.18, t + .05); bg.gain.linearRampToValueAtTime(0, t + dur);
+  br.connect(bf); bf.connect(bg); bg.connect(g);
+  out(g, .6); [o,o2,lfo].forEach(x => { x.start(t); x.stop(t + dur + .2); }); br.start(t); br.stop(t + dur + .1);
 }
-/* raag-Yaman flavoured line in D: Sa Re Ga Ma# Pa Dha Ni */
-const N = {S:293.66,R:329.63,G:369.99,M:415.30,P:440,D:493.88,Ni:554.37,S2:587.33,R2:659.25,G2:739.99};
-const TUNE = [["Ni",.5],["R",.5],["G",1],["M",.5],["G",.5],["R",1],["S",2],
-  ["G",.5],["M",.5],["P",1],["D",.5],["P",.5],["M",.5],["G",.5],["R",2],
-  ["P",.5],["D",.5],["Ni",.5],["S2",1.5],["Ni",.5],["D",.5],["P",.5],["M",.5],["G",.5],["R",.5],["G",1],["S",3]];
-function playTune(){
-  if (!actx) return;
-  const beat = .5; let t = actx.currentTime + .15;
-  TUNE.forEach(([n,d]) => { pluck(N[n], t, Math.max(beat*d,.6)); t += beat*d; });
-  const total = TUNE.reduce((a,[,d]) => a+d, 0) * beat;
-  tuneT = setTimeout(playTune, (total + 1.5) * 1000);
+function pad(notes, t, dur, vol = .035){
+  const lp = actx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1300; const g = actx.createGain();
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .9); g.gain.setValueAtTime(vol, t + dur - .4); g.gain.linearRampToValueAtTime(0, t + dur + .6);
+  lp.connect(g); out(g, .7);
+  notes.forEach(m => [-7, 7].forEach(c => { const o = actx.createOscillator(); o.type = "sawtooth"; o.frequency.value = hz(m); o.detune.value = c; o.connect(lp); o.start(t); o.stop(t + dur + .7); }));
 }
-function chime(i){ if (!actx) return; const t = actx.currentTime; pluck([N.S2,N.R2,N.G2,N.Ni,N.P][i%5], t, .9, .35); pluck([N.S2,N.R2,N.G2,N.Ni,N.P][i%5]*2, t+.06, .7, .12); }
+function keys(notes, t, vol = .05){                        // soft electric-piano stab (lo-fi colour)
+  notes.forEach(m => { const o = actx.createOscillator(), mod = actx.createOscillator(), mg = actx.createGain(), g = actx.createGain();
+    o.type = "sine"; o.frequency.value = hz(m); mod.frequency.value = hz(m)*2; mg.gain.value = hz(m)*.6; mod.connect(mg); mg.connect(o.frequency);
+    env(g, t, .01, vol, 1.3); o.connect(g); out(g, .5); [o,mod].forEach(x => { x.start(t); x.stop(t + 1.5); }); });
+}
+function bass(m, t, dur){
+  const o = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain(); o.type = "sine"; o2.type = "triangle";
+  o.frequency.value = hz(m); o2.frequency.value = hz(m)*2; const g2 = actx.createGain(); g2.gain.value = .25; o2.connect(g2); g2.connect(g); o.connect(g);
+  env(g, t, .02, .16, dur); g.connect(dry); [o,o2].forEach(x => { x.start(t); x.stop(t + dur + .1); });
+}
+function tanpura(m, t){                                     // long buzzing pluck
+  const o = actx.createOscillator(), lp = actx.createBiquadFilter(), g = actx.createGain(); o.type = "sawtooth"; o.frequency.value = hz(m);
+  lp.type = "lowpass"; lp.frequency.setValueAtTime(2400, t); lp.frequency.exponentialRampToValueAtTime(500, t + 2.6);
+  env(g, t, .02, .028, 3.2); o.connect(lp); lp.connect(g); out(g, .5); o.start(t); o.stop(t + 3.4);
+}
+function kick(t, v = .5){ const o = actx.createOscillator(), g = actx.createGain(); o.frequency.setValueAtTime(130, t); o.frequency.exponentialRampToValueAtTime(48, t + .12);
+  env(g, t, .003, v, .32); o.connect(g); g.connect(dry); o.start(t); o.stop(t + .4); }
+function tablaNa(t, v = .2){                                // dayan "na": ringing high stroke
+  [[540,1],[1080,.35],[1620,.12]].forEach(([f,k]) => { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.setValueAtTime(f*1.03, t); o.frequency.exponentialRampToValueAtTime(f, t + .04);
+    env(g, t, .002, v*k, .28); o.connect(g); out(g, .35); o.start(t); o.stop(t + .35); });
+  const n = noise(), hp = actx.createBiquadFilter(), g = actx.createGain(); hp.type = "highpass"; hp.frequency.value = 3000; env(g, t, .001, v*.3, .03); n.connect(hp); hp.connect(g); g.connect(dry); n.start(t); n.stop(t + .05);
+}
+function tablaGe(t, v = .32){                               // bayan "ge": low stroke that bends up
+  const o = actx.createOscillator(), g = actx.createGain(); o.frequency.setValueAtTime(92, t); o.frequency.exponentialRampToValueAtTime(150, t + .22);
+  env(g, t, .004, v, .5); o.connect(g); out(g, .25); o.start(t); o.stop(t + .6);
+}
+function hat(t, v = .035){ const n = noise(), hp = actx.createBiquadFilter(), g = actx.createGain(); hp.type = "highpass"; hp.frequency.value = 7500;
+  env(g, t, .001, v, .05); n.connect(hp); hp.connect(g); g.connect(dry); n.start(t); n.stop(t + .08); }
+
+/* song data */
+const CHORDS = [ {pad:[62,66,69], keys:[66,69,74], root:50},      // D
+                 {pad:[62,66,71], keys:[66,71,74], root:47},      // Bm
+                 {pad:[62,67,71], keys:[67,71,74], root:43},      // G
+                 {pad:[61,64,69], keys:[64,69,73], root:45} ];    // A
+const MEL_A = [ [[74,0,1],[73,1,.5],[71,1.5,.5],[69,2,1.5],[66,3.5,.5]],
+                [[71,0,1],[69,1,.5],[66,1.5,.5],[64,2,1],[66,3,1]],
+                [[67,0,.5],[69,.5,.5],[71,1,1],[74,2,1],[71,3,1]],
+                [[69,0,1],[68,1,.5],[66,1.5,.5],[64,2,1],[61,3,1]] ];
+const MEL_B = [ [[78,0,2],[76,2,1],[74,3,1]],
+                [[74,0,1.5],[73,1.5,.5],[71,2,2]],
+                [[71,0,1],[74,1,1],[76,2,2]],
+                [[76,0,1],[74,1,.5],[73,1.5,.5],[69,2,2]] ];
+let level = 0, bar = 0, nextBar = 0, timer = null;
+function scheduleBar(t, i){
+  const c = CHORDS[i % 4], sec = Math.floor(i / 8) % 2;       // 8 bars santoor, 8 bars flute, repeat
+  pad(c.pad, t, BAR);
+  tanpura(57, t); tanpura(62, t + BEAT); tanpura(62, t + 2*BEAT); tanpura(50, t + 3*BEAT);
+  if (level < 1) return;
+  keys(c.keys, t); keys(c.keys, t + 2.5*BEAT, .035);
+  bass(c.root, t, BEAT*1.8); bass(c.root, t + 2.5*BEAT, BEAT*1.2);
+  kick(t); kick(t + 2.5*BEAT, .38);
+  tablaNa(t + BEAT); tablaNa(t + 3*BEAT); tablaGe(t + 1.5*BEAT, .22); tablaNa(t + 3.5*BEAT, .1); if (i % 2) tablaGe(t + 3.75*BEAT, .18);
+  for (let k = 0; k < 8; k++) hat(t + (k + (k % 2 ? .16 : 0)) * BEAT/2, k % 2 ? .02 : .035);   // swung 8ths
+  const mel = sec ? MEL_B : MEL_A;
+  mel[i % 4].forEach(([m, at, d]) => sec ? flute(m, t + at*BEAT, d*BEAT) : santoor(m, t + at*BEAT, d*BEAT));
+  if (sec) MEL_A[i % 4].filter((_, k) => k % 2 === 0).forEach(([m, at]) => santoor(m - 12, t + at*BEAT, BEAT, .07));  // soft echo under the flute
+}
+function tick(){ while (nextBar < actx.currentTime + .4){ scheduleBar(nextBar, bar); nextBar += BAR; bar++; } }
+const Music = {
+  start(){                                   // moonrise: intro (or the MP3 if one exists)
+    if (isAuto) return;
+    if (mp3){ mp3.volume = muted ? 0 : .6; mp3.play().catch(()=>{}); $("#muteBtn").hidden = false; return; }
+    if (!actx || timer) return;
+    level = 0; bar = 0; nextBar = actx.currentTime + .1; tick(); timer = setInterval(tick, 100);
+  },
+  full(){ level = 1; if (actx || mp3) $("#muteBtn").hidden = false; }
+};
+/* optional licensed track: karwa-chauth/audio/theme.mp3 */
+if (!isAuto) fetch("audio/theme.mp3", { method:"HEAD" }).then(r => { if (r.ok){ mp3 = new Audio("audio/theme.mp3"); mp3.loop = true; mp3.preload = "auto"; } }).catch(()=>{});
+function chime(i){ if (!actx) return; const t = actx.currentTime; const m = [74,76,78,81,83,86][i % 6]; santoor(m, t, .9, .2); santoor(m + 12, t + .07, .6, .07); }
 $("#muteBtn").addEventListener("click", e => {
-  muted = !muted; if (master) master.gain.value = muted ? 0 : .2;
+  muted = !muted;
+  if (master) master.gain.value = muted ? 0 : .8;
+  if (mp3) mp3.volume = muted ? 0 : .6;
   e.currentTarget.setAttribute("aria-pressed", muted);
   e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
   e.currentTarget.textContent = muted ? "✕" : "♪";
@@ -605,6 +708,7 @@ const onEnter = {
   open(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); },
   moon(){ moonScene(); },
   diyas(){ moon.classList.remove("away"); moon.classList.add("up","small"); roofs.classList.add("dim"); },
+  photos(){ requestAnimationFrame(layoutPhotos); },
   letter(){ $("#letter").classList.add("reveal"); },
   finale(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); rainPetals(9000); }
 };
@@ -615,7 +719,7 @@ const channi = $("#channi");
   c.setAttribute("cx", 100 + 92*Math.cos(a)); c.setAttribute("cy", 100 + 92*Math.sin(a)); c.setAttribute("r", i%2 ? 1.8 : 2.8); g.appendChild(c); } })();
 let raised = false, moonReady = false;
 async function moonScene(){
-  ensureAudio(); drone();
+  ensureAudio(); Music.start();
   ["cornerL","cornerR"].forEach(i => $("#"+i).classList.remove("show"));
   requestAnimationFrame(() => moon.classList.add("up"));
   await sleep(reduce ? 50 : 3200);
@@ -659,7 +763,7 @@ async function finishRaise(){
   channi.classList.add("moonlit"); moon.classList.add("away");
   $("#moonTitle").textContent = "First, the moon…";
   $("#moonSub").textContent = "\u00a0";
-  if (actx){ playTune(); $("#muteBtn").hidden = false; }
+  Music.full();
   await sleep(reduce ? 50 : 1900);
   channi.classList.add("revealed");
   $("#moonTitle").textContent = "…and then, you.";
@@ -709,23 +813,68 @@ function updateCount(){
 }
 
 /* ---------- 3. memories ---------- */
+/* Layouts for 1-5 photos: [x centre, top] as fractions of the gallery, plus frame height.
+   "under" frames hang from the tassel of the frame above (no string of their own). */
+const LAYOUTS = {
+  1: { h:.97, at:[[.5,0]] },
+  2: { h:.88, at:[[.29,0],[.71,.11]] },
+  3: { h:.80, at:[[.2,0],[.8,.08],[.5,.19]] },
+  4: { h:.50, at:[[.28,0],[.72,.04],[.28,.49,1],[.72,.5,1]] },
+  5: { h:.50, at:[[.18,0],[.5,.05],[.82,0],[.34,.47],[.66,.5]] }
+};
 function buildPhotos(){
-  const strip = $("#strip"), d2 = $("#dots2"); strip.innerHTML = ""; d2.innerHTML = "";
+  const g = $("#gallery"); g.innerHTML = "";
   C.photos.forEach((ph,i) => {
-    const f = document.createElement("figure"); f.className = "frame";
-    const a = document.createElement("div"); a.className = "arch";
-    if (ph.src){ const img = document.createElement("img"); img.src = ph.src; img.alt = ph.caption || "Photo " + (i+1); img.loading = "lazy"; a.appendChild(img); }
-    else { const d = document.createElement("div"); d.className = "ph"; d.textContent = "Your photo"; a.appendChild(d); }
+    const b = document.createElement("button"); b.className = "hang"; b.type = "button";
+    b.setAttribute("aria-label", (ph.caption || "Photo " + (i+1)) + ", open");
+    const sw = document.createElement("span"); sw.className = "sw";
+    const a = document.createElement("span"); a.className = "arch";
+    if (ph.src){ const img = document.createElement("img"); img.src = ph.src; img.alt = ""; a.appendChild(img); }
+    else { const d = document.createElement("span"); d.className = "ph"; d.textContent = "Your photo"; a.appendChild(d); }
     if (ART_OK.frame){ const fr = document.createElement("img"); fr.className = "frame-art"; fr.src = ART.frame; fr.alt = ""; a.appendChild(fr); }
-    f.appendChild(a);
-    if (ph.caption){ const c = document.createElement("figcaption"); c.textContent = ph.caption; f.appendChild(c); }
-    strip.appendChild(f); d2.appendChild(document.createElement("span"));
+    sw.appendChild(a); b.appendChild(sw);
+    b.addEventListener("click", () => openPhoto(i));
+    g.appendChild(b);
   });
-  $("#swipeHint").hidden = C.photos.length < 2;
-  const mark = () => { const w = strip.firstElementChild ? strip.firstElementChild.offsetWidth + 18 : 1;
-    const k = Math.round(strip.scrollLeft / w); [...d2.children].forEach((s,i) => s.classList.toggle("on", i === k)); };
-  strip.addEventListener("scroll", mark, {passive:true}); mark();
 }
+function layoutPhotos(){
+  const g = $("#gallery"), sc = sceneEl("photos"); if (!g.children.length || sc.hidden) return;
+  // the gallery takes whatever height is left on screen, so nothing needs scrolling
+  const cs = getComputedStyle(sc), kids = [...sc.children].filter(k => k !== g && !k.hidden);
+  const used = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.rowGap || 16) * kids.length
+             + kids.reduce((t,k) => t + k.offsetHeight, 0);
+  const gh = Math.max(230, Math.min(620, H() - used - 8));
+  g.style.height = gh + "px";
+  const n = Math.min(5, g.children.length), L = LAYOUTS[n], gw = g.clientWidth;
+  const ratio = ART_OK.frame ? 609/1482 : .75;
+  let fh = L.h * gh;
+  // keep frames in the same row from touching
+  const rows = {}; L.at.forEach(([x,y]) => (rows[y < .3 ? 0 : 1] = rows[y < .3 ? 0 : 1] || []).push(x));
+  Object.values(rows).forEach(xs => { xs.sort(); for (let k=1;k<xs.length;k++) fh = Math.min(fh, (xs[k]-xs[k-1]) * gw * .94 / ratio); });
+  fh = Math.min(fh, gw * .62 / ratio);
+  [...g.children].forEach((b,i) => {
+    const [x,y,under] = L.at[i];
+    const top = y * gh;
+    b.style.left = (x * gw) + "px"; b.style.top = top + "px";
+    b.style.height = fh + "px"; b.style.width = (fh * ratio) + "px";
+    b.classList.toggle("under", !!under);
+    b.style.setProperty("--str", (under ? 0 : top + 24) + "px");
+  });
+}
+addEventListener("resize", layoutPhotos);
+const lb = $("#lightbox");
+function openPhoto(i){
+  const ph = C.photos[i], fr = lb.querySelector(".lb-frame");
+  fr.innerHTML = "";
+  if (ph.src){ const img = document.createElement("img"); img.src = ph.src; img.alt = ph.caption || "Photo " + (i+1); fr.appendChild(img); }
+  else { const d = document.createElement("div"); d.className = "ph"; d.textContent = "Your photo"; fr.appendChild(d); }
+  $("#lbCap").textContent = ph.caption || ""; $("#lbCap").hidden = !ph.caption;
+  lb.hidden = false; if (!isAuto) $("#lbClose").focus({preventScroll:true});
+}
+function closePhoto(){ lb.hidden = true; }
+$("#lbClose").addEventListener("click", closePhoto);
+lb.addEventListener("click", e => { if (e.target === lb) closePhoto(); });
+addEventListener("keydown", e => { if (e.key === "Escape" && !lb.hidden) closePhoto(); });
 
 /* ---------- fill content ---------- */
 function apply(d){
@@ -765,7 +914,30 @@ function apply(d){
 }
 
 $("#beginBtn").addEventListener("click", () => { ensureAudio(); next(); });
-$$("[data-yes]").forEach(b => b.addEventListener("click", () => go("finale")));
+/* ---------- 5. question: No runs away (same as Birthday) ---------- */
+const noBtn = $("#noBtn"), area = $("#askArea");
+const NO_LINES = ["Are you sure?","Think again","Wrong button","Can't catch me"];
+let dodges = 0;
+function dodge(e){
+  if (dodges >= NO_LINES.length) return false;
+  if (e) e.preventDefault();
+  const a = area.getBoundingClientRect(); noBtn.classList.add("dodging");
+  const w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+  noBtn.style.left = Math.random()*Math.max(0,a.width-w)+"px";
+  noBtn.style.top = 90+Math.random()*Math.max(0,a.height-h-90)+"px";
+  noBtn.querySelector(".lbl").textContent = NO_LINES[dodges]; dodges++;
+  if (dodges >= NO_LINES.length) setTimeout(() => noBtn.querySelector(".lbl").textContent = "Okay, yes", 700);
+  return true;
+}
+let lastDodge = 0;
+noBtn.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse" && dodge(e)) lastDodge = Date.now(); });
+noBtn.addEventListener("pointerenter", e => { if (e.pointerType === "mouse" && dodge(e)) lastDodge = Date.now(); });
+noBtn.addEventListener("click", e => {
+  if (Date.now() - lastDodge < 600) return;   // same tap already handled
+  if (!dodge(e)) sayYes();
+});
+$("#yesBtn").addEventListener("click", () => sayYes());
+function sayYes(){ go("finale"); burstPetals(); }
 $("#replay").addEventListener("click", () => location.reload());
 
 /* ---------- preview watermark (editor only) ---------- */
@@ -801,9 +973,10 @@ async function autoplay(){
   next(); await sleep(700);
   for (const [i,b] of $$(".diya").entries()){ lightDiya(i, b, C.reasons[i] || ""); await sleep(650); }
   await sleep(1200);
-  if (flow.includes("photos")){ next(); await sleep(1600); const st = $("#strip"); if (st.children[1]) st.children[1].scrollIntoView({behavior:"smooth", inline:"center", block:"nearest"}); await sleep(1800); }
+  if (flow.includes("photos")){ next(); await sleep(2200); openPhoto(0); await sleep(1800); closePhoto(); await sleep(600); }
   next(); await sleep(4200);
-  go("finale"); await sleep(5200);
+  if (flow.includes("ask")){ next(); await sleep(1300); dodge(); await sleep(900); dodge(); await sleep(1000); sayYes(); await sleep(5200); }
+  else { go("finale"); await sleep(5200); }
   location.reload();
 }
 
