@@ -235,7 +235,7 @@ body.art-diya .diya .art{display:block}
 body.art-diya .diya .bowl{display:none}
 body.art-diya .diya{width:60px;height:auto;aspect-ratio:64/84}   /* keep this ratio: --wick-x/y are measured in it */
 body.art-diya .diyas:has(> :nth-child(6)){gap:6px 3px}
-body.art-diya .diyas:has(> :nth-child(6)) .diya{width:51px}    /* 6 reasons still fit one row at 375px */
+body.art-diya .diyas:has(> :nth-child(6)) .diya{width:min(51px, calc((100% - 15px) / 6))}    /* 6 reasons always fit one row, even on 320-360px phones */
 body.art-diya .flame-pos,body.art-diya .diya .halo{transform:translate(var(--wick-x),var(--wick-y))}
 .frame-art{display:none}
 body.art-frame .arch{border:0;border-radius:0;box-shadow:none;overflow:visible;background:none}
@@ -484,7 +484,8 @@ const DEMO = {
     "Your laugh fixes my worst days",
     "You remember the little things",
     "Home is wherever you are",
-    "You believe in me, always"
+    "You believe in me, always",
+    "You still make my heart race"
   ],
   letter: [
     "Priya,",
