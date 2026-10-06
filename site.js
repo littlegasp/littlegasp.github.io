@@ -3,7 +3,7 @@
    Page options on <body>: data-header="static" (header doesn't stick), data-footer="none". */
 (function(){
   const IG = "https://instagram.com/tinysurprise_co";
-  const EMAIL = "tinysurpriseco.orders@gmail.com";
+  const EMAIL = "littlegasp.orders@gmail.com";
   const body = document.body;
 
   const blobs = document.createElement("div");

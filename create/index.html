@@ -13,7 +13,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=7">
+<link rel="stylesheet" href="/style.css?v=8">
 <style>
 body{padding-bottom:110px}
 .ed{max-width:1100px;margin:16px auto 0;padding:0 20px;display:grid;gap:28px}
@@ -80,7 +80,7 @@ textarea{min-height:170px;resize:vertical}
 </style>
 </head>
 <body data-header="static" data-footer="none">
-<script src="/site.js?v=7"></script>
+<script src="/site.js?v=8"></script>
 
 <main class="ed" id="ed" data-tab="write">
   <div class="tabs mobile-only" role="tablist">
@@ -411,7 +411,7 @@ async function finish(paid){
   } catch(e){
     const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Retry";
     btn.onclick = () => finish(paid);
-    overlay({ title: "Almost there", text: "Your payment is safe, but we couldn't finish creating your website (" + e.message + "). Tap Retry. If it keeps failing, email tinysurpriseco.orders@gmail.com with your payment ID " + paid.paymentId + ".", body: [btn] });
+    overlay({ title: "Almost there", text: "Your payment is safe, but we couldn't finish creating your website (" + e.message + "). Tap Retry. If it keeps failing, email littlegasp.orders@gmail.com with your payment ID " + paid.paymentId + ".", body: [btn] });
   } finally { busy(false); }
 }
 
