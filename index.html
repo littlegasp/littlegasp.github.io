@@ -39,10 +39,19 @@
   "email":"tinysurpriseco.orders@gmail.com",
   "sameAs":["https://instagram.com/tinysurprise_co","https://www.instagram.com/tinysurprise_co/"],
   "knowsAbout":["interactive surprise websites","digital birthday gifts","personalised gift websites"]},
- {"@type":"Product","name":"Personalised surprise website","brand":{"@id":"https://tinysurprise-co.github.io/#org"},
+ {"@type":"Product","name":"Personalised surprise website","brand":{"@type":"Brand","name":"Tiny Surprise Co"},
   "description":"An interactive website with your photos, notes and letter, made for one person. Live preview before you pay.",
   "image":"https://tinysurprise-co.github.io/og-image.png",
-  "offers":{"@type":"Offer","price":"149","priceCurrency":"INR","availability":"https://schema.org/InStock","url":"https://tinysurprise-co.github.io/#designs"}}
+  "offers":{"@type":"Offer","price":"149","priceCurrency":"INR","availability":"https://schema.org/InStock","url":"https://tinysurprise-co.github.io/#designs",
+   "shippingDetails":{"@type":"OfferShippingDetails",
+     "shippingRate":{"@type":"MonetaryAmount","value":"0","currency":"INR"},
+     "shippingDestination":{"@type":"DefinedRegion","addressCountry":"IN"},
+     "deliveryTime":{"@type":"ShippingDeliveryTime",
+       "handlingTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":0,"unitCode":"DAY"},
+       "transitTime":{"@type":"QuantitativeValue","minValue":0,"maxValue":0,"unitCode":"DAY"}}},
+   "hasMerchantReturnPolicy":{"@type":"MerchantReturnPolicy","applicableCountry":"IN",
+     "returnPolicyCategory":"https://schema.org/MerchantReturnNotPermitted",
+     "merchantReturnLink":"https://tinysurprise-co.github.io/refund.html"}}}
 ]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
