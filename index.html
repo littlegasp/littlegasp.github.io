@@ -309,17 +309,23 @@ DESIGNS.forEach((d, i) => {
   grid.appendChild(card);
 });
 
-/* hero showcase: live designs play in the middle phone (featured first); the side phones show
-   coming-soon designs, then other live ones, each with the right tag */
+/* hero showcase: each live design plays once in the middle phone, then hands over to the next
+   (featured first). The side phones show coming-soon designs and the live design that ISN'T playing,
+   and the "Live now" pill names whatever is playing. */
 const liveDesigns = DESIGNS.filter(d => d.status === "live").sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-const sides = DESIGNS.filter(d => d.status !== "live").concat(liveDesigns.slice(1), liveDesigns.slice(0, 1));
-[["sideL","chipL",sides[0]],["sideR","chipR",sides[1] || sides[0]]].forEach(([scr, chip, d]) => {
-  document.getElementById(scr).innerHTML = ART[d.art] || "";
-  const c = document.getElementById(chip), live = d.status === "live";
-  c.textContent = live ? "Live now" : "Coming soon"; c.classList.toggle("is-live", live);
-});
+const soonDesigns = DESIGNS.filter(d => d.status !== "live");
 const mainScr = document.getElementById("mainScr");
-let showIdx = 0;
+let showIdx = 0, showTimer;
+function setSide(scr, chip, d){
+  document.getElementById(scr).innerHTML = d ? (ART[d.art] || "") : "";
+  const c = document.getElementById(chip), live = !!d && d.status === "live";
+  c.hidden = !d; if (!d) return;
+  c.textContent = live ? "Live now" : "Coming soon"; c.classList.toggle("is-live", live);
+}
+function showPill(d){
+  document.getElementById("liveName").textContent = d.name;
+  document.getElementById("livePill").href = "/create/?d=" + encodeURIComponent(d.key);
+}
 function playShowcase(){
   const d = liveDesigns[showIdx % liveDesigns.length];
   const f = document.createElement("iframe");
@@ -327,7 +333,17 @@ function playShowcase(){
   f.loading = "eager";
   mainScr.innerHTML = ""; mainScr.appendChild(f); fitShow();
   const t = document.getElementById("tryLink"); t.href = d.demo; t.setAttribute("aria-label", "Try the " + d.name + " demo");
+  showPill(d);
+  const others = soonDesigns.concat(liveDesigns.filter(x => x !== d));   // side phones: never the one playing
+  setSide("sideL", "chipL", others[0]);
+  setSide("sideR", "chipR", others[1] || others[0]);
+  clearTimeout(showTimer); showTimer = setTimeout(nextShow, 75000);   // safety net if a design never reports "done"
 }
+function nextShow(){ showIdx++; playShowcase(); }
+addEventListener("message", e => {
+  const f = mainScr.querySelector("iframe");
+  if (e.origin === location.origin && f && e.source === f.contentWindow && e.data && e.data.type === "tsc-autoplay-done") nextShow();
+});
 function fitShow(){
   const f = mainScr.querySelector("iframe"); if (!f) return;
   const k = mainScr.clientWidth / 375;
@@ -335,18 +351,11 @@ function fitShow(){
 }
 addEventListener("resize", fitShow);
 if (liveDesigns.length){
-  mainScr.innerHTML = ART[liveDesigns[0].art];
+  const first = liveDesigns[0], others = soonDesigns.concat(liveDesigns.slice(1));
+  mainScr.innerHTML = ART[first.art];
   mainScr.style.display = "flex"; mainScr.style.alignItems = "center"; mainScr.style.justifyContent = "center";
+  showPill(first); setSide("sideL", "chipL", others[0]); setSide("sideR", "chipR", others[1] || others[0]);
   setTimeout(playShowcase, 700);
-  /* with more than one live design, rotate every 40 seconds */
-  if (liveDesigns.length > 1) setInterval(() => { showIdx++; playShowcase(); }, 40000);
-}
-
-/* "Live now" pill follows the featured (or first live) design */
-const featured = DESIGNS.find(d => d.featured && d.status === "live") || liveDesigns[0];
-if (featured){
-  document.getElementById("liveName").textContent = featured.name;
-  document.getElementById("livePill").href = "/create/?d=" + encodeURIComponent(featured.key);
 }
 
 /* scroll reveal */

@@ -53,7 +53,7 @@ main[hidden],.dots[hidden]{display:none}
 main{max-width:440px;margin:0 auto;min-height:100%;display:flex}
 .scene{flex:1;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   text-align:center;padding:64px 22px 36px;gap:18px}
-.scene > :first-child{margin-top:auto}.scene > :last-child{margin-bottom:auto}   /* = safe centring */
+.scene::before,.scene::after{content:"";flex:1 0 0}   /* equal spacers = centred when there is room, top-aligned when there isn't (works even when the last button is still hidden) */
 .scene[hidden]{display:none}
 h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;letter-spacing:-.01em}
 h1{font-size:clamp(2.2rem,10vw,2.8rem)}
@@ -146,6 +146,8 @@ body[data-lights="on"] .cake-body{filter:none}
 .icon-btn[hidden]{display:none}
 canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.made{font-size:.8rem;color:var(--muted);margin-top:6px}
+.made a{color:var(--berry-dark);font-weight:600}
 
 /* ===== Laptops: centred phone-shaped stage (same idea as Karwa Chauth), soft blurred sides ===== */
 @media (min-width:700px) and (min-aspect-ratio:4/5){
@@ -283,6 +285,7 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
     <h2 tabindex="-1" id="endTitle">You said yes!</h2>
     <p class="sub" id="yesReply"></p>
     <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
+    <p class="made">Made with love on <a href="https://tinysurprise-co.github.io/" target="_blank" rel="noopener">Tiny Surprise Co</a></p>
   </section>
 </main>
 </div><!-- /stage -->
@@ -349,7 +352,9 @@ async function runAutoplay(){
   if (seq.includes("notes")){ go("notes"); await wait(900); for (const b of document.querySelectorAll(".flip")){ b.click(); await wait(450); } await wait(1000); }
   if (seq.includes("letter")){ go("letter"); await wait(4300); }
   if (seq.includes("ask")){ go("ask"); await wait(1300); dodge(); await wait(900); dodge(); await wait(1000); sayYes(); await wait(3600); }
-  location.reload();
+  /* homepage showcase: tell the homepage this design has finished, so it can play the next one */
+  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
+  else location.reload();
 }
 async function start(){
   try {

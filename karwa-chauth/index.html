@@ -82,8 +82,9 @@ canvas.layer{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
 .corner.tr{top:calc(env(safe-area-inset-top,0px) + 6px);right:6px;transform:scaleX(-1)}
 
 /* scenes */
-main{position:relative;z-index:5;max-width:440px;margin:0 auto;min-height:calc(100 * var(--vh));min-height:100dvh;display:flex}
-.scene{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;
+main{position:relative;z-index:5;margin:0 auto;min-height:calc(100 * var(--vh));min-height:100dvh;display:flex}
+.scene{flex:1;min-width:0;max-width:440px;margin:0 auto;   /* main spans the whole stage so the cloth can reach both edges; text stays 440px wide */
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px;
   padding:calc(calc(8 * var(--vh)) + var(--m) + (var(--c) - var(--m)) / 2 + 26px) 22px 40px}
 .scene.center{justify-content:center;padding-top:calc(calc(8 * var(--vh)) + 96px)}
 .scene.center[data-scene="open"]{padding-top:72px}
@@ -266,11 +267,11 @@ body.art-lantern:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]
 body.art-lantern:is([data-scene="open"],[data-scene="moon"],[data-scene="photos"]) .d-hang,
 body.art-corner:is([data-scene="open"],[data-scene="finale"]) .d-corner{opacity:1}
 body.art-corner .corner{display:none}
-@media (max-height:780px){ body.art-thali[data-scene="finale"] .d-thali{opacity:0} }   /* short phones: the finale text reaches down to it */
+@media (max-height:780px){ body.art-thali[data-scene="finale"] .d-thali,body.art-lantern[data-scene="finale"] .d-lantern{opacity:0} }   /* short phones: the finale text reaches down to them; thali and lantern always come and go together */
 
 /* red cloth under the diyas */
 .altar{position:relative;width:100%;isolation:isolate;padding-bottom:8px}
-body.art-cloth .altar::before{content:"";position:absolute;z-index:-1;left:-22px;right:-22px;top:28px;bottom:-60px;
+body.art-cloth .altar::before{content:"";position:absolute;z-index:-1;left:calc(50% - 50 * var(--vw));right:calc(50% - 50 * var(--vw));top:28px;bottom:-60px;   /* edge to edge of the stage, also on laptops */
   background:var(--cloth-img) center top / 100% auto no-repeat;
   -webkit-mask:linear-gradient(#000 55%,transparent 92%);mask:linear-gradient(#000 55%,transparent 92%)}
 body.art-cloth .cloth{display:none}
@@ -996,7 +997,9 @@ async function autoplay(){
   next(); await sleep(4200);
   if (flow.includes("ask")){ next(); await sleep(1300); dodge(); await sleep(900); dodge(); await sleep(1000); sayYes(); await sleep(5200); }
   else { go("finale"); await sleep(5200); }
-  location.reload();
+  /* homepage showcase: tell the homepage this design has finished, so it can play the next one */
+  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
+  else location.reload();
 }
 
 const artReady = Promise.race([loadArt(), sleep(4000)]);   // never wait more than 4 s for artwork
