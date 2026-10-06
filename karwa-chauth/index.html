@@ -206,6 +206,9 @@ body[data-scene="photos"] .moon{opacity:0}   /* the small moon would sit behind 
 .made{font-size:.8rem;color:#A99BD6;margin-top:6px}
 .made a{color:var(--gold-soft)}
 .msg{max-width:30ch}
+body:not(.ready) > #stage > main,body:not(.ready) .dots{visibility:hidden}   /* nothing shows until the real content is in */
+.loading{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;margin:0;font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--gold-soft)}
+body.ready .loading{display:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* ===== Painted artwork layer =====
@@ -341,11 +344,12 @@ body.art-scroll .scroll .orn{display:none}
 <button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
 <canvas id="petals" class="layer" aria-hidden="true"></canvas>
 
+<p class="loading" id="loading" role="status">Opening your surprise…</p>
 <main>
   <!-- 0. Opening -->
   <section class="scene center" data-scene="open">
     <p class="for">For</p>
-    <h1 class="name" tabindex="-1" data-to>Priya</h1>
+    <h1 class="name" tabindex="-1" data-to></h1>
     <p class="sub">Tonight, the moon has a message for you.</p>
     <button class="btn" id="beginBtn">Tap to begin</button>
     <p class="made">Turn your sound on</p>
@@ -357,7 +361,7 @@ body.art-scroll .scroll .orn{display:none}
     <p class="sub" id="moonSub">&nbsp;</p>
     <div class="raise">
       <button class="channi" id="channi" aria-label="Raise the channi" hidden>
-        <span class="view"><span class="vmoon"></span><span class="vphoto vph" id="vph" data-to>Priya</span></span>
+        <span class="view"><span class="vmoon"></span><span class="vphoto vph" id="vph" data-to></span></span>
         <svg class="rim" viewBox="0 0 200 200" aria-hidden="true">
           <defs>
             <pattern id="net" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -433,7 +437,7 @@ body.art-scroll .scroll .orn{display:none}
   <!-- 6. Finale -->
   <section class="scene center" data-scene="finale" hidden>
     <h1 tabindex="-1">Happy Karwa Chauth</h1>
-    <p class="name" style="font-size:clamp(2.4rem,calc(11 * var(--vw)),3.2rem)" data-to>Priya</p>
+    <p class="name" style="font-size:clamp(2.4rem,calc(11 * var(--vw)),3.2rem)" data-to></p>
     <p class="sub msg" id="finaleMsg"></p>
     <p class="sub msg" id="finaleNum" hidden></p>
     <button class="btn ghost" id="replay">Watch again</button>
@@ -993,6 +997,7 @@ function waitForPreviewData(){
   });
 }
 function showError(msg){
+  document.body.classList.add("ready");
   scenes.forEach(s => s.hidden = s.dataset.scene !== "open");
   const s = sceneEl("open");
   s.innerHTML = `<h2 tabindex="-1">This surprise didn't load</h2><p class="sub"></p><a class="btn ghost" href="https://www.instagram.com/tinysurprise_co/">Message @tinysurprise_co</a>`;
@@ -1029,6 +1034,7 @@ async function start(){
     await artReady;
     apply(d);
     go("open");
+    document.body.classList.add("ready");
     if (isAuto) autoplay();
   } catch (err){
     showError(err && err.message && !/fetch|JSON|network/i.test(err.message) ? err.message : "Check your internet connection and open the link again.");
