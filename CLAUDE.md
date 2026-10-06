@@ -1,6 +1,6 @@
 # Little Gasp – website repo guide
 
-Static site on GitHub Pages: https://tinysurprise-co.github.io (pushing to `main` publishes in ~1 minute).
+Static site on GitHub Pages, custom domain https://littlegasp.com (CNAME file; DNS at GoDaddy: 4 A records 185.199.108-111.153 + CNAME www -> tinysurprise-co.github.io). Pushing to `main` publishes in ~1 minute.
 Brand Instagram: @tinysurprise_co. Owner: Aniket Nandkumar Gurav, Mumbai.
 
 ## What's where
