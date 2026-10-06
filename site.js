@@ -2,7 +2,7 @@
    Edit links here once; every page picks them up.
    Page options on <body>: data-header="static" (header doesn't stick), data-footer="none". */
 (function(){
-  const IG = "https://instagram.com/tinysurprise_co";
+  const IG = "https://instagram.com/littlegasp.co/";
   const EMAIL = "littlegasp.orders@gmail.com";
   const body = document.body;
 

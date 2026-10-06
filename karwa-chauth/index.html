@@ -1000,7 +1000,7 @@ function showError(msg){
   document.body.classList.add("ready");
   scenes.forEach(s => s.hidden = s.dataset.scene !== "open");
   const s = sceneEl("open");
-  s.innerHTML = `<h2 tabindex="-1">This surprise didn't load</h2><p class="sub"></p><a class="btn ghost" href="https://www.instagram.com/tinysurprise_co/">Message @tinysurprise_co</a>`;
+  s.innerHTML = `<h2 tabindex="-1">This surprise didn't load</h2><p class="sub"></p><a class="btn ghost" href="https://www.instagram.com/littlegasp.co/">Message @littlegasp.co</a>`;
   s.querySelector("p").textContent = msg;
 }
 
