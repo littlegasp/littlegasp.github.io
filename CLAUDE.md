@@ -1,4 +1,4 @@
-# Tiny Surprise Co – website repo guide
+# Little Gasp – website repo guide
 
 Static site on GitHub Pages: https://tinysurprise-co.github.io (pushing to `main` publishes in ~1 minute).
 Brand Instagram: @tinysurprise_co. Owner: Aniket Nandkumar Gurav, Mumbai.
@@ -26,5 +26,5 @@ Backend (NOT in this repo): Google Apps Script web app (`API_URL`, ends in `/exe
 10. **Homepage cards** use `image` (1200x900 webp in `/img/cards/`): the real design on a phone over its own colours. Each design in the editor `DESIGNS` sets `numberLabel`/`numberHint`, `questionHint`, `yesHint` so no other design's examples leak in.
 12. **Homepage showcase:** a template's `?autoplay=1` run must end with `parent.postMessage({type:"tsc-autoplay-done"}, location.origin)` (reload only when not in a frame). The homepage then plays the next live design; the "Live now" pill and side phones follow whatever is playing.
 14. Decorative props near text (Karwa Chauth thali + lantern) are hidden by measuring overlap (`fitProps()`), not by fixed screen heights; related props always hide together.
-13. Every template's last screen ends with the "Made with love on Tiny Surprise Co" link.
+13. Every template's last screen ends with the "Made with love on Little Gasp" link.
 11. In page CSS, any class that sets `display` on an element that uses the `hidden` attribute needs its own `[hidden]{display:none}` rule.

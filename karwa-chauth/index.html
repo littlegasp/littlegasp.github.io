@@ -8,7 +8,7 @@
 <title>Happy Karwa Chauth</title>
 <meta name="description" content="Someone made you a little Karwa Chauth surprise. Open it with your sound on.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Tiny Surprise Co">
+<meta property="og:site_name" content="Little Gasp">
 <meta property="og:title" content="A Karwa Chauth surprise for you 🌙">
 <meta property="og:description" content="Someone made you a little surprise. Open it with your sound on.">
 <meta property="og:image" content="https://tinysurprise-co.github.io/karwa-chauth/img/share.jpg">
@@ -437,7 +437,7 @@ body.art-scroll .scroll .orn{display:none}
     <p class="sub msg" id="finaleMsg"></p>
     <p class="sub msg" id="finaleNum" hidden></p>
     <button class="btn ghost" id="replay">Watch again</button>
-    <p class="made">Made with love on <a href="https://tinysurprise-co.github.io/" target="_blank" rel="noopener">Tiny Surprise Co</a></p>
+    <p class="made">Made with love on <a href="https://tinysurprise-co.github.io/" target="_blank" rel="noopener">Little Gasp</a></p>
   </section>
 </main>
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo">
@@ -976,7 +976,7 @@ $("#replay").addEventListener("click", () => location.reload());
 
 /* ---------- preview watermark (editor only) ---------- */
 function addWatermark(){
-  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(243,213,142,0.30)'>PREVIEW · Tiny Surprise Co</text></svg>";
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(243,213,142,0.30)'>PREVIEW · Little Gasp</text></svg>";
   const wm = document.createElement("div"); wm.setAttribute("aria-hidden","true");
   wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
   const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";

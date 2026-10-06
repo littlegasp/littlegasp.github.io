@@ -1,4 +1,4 @@
-/* ===== Tiny Surprise Co – shared header, footer and phone menu =====
+/* ===== Little Gasp – shared header, footer and phone menu =====
    Edit links here once; every page picks them up.
    Page options on <body>: data-header="static" (header doesn't stick), data-footer="none". */
 (function(){
@@ -16,7 +16,7 @@
   const bar = document.createElement("header");
   bar.className = "bar glass" + (body.dataset.header === "static" ? " static" : "");
   bar.innerHTML =
-    '<a class="logo" href="/"><img src="/apple-touch-icon.png" alt=""><span>Tiny Surprise Co</span></a>' +
+    '<a class="logo" href="/"><img src="/apple-touch-icon.png" alt=""><span>Little Gasp</span></a>' +
     '<nav id="nav">' +
       '<a href="/#designs">Designs</a>' +
       '<a href="/#how">How it works</a>' +
@@ -44,7 +44,7 @@
       f.className = "site";
       f.innerHTML =
         '<nav><a href="/terms.html">Terms</a><a href="/refund.html">Refunds</a><a href="/privacy.html">Privacy</a><a href="/contact.html">Contact</a><a href="' + IG + '" target="_blank" rel="noopener">Instagram</a></nav>' +
-        '<p>Tiny Surprise Co, operated by Aniket Nandkumar Gurav, Mumbai, India · <a href="mailto:' + EMAIL + '">' + EMAIL + '</a></p>';
+        '<p>Little Gasp, operated by Aniket Nandkumar Gurav, Mumbai, India · <a href="mailto:' + EMAIL + '">' + EMAIL + '</a></p>';
       body.appendChild(f);
     });
   }
