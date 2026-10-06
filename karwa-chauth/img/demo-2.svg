@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4B2E7E"/><stop offset=".45" stop-color="#E8789A"/><stop offset=".75" stop-color="#FFC27A"/>
+    </linearGradient>
+    <radialGradient id="sun" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#FFF4D6"/><stop offset=".55" stop-color="#FFD98A"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9A27E"/><stop offset="1" stop-color="#5E2F57"/></linearGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#sky)"/>
+  <circle cx="300" cy="430" r="150" fill="url(#sun)"/>
+  <path d="M0 470 L90 330 L150 400 L240 250 L330 380 L400 300 L480 400 L540 340 L600 420 V560 H0Z" fill="#7A3E73"/>
+  <path d="M240 250 L270 300 L252 296 L240 316 L226 294 L212 300Z" fill="#F9E3EC" opacity=".85"/>
+  <path d="M400 300 L420 330 L406 328 L398 342 L388 326Z" fill="#F9E3EC" opacity=".8"/>
+  <path d="M0 520 L120 420 L210 480 L300 400 L390 470 L470 420 L600 500 V600 H0Z" fill="#4E2552"/>
+  <rect x="0" y="560" width="600" height="240" fill="url(#lake)"/>
+  <g stroke="#FFE3B3" stroke-width="4" stroke-linecap="round" opacity=".6"><path d="M240 590h120"/><path d="M262 616h76"/><path d="M280 640h40"/></g>
+  <!-- shore + two people -->
+  <path d="M0 690 Q300 650 600 700 V800 H0Z" fill="#2A1636"/>
+  <g fill="#1A0F24">
+    <circle cx="276" cy="604" r="12"/><path d="M276 618c-16 0-24 12-26 32l-4 40h60l-4-40c-2-20-10-32-26-32Z"/>
+    <circle cx="320" cy="600" r="13"/><path d="M320 615c-17 0-26 13-28 34l-4 44h64l-4-44c-2-21-11-34-28-34Z"/>
+    <path d="M296 640h8v10h-8Z"/>
+  </g>
+  <g fill="#FFF4D6" opacity=".9"><path d="M120 150q10-8 20 0q10-8 20 0" fill="none" stroke="#3B1A3A" stroke-width="3"/><path d="M430 120q8-6 16 0q8-6 16 0" fill="none" stroke="#3B1A3A" stroke-width="3"/></g>
+</svg>

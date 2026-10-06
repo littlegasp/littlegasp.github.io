@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800">
+  <defs>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D2350"/><stop offset="1" stop-color="#4A2C6E"/></linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6B2A3E"/><stop offset="1" stop-color="#3E1527"/></linearGradient>
+    <linearGradient id="cup" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFF4E0"/><stop offset=".6" stop-color="#F3DFC0"/><stop offset="1" stop-color="#D8BF98"/></linearGradient>
+    <radialGradient id="lamp" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFD27A" stop-opacity=".7"/><stop offset="1" stop-color="#FFD27A" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="600" height="800" fill="url(#wall)"/>
+  <rect x="70" y="70" width="460" height="420" rx="200" ry="200" fill="#2A1530"/>
+  <rect x="90" y="90" width="420" height="390" rx="190" ry="190" fill="url(#win)"/>
+  <g fill="#FFD27A" opacity=".85">
+    <rect x="130" y="330" width="40" height="150"/><rect x="190" y="300" width="50" height="180"/><rect x="260" y="350" width="36" height="130"/>
+    <rect x="320" y="280" width="56" height="200"/><rect x="396" y="330" width="44" height="150"/>
+  </g>
+  <g fill="#1D2350">
+    <rect x="138" y="345" width="10" height="12"/><rect x="152" y="380" width="10" height="12"/><rect x="200" y="320" width="10" height="12"/><rect x="220" y="360" width="10" height="12"/>
+    <rect x="330" y="300" width="12" height="12"/><rect x="354" y="340" width="12" height="12"/><rect x="404" y="350" width="10" height="12"/><rect x="270" y="370" width="10" height="12"/>
+  </g>
+  <circle cx="430" cy="170" r="34" fill="#FFF4D6"/>
+  <path d="M300 90v390M90 285h420" stroke="#2A1530" stroke-width="10"/>
+  <!-- sill -->
+  <rect x="40" y="480" width="520" height="34" rx="6" fill="#8C4A3A"/>
+  <rect x="40" y="514" width="520" height="286" fill="#4A1C2C"/>
+  <circle cx="300" cy="560" r="220" fill="url(#lamp)"/>
+  <!-- two cups -->
+  <g>
+    <path d="M190 470h110l-12 120c-2 16-14 26-30 26h-26c-16 0-28-10-30-26Z" fill="url(#cup)"/>
+    <path d="M190 500c-30 0-34 50 0 56" fill="none" stroke="#E9D3B0" stroke-width="12"/>
+    <ellipse cx="245" cy="472" rx="55" ry="12" fill="#B06A3C"/>
+    <path d="M214 540c10 6 52 6 62 0" stroke="#E8457A" stroke-width="6" fill="none"/>
+  </g>
+  <g>
+    <path d="M330 470h110l-12 120c-2 16-14 26-30 26h-26c-16 0-28-10-30-26Z" fill="url(#cup)"/>
+    <path d="M440 500c30 0 34 50 0 56" fill="none" stroke="#E9D3B0" stroke-width="12"/>
+    <ellipse cx="385" cy="472" rx="55" ry="12" fill="#B06A3C"/>
+    <path d="M354 540c10 6 52 6 62 0" stroke="#F59E1B" stroke-width="6" fill="none"/>
+  </g>
+  <path d="M250 450c-20-30 20-40 0-80M390 450c20-30-20-40 0-80" stroke="#FFF4E8" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>
+  <path d="M320 410c-16-18-44-4-30 18l30 26 30-26c14-22-14-36-30-18Z" fill="#E8457A" opacity=".85"/>
+</svg>

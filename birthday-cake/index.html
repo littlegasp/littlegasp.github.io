@@ -5,6 +5,18 @@
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>A surprise for you</title>
+<meta name="description" content="Someone made you a little birthday surprise. Open it with your sound on.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tiny Surprise Co">
+<meta property="og:title" content="A birthday surprise for you 🎂">
+<meta property="og:description" content="Someone made you a little surprise. Open it with your sound on.">
+<meta property="og:image" content="https://tinysurprise-co.github.io/birthday-cake/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
@@ -37,9 +49,11 @@ body[data-lights="off"]{background:var(--night);color:var(--night-ink)}
 .loader{min-height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}
 .loader .whisper{max-width:22ch;line-height:1.2}
 main[hidden],.dots[hidden]{display:none}
+#stage{height:100%}
 main{max-width:440px;margin:0 auto;min-height:100%;display:flex}
-.scene{flex:1;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+.scene{flex:1;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   text-align:center;padding:64px 22px 36px;gap:18px}
+.scene > :first-child{margin-top:auto}.scene > :last-child{margin-bottom:auto}   /* = safe centring */
 .scene[hidden]{display:none}
 h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;letter-spacing:-.01em}
 h1{font-size:clamp(2.2rem,10vw,2.8rem)}
@@ -96,7 +110,9 @@ body[data-lights="on"] .cake-body{filter:none}
   font-size:1.5rem;line-height:1.1;color:#2A1F5C}
 
 /* reasons */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;
+  max-width:max(230px, calc((100vh - 330px - (var(--rows,3) - 1) * 12px) * 2 / (var(--rows,3) * 1.05)))}
+@supports (height:1dvh){ .grid{max-width:max(230px, calc((100dvh - 330px - (var(--rows,3) - 1) * 12px) * 2 / (var(--rows,3) * 1.05)))} }
 .flip{appearance:none;border:0;padding:0;background:none;cursor:pointer;aspect-ratio:1/1.05;perspective:800px;font:inherit;color:inherit}
 .flip-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s ease}
 .flip.open .flip-inner{transform:rotateY(180deg)}
@@ -131,6 +147,23 @@ body[data-lights="on"] .cake-body{filter:none}
 canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
+/* ===== Laptops: centred phone-shaped stage (same idea as Karwa Chauth), soft blurred sides ===== */
+@media (min-width:700px) and (min-aspect-ratio:4/5){
+  html,body{height:100%;overflow:hidden}
+  body{display:flex;justify-content:center;background:#E9DDF0}
+  body[data-lights="off"]{background:#0F0C26}
+  body::before{content:"";position:fixed;inset:-60px;z-index:0;filter:blur(40px);opacity:.9;transition:background 1.2s;
+    background:radial-gradient(circle at 20% 30%,#F7A8C2,transparent 45%),radial-gradient(circle at 80% 70%,#8FD6BD,transparent 45%),radial-gradient(circle at 70% 15%,#FFC857,transparent 40%),#FDEFF4}
+  body[data-lights="off"]::before{background:radial-gradient(circle at 50% 40%,#2A1F5C,#0E0A24 70%)}
+  #stage{position:relative;z-index:1;width:min(100vw,56.25vh);height:100vh;overflow:hidden;transform:translateZ(0);
+    background:var(--bg);box-shadow:0 0 0 1px rgba(42,31,92,.08),0 30px 80px rgba(42,31,92,.35);transition:background-color 1.2s}
+  body[data-lights="off"] #stage{background:var(--night)}
+  #stage > main,#stage > .loader{height:100%;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+  .stack{width:min(74%,290px)}
+  .cake-wrap{width:min(80%,300px)}
+}
+@supports (height:1dvh){ @media (min-width:700px) and (min-aspect-ratio:4/5){ #stage{width:min(100vw,56.25dvh);height:100dvh} } }
+
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   .reveal p{opacity:1;transform:none}
@@ -138,6 +171,7 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
 </style>
 </head>
 <body data-lights="off">
+<div id="stage">
 <nav class="dots" aria-label="Progress" id="dots" hidden></nav>
 <button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
 <canvas id="confetti" aria-hidden="true"></canvas>
@@ -246,11 +280,12 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
   <!-- 6. Finale -->
   <section class="scene" data-scene="end" hidden>
     <p class="whisper" style="color:var(--berry)">Happy birthday, <span data-to></span></p>
-    <h2 tabindex="-1">It's a date.</h2>
+    <h2 tabindex="-1" id="endTitle">You said yes!</h2>
     <p class="sub" id="yesReply"></p>
     <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
   </section>
 </main>
+</div><!-- /stage -->
 
 <script>
 /* ============ SETUP: paste your Apps Script Web app URL ============ */
@@ -261,9 +296,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzvhIqDkLH6nIPGvZLbtg2I
 const DEMO = {
   to: "Meera", from: "Aarav", number: "25",
   photos: [
-    { src: "", caption: "The day we got caught in the rain" },
-    { src: "", caption: "Our first trip together" },
-    { src: "", caption: "That ridiculous cafe selfie" }
+    { src: "img/demo-1.svg", caption: "The day we got caught in the rain" },
+    { src: "img/demo-2.svg", caption: "Our first trip together" },
+    { src: "img/demo-3.svg", caption: "That ridiculous cafe selfie" }
   ],
   reasons: ["The way you hum while you cook","You remember everyone's chai order","Your 2 a.m. theories about everything","How excited you get about tiny things","You make my family feel like yours","You never let me give up on anything"],
   letter: ["Meera,","I tried writing this three times and kept getting distracted remembering things, so here's the short version.","You make ordinary days feel like the good kind of busy.","This year I hope you get every wish, including the one you just made on that cake."],
@@ -368,7 +403,7 @@ function build(d){
   buildPhotos(); buildNotes(); buildLetter();
   $("#question").textContent = C.question;
   $("#yesReply").textContent = C.yesReply || "Can't wait.";
-  if (!C.question) { const h = document.querySelector('[data-scene="end"] h2'); h.textContent = "Happy birthday, " + C.to + "."; }
+  if (!C.question) $("#endTitle").textContent = "Happy birthday, " + C.to + ".";
 
   $("#loader").remove();
   document.querySelector("main").hidden = false;
@@ -382,7 +417,7 @@ function go(name){
   document.querySelectorAll("[data-scene]").forEach(s => s.hidden = s.dataset.scene !== name);
   [...$("#dots").children].forEach((d,i) => d.classList.toggle("on", i === current));
   $("#dots").setAttribute("aria-label", `Step ${current+1} of ${seq.length}`);
-  window.scrollTo(0,0);
+  window.scrollTo(0,0); document.querySelector("main").scrollTo(0,0);
   const h = document.querySelector(`[data-scene="${name}"]`).querySelector("h1,h2");
   if (h && !isPreview) h.focus({preventScroll:true});
   if (name === "letter") $("#letter").classList.add("reveal");
@@ -436,21 +471,22 @@ $("#muteBtn").addEventListener("click", e => {
 /* ---------- confetti ---------- */
 const cv = $("#confetti"), cx = cv.getContext("2d");
 let parts = [], running = false;
-function size(){ const r = devicePixelRatio||1; cv.width = innerWidth*r; cv.height = innerHeight*r; cx.setTransform(r,0,0,r,0,0); }
+const CW = () => cv.clientWidth || innerWidth, CH = () => cv.clientHeight || innerHeight;
+function size(){ const r = devicePixelRatio||1; cv.width = CW()*r; cv.height = CH()*r; cx.setTransform(r,0,0,r,0,0); }
 size(); addEventListener("resize", size);
 const COLORS = ["#E8457A","#FFC857","#8FD6BD","#F7A8C2","#FFFFFF","#7B6CF6"];
 function burst(n=150){
   if (reduce) return;
-  for (let i=0;i<n;i++) parts.push({ x: innerWidth/2+(Math.random()-.5)*80, y: innerHeight*.35, vx:(Math.random()-.5)*12, vy:-Math.random()*11-4,
+  for (let i=0;i<n;i++) parts.push({ x: CW()/2+(Math.random()-.5)*80, y: CH()*.35, vx:(Math.random()-.5)*12, vy:-Math.random()*11-4,
     w:6+Math.random()*6, h:3+Math.random()*4, r:Math.random()*6, vr:(Math.random()-.5)*.3, c:COLORS[i%COLORS.length] });
   if (!running){ running = true; requestAnimationFrame(tick); }
 }
 function tick(){
-  cx.clearRect(0,0,innerWidth,innerHeight);
+  cx.clearRect(0,0,CW(),CH());
   parts.forEach(p => { p.vy+=.22; p.vx*=.99; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr;
     cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle=p.c; cx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cx.restore(); });
-  parts = parts.filter(p => p.y < innerHeight+30);
-  if (parts.length) requestAnimationFrame(tick); else { running = false; cx.clearRect(0,0,innerWidth,innerHeight); }
+  parts = parts.filter(p => p.y < CH()+30);
+  if (parts.length) requestAnimationFrame(tick); else { running = false; cx.clearRect(0,0,CW(),CH()); }
 }
 
 /* ---------- cake ---------- */
@@ -519,6 +555,7 @@ function buildNotes(){
   const grid = $("#grid"), opened = new Set(), total = C.reasons.length, MARKS = ["♥","✿","★","☀","♪","✦"];
   $("#notesTitle").textContent = total === 1 ? "One thing I love about you" : `${WORDS[total]} things I love about you`;
   if (total % 2) grid.style.gridTemplateColumns = total === 1 ? "1fr" : "1fr 1fr";
+  grid.style.setProperty("--rows", Math.ceil(total / 2));
   const btnLbl = $("#next2lbl"), btn = $("#next2");
   const nextLabel = LABELS[seq[seq.indexOf("notes")+1]] || "Finish";
   btnLbl.textContent = `0 of ${total} opened`;

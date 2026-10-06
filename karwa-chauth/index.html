@@ -6,7 +6,18 @@
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#140F33">
 <title>Happy Karwa Chauth</title>
-<link rel="icon" href="/favicon.png">
+<meta name="description" content="Someone made you a little Karwa Chauth surprise. Open it with your sound on.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tiny Surprise Co">
+<meta property="og:title" content="A Karwa Chauth surprise for you 🌙">
+<meta property="og:description" content="Someone made you a little surprise. Open it with your sound on.">
+<meta property="og:image" content="https://tinysurprise-co.github.io/karwa-chauth/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
@@ -30,7 +41,7 @@ html{--vh:1vh;--vw:1vw}
 @supports (height:1dvh){ html{--vh:1dvh} }
 html{--vw:min(1vw, calc(.5625 * var(--vh)))}
 #backdrop{position:fixed;inset:-40px;z-index:0;background:radial-gradient(ellipse at 50% 30%,#2A1F5C,#0E0A24 70%);
-  background-size:cover;background-position:center;filter:blur(28px) brightness(.62) saturate(1.15)}
+  background-size:cover;background-position:center;transition:background-image .6s;filter:blur(28px) brightness(.62) saturate(1.15)}
 #stage{position:relative;z-index:1;width:calc(100 * var(--vw));height:calc(100 * var(--vh));margin:0 auto;overflow:hidden;
   transform:translateZ(0);background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-mid) 55%,var(--sky-low) 100%);
   box-shadow:0 0 0 1px rgba(232,181,74,.18),0 30px 80px rgba(0,0,0,.6)}
@@ -101,7 +112,7 @@ p{margin:0}
 
 /* channi */
 .raise{position:relative;flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;min-height:calc(var(--c) + 60px)}
-.channi{appearance:none;border:0;background:none;padding:0;cursor:grab;width:var(--c);height:var(--c);position:relative;touch-action:none;
+.channi{appearance:none;border:0;background:none;padding:0;cursor:grab;flex:none;width:var(--c);height:var(--c);aspect-ratio:1;position:relative;touch-action:none;
   border-radius:50%;transition:transform .5s cubic-bezier(.2,.9,.3,1.2);z-index:6}
 .channi.dragging{transition:none;cursor:grabbing}
 .channi .view{position:absolute;left:10%;top:10%;width:80%;height:80%;border-radius:50%;overflow:hidden}
@@ -142,6 +153,7 @@ p{margin:0}
 
 /* memories: frames hang at different heights, all on one screen */
 .gallery{position:relative;width:calc(100% + 44px);margin:0 -22px;height:320px;flex:none}
+body[data-scene="photos"] .moon{opacity:0}   /* the small moon would sit behind the title */
 .hang{position:absolute;top:0;padding:0;border:0;background:none;cursor:pointer;transform:translateX(-50%)}
 .hang .sw{position:relative;display:block;height:100%;transform-origin:50% calc(-1 * var(--str,0px));animation:sway 5s ease-in-out infinite}
 .hang:nth-child(2n) .sw{animation-delay:-2.4s}.hang:nth-child(3n) .sw{animation-duration:6s}
@@ -251,7 +263,7 @@ body:is([data-scene="ask"],[data-scene="finale"]) #bg2::after{opacity:1}
 .d-corner.l{left:0}.d-corner.r{right:0;transform:scaleX(-1)}
 body.art-thali:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]) .d-thali,
 body.art-lantern:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]) .d-lantern,
-body.art-lantern:is([data-scene="open"],[data-scene="moon"],[data-scene="photos"],[data-scene="finale"]) .d-hang,
+body.art-lantern:is([data-scene="open"],[data-scene="moon"],[data-scene="photos"]) .d-hang,
 body.art-corner:is([data-scene="open"],[data-scene="finale"]) .d-corner{opacity:1}
 body.art-corner .corner{display:none}
 @media (max-height:780px){ body.art-thali[data-scene="finale"] .d-thali{opacity:0} }   /* short phones: the finale text reaches down to it */
@@ -272,7 +284,7 @@ body.art-card .note p{color:var(--maroon-deep);font-size:1.35rem;text-shadow:non
 /* parchment scroll for the letter (stretches to any letter length).
    The rolled ends + paisley corners (top/bottom --scroll-slice px of scroll.webp, which is 900x1374) are drawn unstretched
    in ::before/::after at --scroll-edge tall; only the plain middle stretches. (border-image left hairline seams through the text.) */
-:root{ --scroll-slice:289; --scroll-edge:calc((calc(100 * var(--vw)) - 44px) * var(--scroll-slice) / 900); --scroll-pad:4px 58px; }
+:root{ --scroll-slice:289; --scroll-edge:calc((calc(100 * var(--vw)) - 44px) * var(--scroll-slice) / 900); --scroll-pad:4px 19%; }
 body.art-scroll .scroll{box-shadow:none;border-radius:0;border:solid transparent;border-width:var(--scroll-edge) 0;padding:var(--scroll-pad);
   background:var(--scroll-img) center / 100% calc(100% * 1374 / (1374 - 2 * var(--scroll-slice))) no-repeat padding-box;
   filter:drop-shadow(0 18px 34px rgba(0,0,0,.5))}
@@ -449,7 +461,7 @@ function loadArt(){
     im.onerror = () => res();
     im.src = src;
   }))).then(() => {
-    if (ART_OK.bg) document.getElementById("bg").style.backgroundImage = `url(${ART.bg})`;
+    if (ART_OK.bg) ["bg","backdrop"].forEach(i => document.getElementById(i).style.backgroundImage = `url(${ART.bg})`);   // backdrop = blurred sides on laptops
     if (ART_OK.bg2) document.getElementById("bg2").style.backgroundImage = `url(${ART.bg2})`;
     ["cloth","card","scroll"].forEach(k => ART_OK[k] && document.documentElement.style.setProperty(`--${k}-img`, `url(${ART[k]})`));
     document.querySelectorAll("img[data-art]").forEach(im => { if (ART_OK[im.dataset.art]) im.src = ART[im.dataset.art]; });
@@ -462,9 +474,9 @@ function loadArt(){
 const DEMO = {
   to: "Priya", from: "Rohan", number: "3",
   photos: [
-    { src: "", caption: "The night we met" },
-    { src: "", caption: "Our first trip together" },
-    { src: "", caption: "My favourite view" }
+    { src: "img/demo-1.svg", caption: "The night we met" },
+    { src: "img/demo-2.svg", caption: "Our first trip together" },
+    { src: "img/demo-3.svg", caption: "My favourite view" }
   ],
   reasons: [
     "You make every wait worth it",
@@ -553,7 +565,8 @@ function petalTick(now){
 /* ---------- music: original romantic lo-fi arrangement, made in code (no audio files, no copyright issues) ----------
    Intro (moonrise): tanpura + warm pad.  Full (after the channi reveal): + tabla/lo-fi beat, bass,
    santoor-style melody, then a bansuri-style flute section.  Key of D, 78 BPM, I-vi-IV-V.
-   Optional: drop an MP3 you have the rights to at karwa-chauth/audio/theme.mp3 and it plays instead. */
+   Optional: to use an MP3 you have the rights to instead, upload it and put its path in THEME_MP3 (e.g. "audio/theme.mp3"). */
+const THEME_MP3 = "";
 let actx, master, dry, wet, muted = false, mp3 = null;
 const BPM = 78, BEAT = 60 / BPM, BAR = 4 * BEAT;
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -674,8 +687,7 @@ const Music = {
   },
   full(){ level = 1; if (actx || mp3) $("#muteBtn").hidden = false; }
 };
-/* optional licensed track: karwa-chauth/audio/theme.mp3 */
-if (!isAuto) fetch("audio/theme.mp3", { method:"HEAD" }).then(r => { if (r.ok){ mp3 = new Audio("audio/theme.mp3"); mp3.loop = true; mp3.preload = "auto"; } }).catch(()=>{});
+if (THEME_MP3 && !isAuto){ mp3 = new Audio(THEME_MP3); mp3.loop = true; mp3.preload = "auto"; }
 function chime(i){ if (!actx) return; const t = actx.currentTime; const m = [74,76,78,81,83,86][i % 6]; santoor(m, t, .9, .2); santoor(m + 12, t + .07, .6, .07); }
 $("#muteBtn").addEventListener("click", e => {
   muted = !muted;
@@ -698,6 +710,7 @@ function go(name){
   const dots = $("#dots"); [...dots.children].forEach((d,i) => d.classList.toggle("on", i === idx));
   dots.setAttribute("aria-label", `Step ${idx+1} of ${flow.length}`);
   if (!isAuto){ STAGE.querySelector("main").scrollTo(0,0); const h = sceneEl(name).querySelector("h1,h2"); if (h) h.focus({preventScroll:true}); }
+  if (idx > flow.indexOf("moon")){ moon.classList.remove("away"); moon.classList.add("up","small"); roofs.classList.add("dim"); }
   onEnter[name] && onEnter[name]();
 }
 function next(){ go(flow[current + 1]); }
@@ -707,7 +720,7 @@ const moon = $("#moon"), roofs = $("#roofs");
 const onEnter = {
   open(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); },
   moon(){ moonScene(); },
-  diyas(){ moon.classList.remove("away"); moon.classList.add("up","small"); roofs.classList.add("dim"); },
+  diyas(){},
   photos(){ requestAnimationFrame(layoutPhotos); },
   letter(){ $("#letter").classList.add("reveal"); },
   finale(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); rainPetals(9000); }
@@ -788,7 +801,7 @@ function diyaSVG(i){
 let lit = new Set();
 function buildDiyas(){
   const wrap = $("#diyas"); wrap.innerHTML = "";
-  const reasons = C.reasons.length ? C.reasons : ["You make every wait worth it"];
+  const reasons = C.reasons;
   const n = reasons.length, mid = (n-1)/2;
   reasons.forEach((r,i) => {
     const b = document.createElement("button"); b.className = "diya";
@@ -807,21 +820,23 @@ function lightDiya(i, b, r){
   updateCount();
 }
 function updateCount(){
-  const n = C.reasons.length || 1;
+  const n = C.reasons.length;
   $("#diyaCount").textContent = lit.size >= n ? "All lit." : `${lit.size} of ${n} lit`;
   if (lit.size >= n){ const b = $("#toNext2"); if (b.hidden){ b.hidden = false; b.classList.add("glow-in"); } }
 }
 
 /* ---------- 3. memories ---------- */
-/* Layouts for 1-5 photos: [x centre, top] as fractions of the gallery, plus frame height.
-   "under" frames hang from the tassel of the frame above (no string of their own). */
+/* Layouts for 1-5 photos. Each frame: [x centre as a fraction of the gallery width, top as a fraction of the
+   frame height, row]. Row 1 frames hang between the row 0 frames (or "under" = from the tassel above).
+   The frame size is the biggest that fits the free height AND keeps frames in a row from touching. */
 const LAYOUTS = {
-  1: { h:.97, at:[[.5,0]] },
-  2: { h:.88, at:[[.29,0],[.71,.11]] },
-  3: { h:.80, at:[[.2,0],[.8,.08],[.5,.19]] },
-  4: { h:.50, at:[[.28,0],[.72,.04],[.28,.49,1],[.72,.5,1]] },
-  5: { h:.50, at:[[.18,0],[.5,.05],[.82,0],[.34,.47],[.66,.5]] }
+  1: { at:[[.5,0,0]] },
+  2: { at:[[.3,0,0],[.7,.1,0]] },
+  3: { at:[[.27,0,0],[.73,.06,0],[.5,.66,1]] },
+  4: { at:[[.28,0,0],[.72,.05,0],[.28,1,1,1],[.72,1.05,1,1]] },
+  5: { at:[[.18,0,0],[.5,.05,0],[.82,0,0],[.34,.72,1],[.66,.76,1]] }
 };
+const STRING = 12;   // px of string above the highest frame (sits in the gap under the subtitle)
 function buildPhotos(){
   const g = $("#gallery"); g.innerHTML = "";
   C.photos.forEach((ph,i) => {
@@ -839,26 +854,29 @@ function buildPhotos(){
 }
 function layoutPhotos(){
   const g = $("#gallery"), sc = sceneEl("photos"); if (!g.children.length || sc.hidden) return;
-  // the gallery takes whatever height is left on screen, so nothing needs scrolling
+  const n = Math.min(5, g.children.length), L = LAYOUTS[n], gw = g.clientWidth;
+  const ratio = ART_OK.frame ? 609/1482 : .75;
+  // free height = screen minus everything else in the scene
   const cs = getComputedStyle(sc), kids = [...sc.children].filter(k => k !== g && !k.hidden);
   const used = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.rowGap || 16) * kids.length
              + kids.reduce((t,k) => t + k.offsetHeight, 0);
-  const gh = Math.max(230, Math.min(620, H() - used - 8));
-  g.style.height = gh + "px";
-  const n = Math.min(5, g.children.length), L = LAYOUTS[n], gw = g.clientWidth;
-  const ratio = ART_OK.frame ? 609/1482 : .75;
-  let fh = L.h * gh;
-  // keep frames in the same row from touching
-  const rows = {}; L.at.forEach(([x,y]) => (rows[y < .3 ? 0 : 1] = rows[y < .3 ? 0 : 1] || []).push(x));
-  Object.values(rows).forEach(xs => { xs.sort(); for (let k=1;k<xs.length;k++) fh = Math.min(fh, (xs[k]-xs[k-1]) * gw * .94 / ratio); });
+  const free = Math.max(230, H() - used - 8) - STRING;
+  const tall = Math.max(...L.at.map(([,y]) => y)) + 1;           // total height in frame-heights
+  let fh = free / tall;
+  // frames in the same row must not touch, and must stay inside the screen
+  const rows = {}; L.at.forEach(([x,,r]) => (rows[r] = rows[r] || []).push(x));
+  Object.values(rows).forEach(xs => { xs.sort((p,q) => p-q);
+    for (let k=1;k<xs.length;k++) fh = Math.min(fh, (xs[k]-xs[k-1]) * gw / (ratio * 1.08));
+    fh = Math.min(fh, 2 * Math.min(xs[0], 1 - xs[xs.length-1]) * gw / (ratio * 1.04)); });
   fh = Math.min(fh, gw * .62 / ratio);
+  g.style.height = Math.ceil(fh * tall + STRING) + "px";       // the gallery hugs the frames: no empty gap below
   [...g.children].forEach((b,i) => {
-    const [x,y,under] = L.at[i];
-    const top = y * gh;
-    b.style.left = (x * gw) + "px"; b.style.top = top + "px";
+    const [x,y,row,under] = L.at[i];
+    const top = STRING + y * fh;
+    b.style.left = (x * gw) + "px"; b.style.top = top + "px"; b.style.zIndex = row ? 1 : 2;
     b.style.height = fh + "px"; b.style.width = (fh * ratio) + "px";
     b.classList.toggle("under", !!under);
-    b.style.setProperty("--str", (under ? 0 : top + 24) + "px");
+    b.style.setProperty("--str", (under ? 0 : top) + "px");
   });
 }
 addEventListener("resize", layoutPhotos);
@@ -904,12 +922,13 @@ function apply(d){
     sg.textContent = "Yours, always,\n" + C.from; sg.style.setProperty("--i", lines.length); body.appendChild(sg); }
 
   $("#question").textContent = C.question;
-  $("#afterLetter").textContent = C.question ? "One last question" : "One more thing";
   $("#finaleMsg").textContent = C.yesReply && C.question ? C.yesReply : (C.from ? `With all my love, ${C.from}` : "With all my love");
   const n = parseInt(C.number, 10);
   if (n > 0){ $("#finaleNum").hidden = false; $("#finaleNum").textContent = n === 1 ? "Our first Karwa Chauth together, and my favourite moon so far." : `${n} Karwa Chauths together, and I'd wait for every one again.`; }
 
-  flow = ["open","moon","diyas"].concat(hasPhotos ? ["photos"] : [], ["letter"], C.question ? ["ask"] : [], ["finale"]);
+  flow = ["open","moon"].concat(C.reasons.length ? ["diyas"] : [], hasPhotos ? ["photos"] : [], ["letter"], C.question ? ["ask"] : [], ["finale"]);
+  const NEXT_LABEL = { diyas:"Light the diyas", photos:"See our moments", letter:"Read my letter", ask:"One last question", finale:"One more thing" };
+  flow.forEach((nm, i) => { const b = sceneEl(nm).querySelector("[data-next]"); if (b && flow[i+1]) b.textContent = NEXT_LABEL[flow[i+1]]; });
   const dots = $("#dots"); dots.innerHTML = ""; flow.forEach(() => dots.appendChild(document.createElement("span")));
 }
 

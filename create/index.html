@@ -5,7 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Create your surprise – Tiny Surprise Co</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css?v=6">
@@ -59,6 +64,7 @@ textarea{min-height:170px;resize:vertical}
 @media(min-width:900px){.pricebox{max-width:none}.paybar .btn{padding:15px 26px}.trust{font-size:.8rem}}
 .toast{position:fixed;left:50%;bottom:calc(var(--payH,110px) + 16px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;z-index:20;max-width:90vw;text-align:center}
 .restore{background:rgba(255,200,87,.85);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.restore[hidden]{display:none}   /* display:flex above would otherwise show it to every new visitor */
 .linkbtn{border:0;background:none;font:700 .92rem var(--body);color:var(--berry-dark);cursor:pointer;text-decoration:underline}
 .ov{position:fixed;inset:0;background:rgba(27,22,64,.62);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
 .ov[hidden]{display:none}
@@ -162,18 +168,22 @@ const DESIGNS = {
   "birthday-cake": {
     name: "Birthday Cake",
     path: "/birthday-cake/",
-    price: 149,          // what buyers pay now
-    regularPrice: 299,   // your genuine regular price; set to 0 to hide the crossed-out price
-    offerLabel: "Launch price till 31 Oct", // e.g. "Launch price till 31 Oct"; "" to hide
-    numberLabel: "Age they're turning"
+    price: 149,          // what buyers pay now (must match Apps Script PRICES)
+    regularPrice: 0,     // crossed-out price: only once you have really sold at it; 0 hides it
+    offerLabel: "Launch price till 31 Oct", // "" to hide
+    offerEnds: "2026-10-31",                // the label hides itself after this date
+    numberLabel: "Age they're turning", numberHint: "e.g. 25",   // "(optional)" is added automatically
+    questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
   },
   "karwa-chauth": {
     name: "Karwa Chauth Moon",
     path: "/karwa-chauth/",
     price: 149,
-    regularPrice: 299,
+    regularPrice: 0,
     offerLabel: "Launch price till 31 Oct",
-    numberLabel: "Karwa Chauths together (optional)"
+    offerEnds: "2026-10-31",
+    numberLabel: "Karwa Chauths together", numberHint: "e.g. 3",
+    questionHint: "e.g. Dinner on the terrace after the moon comes out?", yesHint: "e.g. It's a date. I've got your favourite sweets."
   }
 };
 /* ============================================ */
@@ -186,8 +196,12 @@ if (!D) { document.querySelector("main").innerHTML = '<p style="padding:40px 0">
 
 $("#title").textContent = "Make your " + D.name + " surprise";
 $("#numberLabel").textContent = D.numberLabel || "Special number";
+if (D.numberHint) $("#f-number").placeholder = D.numberHint;
+if (D.questionHint) $("#f-question").placeholder = D.questionHint;
+if (D.yesHint) $("#f-yes").placeholder = D.yesHint;
+const offerOn = D.offerLabel && (!D.offerEnds || Date.now() <= new Date(D.offerEnds + "T23:59:59+05:30").getTime());
 const pb = $("#pricebox");
-pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (D.offerLabel ? `<span class="offer">${D.offerLabel}</span>` : "");
+pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (offerOn ? `<span class="offer">${D.offerLabel}</span>` : "");
 
 /* ---------- state ---------- */
 let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"" };
@@ -213,7 +227,9 @@ async function clearDraft(){ try { const db = await idb(); db.transaction("draft
 function bindFields(){
   document.querySelectorAll("[data-field]").forEach(el => {
     el.value = state[el.dataset.field] || "";
-    el.oninput = () => { state[el.dataset.field] = el.value; el.removeAttribute("aria-invalid"); changed(); };
+    el.oninput = () => {
+      if (el.dataset.field === "number" && /\D/.test(el.value)) el.value = el.value.replace(/\D/g, "");   // numbers only
+      state[el.dataset.field] = el.value; el.removeAttribute("aria-invalid"); changed(); };
   });
 }
 function renderNotes(){
@@ -305,10 +321,17 @@ function fitLayout(){
   document.body.style.paddingBottom = (payH + 20) + "px";
   document.documentElement.style.setProperty("--payH", payH + "px");
   const root = $(".phone").style;
-  if (desktop()){ ["--s","--sw","--sh","--ih"].forEach(v => root.removeProperty(v)); return; }
-  const tabsH = $(".tabs").offsetHeight, actH = $(".pv-actions").offsetHeight + 10;
-  const availH = Math.max(380, innerHeight - tabsH - payH - actH - 20 - 12);   // 20 = phone frame padding
-  const s = Math.max(0.5, Math.min(0.8, (innerWidth - 60) / 375, availH / 640));
+  const actH = $(".pv-actions").offsetHeight + 10;
+  let availH, s;
+  if (desktop()){
+    const topY = Math.max(16, $("#previewPane").offsetTop);            // below the header at the top of the page
+    availH = Math.max(420, Math.min(700, innerHeight - topY - payH - actH - 20 - 12));
+    s = Math.max(0.5, Math.min(0.8, availH / 700));
+  } else {
+    const tabsH = $(".tabs").offsetHeight;
+    availH = Math.max(380, innerHeight - tabsH - payH - actH - 20 - 12);   // 20 = phone frame padding
+    s = Math.max(0.5, Math.min(0.8, (innerWidth - 60) / 375, availH / 640));
+  }
   root.setProperty("--s", s);
   root.setProperty("--sw", Math.round(375 * s) + "px");
   root.setProperty("--sh", Math.round(availH) + "px");

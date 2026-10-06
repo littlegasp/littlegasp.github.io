@@ -21,3 +21,7 @@ Backend (NOT in this repo): Google Apps Script web app (`API_URL`, ends in `/exe
 5. Customer websites must stay out of search engines (`<meta name="robots" content="noindex">` in every template).
 6. No fake reviews, counters or made-up numbers on the site. Crossed-out prices must reflect a real regular price.
 7. Test on phone widths (375px) and laptop before pushing; describe changes to the owner in plain language.
+8. **Every template also has:** a phone-shaped stage on laptops (centred 9:16 column, blurred sides); demo photos in `<template>/img/demo-N.svg` (used only in demo/autoplay); a WhatsApp/social preview (`og:` tags + `<template>/img/share.jpg`, 1200x630, no names); the full favicon set; "next" buttons that name the scene they open (built from the scene order, so skipped scenes never leave a wrong label); a finale that reads right for ANY question (no "It's a date").
+9. **Prices/offers:** `regularPrice` (crossed-out) stays 0 until the design has really sold at that price. Offer badges carry `offerEnds` (YYYY-MM-DD) and hide themselves after that date in both homepage and editor; the price itself still has to be changed in all three places.
+10. **Homepage cards** use `image` (1200x900 webp in `/img/cards/`): the real design on a phone over its own colours. Each design in the editor `DESIGNS` sets `numberLabel`/`numberHint`, `questionHint`, `yesHint` so no other design's examples leak in.
+11. In page CSS, any class that sets `display` on an element that uses the `hidden` attribute needs its own `[hidden]{display:none}` rule.

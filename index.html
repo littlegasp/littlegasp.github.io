@@ -96,6 +96,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 @keyframes bobR{50%{transform:rotate(7deg) translateY(4px)}}
 .chip{position:absolute;z-index:4;border-radius:999px;padding:7px 14px;font-weight:700;font-size:.82rem;color:var(--ink);white-space:nowrap}
 .chip.soon{top:12px;left:50%;transform:translateX(-50%);background:var(--butter)}
+.chip.soon.is-live{background:var(--mint)}
 .chip.live{left:16px;bottom:16px}
 .chip.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#22A06B;margin-right:8px;vertical-align:1px}
 .note{position:absolute;z-index:5;top:22px;right:18px;transform:rotate(5deg);background:#FFF6D6;padding:12px 16px 14px;border-radius:6px;box-shadow:0 8px 18px rgba(42,31,92,.15);font-family:"Nanum Pen Script",cursive;font-size:1.45rem;line-height:1.05;color:#4B3F7E}
@@ -124,6 +125,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .dcard:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(42,31,92,.14)}
 .dcard .art{background:#1B1640;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;position:relative}
 .dcard .art svg{width:56%}
+.dcard .art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .dcard .body{padding:18px 20px 22px;display:flex;flex-direction:column;gap:8px;flex:1}
 .dcard h3{margin:0;font-size:1.35rem}
 .dcard p{margin:0;color:var(--muted)}
@@ -184,9 +186,9 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
       <svg class="float" style="left:12%;top:14%" width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-9.3-8.6C1 9 3 5 6.6 5c2 0 3.4 1.2 5.4 3.3C14 6.2 15.4 5 17.4 5 21 5 23 9 21.3 12.4 19 16.6 12 21 12 21z" fill="#F7A8C2"/></svg>
       <svg class="float" style="right:16%;bottom:20%;animation-delay:-2s" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z" fill="#FFC857"/></svg>
 
-      <div class="ph side left"><div class="scr" id="sideL"></div><span class="chip soon">Coming soon</span></div>
+      <div class="ph side left"><div class="scr" id="sideL"></div><span class="chip soon" id="chipL"></span></div>
       <div class="ph main"><div class="scr" id="mainScr"></div></div>
-      <div class="ph side right"><div class="scr" id="sideR"></div><span class="chip soon">Coming soon</span></div>
+      <div class="ph side right"><div class="scr" id="sideR"></div><span class="chip soon" id="chipR"></span></div>
 
       <span class="chip live glass">A real website, playing on its own</span>
       <a class="try glass" id="tryLink" href="#designs" target="_blank" rel="noopener">Tap to try it ↗</a>
@@ -256,17 +258,22 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 </main>
 
 <script>
-/* ===== DESIGNS: add one entry per design =====
+/* ===== DESIGNS: add one entry per design, in the order the cards should appear =====
    status "live" designs play in the hero and get Create/Demo buttons.
-   featured: true = the design named in the "Live now" pill (use it for your newest/seasonal design).
+   featured: true = named in the "Live now" pill and played first in the hero (use it for the seasonal design).
+   image = card picture (1200x900 webp in /img/cards/); art = simple drawing used when there's no image.
+   regularPrice: only set it (to show a crossed-out price) once you have really sold at that price; 0 hides it.
+   offer + offerEnds: the offer badge disappears by itself after offerEnds (YYYY-MM-DD).
    Prices must match the editor and the Apps Script. */
 const DESIGNS = [
-  { key: "birthday-cake", name: "Birthday Cake", status: "live", featured: true, price: 149, regularPrice: 299, offer: "Launch price till 31 Oct",
-    text: "Candles, a wish, confetti and a birthday tune, then your photos, notes and letter unfold.",
-    demo: "/birthday-cake/", art: "cake" },
-  { key: "karwa-chauth", name: "Karwa Chauth Moon", status: "live", price: 149, regularPrice: 299, offer: "Launch price till 31 Oct",
+  { key: "karwa-chauth", name: "Karwa Chauth Moon", status: "live", featured: true, price: 149, regularPrice: 0,
+    offer: "Launch price till 31 Oct", offerEnds: "2026-10-31",
     text: "A moonlit surprise for your partner, revealed the moment the moon rises.",
-    demo: "/karwa-chauth/", art: "moon" },
+    demo: "/karwa-chauth/", art: "moon", image: "/img/cards/karwa-chauth.webp" },
+  { key: "birthday-cake", name: "Birthday Cake", status: "live", price: 149, regularPrice: 0,
+    offer: "Launch price till 31 Oct", offerEnds: "2026-10-31",
+    text: "Candles, a wish, confetti and a birthday tune, then your photos, notes and letter unfold.",
+    demo: "/birthday-cake/", art: "cake", image: "/img/cards/birthday-cake.webp" },
   { key: "diwali", name: "Diwali Diyas", status: "soon",
     text: "Light the diyas one by one to reveal your wishes, photos and a festive letter. Bhai Dooj version included.", art: "diya" }
 ];
@@ -278,20 +285,23 @@ const ART = {
   diya: '<svg viewBox="0 0 240 220" aria-hidden="true"><circle cx="120" cy="96" r="70" fill="#FFC857" opacity=".14"/><path d="M50 140h140c-6 34-34 52-70 52s-64-18-70-52z" fill="#E8457A"/><path d="M60 140h120" stroke="#FFC857" stroke-width="8" stroke-linecap="round"/><path d="M120 62c16 22 18 40 0 64-18-24-16-42 0-64z" fill="#FFB020"/><path d="M120 86c7 10 8 18 0 30-8-12-7-20 0-30z" fill="#FFF3C4"/></svg>'
 };
 
+/* an offer badge only shows until its end date (end of that day, India time) */
+const offerOn = d => d.offer && (!d.offerEnds || Date.now() <= new Date(d.offerEnds + "T23:59:59+05:30").getTime());
+
 /* designs grid */
 const grid = document.getElementById("grid");
 DESIGNS.forEach((d, i) => {
   const live = d.status === "live";
   const card = document.createElement("article");
   card.className = "dcard glass reveal"; card.style.setProperty("--d", (i * 0.08) + "s");
-  card.innerHTML = `<div class="art">${ART[d.art] || ""}${live ? "" : '<span class="soonTag">Coming soon</span>'}</div><div class="body"></div>`;
+  card.innerHTML = `<div class="art">${d.image ? `<img src="${d.image}" alt="${d.name} design preview" loading="lazy">` : (ART[d.art] || "")}${live ? "" : '<span class="soonTag">Coming soon</span>'}</div><div class="body"></div>`;
   const body = card.querySelector(".body");
   const h = document.createElement("h3"); h.textContent = d.name;
   const p = document.createElement("p"); p.textContent = d.text;
   body.append(h, p);
   if (live){
     const pr = document.createElement("div"); pr.className = "price";
-    pr.innerHTML = `₹${d.price}` + (d.regularPrice > d.price ? ` <s>₹${d.regularPrice}</s>` : "") + (d.offer ? ` <span class="badge">${d.offer}</span>` : "");
+    pr.innerHTML = `₹${d.price}` + (d.regularPrice > d.price ? ` <s>₹${d.regularPrice}</s>` : "") + (offerOn(d) ? ` <span class="badge">${d.offer}</span>` : "");
     const ac = document.createElement("div"); ac.className = "actions";
     ac.innerHTML = `<a class="btn" href="/create/?d=${encodeURIComponent(d.key)}">Create yours</a><a class="btn glassy" href="${d.demo}" target="_blank" rel="noopener">Try the demo</a>`;
     body.append(pr, ac);
@@ -299,11 +309,15 @@ DESIGNS.forEach((d, i) => {
   grid.appendChild(card);
 });
 
-/* hero showcase: live designs play in the middle phone, others on the sides */
-const liveDesigns = DESIGNS.filter(d => d.status === "live");
-const soonDesigns = DESIGNS.filter(d => d.status !== "live");
-document.getElementById("sideL").innerHTML = ART[(soonDesigns[0] || DESIGNS[0]).art];
-document.getElementById("sideR").innerHTML = ART[(soonDesigns[1] || DESIGNS[0]).art];
+/* hero showcase: live designs play in the middle phone (featured first); the side phones show
+   coming-soon designs, then other live ones, each with the right tag */
+const liveDesigns = DESIGNS.filter(d => d.status === "live").sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+const sides = DESIGNS.filter(d => d.status !== "live").concat(liveDesigns.slice(1), liveDesigns.slice(0, 1));
+[["sideL","chipL",sides[0]],["sideR","chipR",sides[1] || sides[0]]].forEach(([scr, chip, d]) => {
+  document.getElementById(scr).innerHTML = ART[d.art] || "";
+  const c = document.getElementById(chip), live = d.status === "live";
+  c.textContent = live ? "Live now" : "Coming soon"; c.classList.toggle("is-live", live);
+});
 const mainScr = document.getElementById("mainScr");
 let showIdx = 0;
 function playShowcase(){
