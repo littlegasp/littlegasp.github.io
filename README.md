@@ -1,3 +1,3 @@
 # Little Gasp
 
-https://littlegasp.com (GitHub Pages repo: tinysurprise-co.github.io)
+https://littlegasp.com (GitHub Pages repo: littlegasp.github.io)
