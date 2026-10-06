@@ -25,5 +25,6 @@ Backend (NOT in this repo): Google Apps Script web app (`API_URL`, ends in `/exe
 9. **Prices/offers:** `regularPrice` (crossed-out) stays 0 until the design has really sold at that price. Offer badges carry `offerEnds` (YYYY-MM-DD) and hide themselves after that date in both homepage and editor; the price itself still has to be changed in all three places.
 10. **Homepage cards** use `image` (1200x900 webp in `/img/cards/`): the real design on a phone over its own colours. Each design in the editor `DESIGNS` sets `numberLabel`/`numberHint`, `questionHint`, `yesHint` so no other design's examples leak in.
 12. **Homepage showcase:** a template's `?autoplay=1` run must end with `parent.postMessage({type:"tsc-autoplay-done"}, location.origin)` (reload only when not in a frame). The homepage then plays the next live design; the "Live now" pill and side phones follow whatever is playing.
+14. Decorative props near text (Karwa Chauth thali + lantern) are hidden by measuring overlap (`fitProps()`), not by fixed screen heights; related props always hide together.
 13. Every template's last screen ends with the "Made with love on Tiny Surprise Co" link.
 11. In page CSS, any class that sets `display` on an element that uses the `hidden` attribute needs its own `[hidden]{display:none}` rule.

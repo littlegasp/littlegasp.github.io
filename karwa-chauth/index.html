@@ -267,7 +267,7 @@ body.art-lantern:is([data-scene="open"],[data-scene="ask"],[data-scene="finale"]
 body.art-lantern:is([data-scene="open"],[data-scene="moon"],[data-scene="photos"]) .d-hang,
 body.art-corner:is([data-scene="open"],[data-scene="finale"]) .d-corner{opacity:1}
 body.art-corner .corner{display:none}
-@media (max-height:780px){ body.art-thali[data-scene="finale"] .d-thali,body.art-lantern[data-scene="finale"] .d-lantern{opacity:0} }   /* short phones: the finale text reaches down to them; thali and lantern always come and go together */
+body.props-off .d-thali,body.props-off .d-lantern{opacity:0 !important}   /* set by fitProps(): text or buttons would touch them, so thali and lantern leave together */
 
 /* red cloth under the diyas */
 .altar{position:relative;width:100%;isolation:isolate;padding-bottom:8px}
@@ -711,6 +711,7 @@ function go(name){
   const dots = $("#dots"); [...dots.children].forEach((d,i) => d.classList.toggle("on", i === idx));
   dots.setAttribute("aria-label", `Step ${idx+1} of ${flow.length}`);
   if (!isAuto){ STAGE.querySelector("main").scrollTo(0,0); const h = sceneEl(name).querySelector("h1,h2"); if (h) h.focus({preventScroll:true}); }
+  requestAnimationFrame(fitProps);
   if (idx > flow.indexOf("moon")){ moon.classList.remove("away"); moon.classList.add("up","small"); roofs.classList.add("dim"); }
   onEnter[name] && onEnter[name]();
 }
@@ -726,6 +727,18 @@ const onEnter = {
   letter(){ $("#letter").classList.add("reveal"); },
   finale(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); rainPetals(9000); }
 };
+
+/* thali + lantern: shown only where they don't touch the scene's text or buttons (any screen size) */
+function fitProps(){
+  const sc = sceneEl(flow[current]); if (!sc) return;
+  document.body.classList.remove("props-off");
+  const props = [$(".d-thali"), $(".d-lantern")].map(e => e.getBoundingClientRect()).filter(r => r.width);
+  if (!props.length) return;
+  const items = [...sc.querySelectorAll("h1,h2,p,.btn,.made")].filter(e => e.offsetParent).map(e => e.getBoundingClientRect());
+  const hit = items.some(t => props.some(r => t.bottom + 10 > r.top && t.right > r.left && t.left < r.right));
+  document.body.classList.toggle("props-off", hit);
+}
+addEventListener("resize", fitProps);
 
 /* ---------- 1. moonrise + channi ---------- */
 const channi = $("#channi");
