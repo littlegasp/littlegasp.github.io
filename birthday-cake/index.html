@@ -386,9 +386,14 @@ function build(d){
     question: (d.question || "").trim(), yesReply: (d.yesReply || "").trim()
   };
   if (id) C.photos = C.photos.filter(p => p.src);
-  if (d.song && d.song.src && !isAuto){
-    song = new Audio(d.song.src); song.loop = true; song.preload = "auto"; song.volume = .8;
-    song.addEventListener("error", () => { const was = songOn; song = null; if (was) playTune(); });   // won't load: our tune instead
+  /* the buyer's own song if they added one, else our birthday song; the synth tune only if neither loads */
+  if (!isAuto){
+    const own = d.song && d.song.src;
+    song = new Audio(own || SONG.src); song.loop = true; song.preload = "auto"; song.volume = own ? .8 : SONG.volume;
+    song.addEventListener("error", () => {
+      if (own && song && !song.src.endsWith(SONG.src)){ song.src = SONG.src; song.volume = SONG.volume; if (songOn) song.play().catch(() => {}); return; }
+      const was = songOn; song = null; if (was) playTune();
+    });
     document.addEventListener("visibilitychange", () => { if (song && songOn) document.hidden ? song.pause() : song.play().catch(() => {}); });
   }
 
@@ -438,6 +443,7 @@ document.querySelectorAll("[data-next]").forEach(b => b.addEventListener("click"
 }));
 
 /* ---------- audio: music-box synth ---------- */
+const SONG = { src:"audio/happy-birthday.mp3", volume:.75, credit:"Happy Birthday by NastelBom, Pixabay Content Licence" };
 let ctx, master, muted = false, song = null, songOn = false;   // song = the buyer's own track, if they added one
 function ensureAudio(){
        if (isAuto) return;   // homepage showcase is always silent

@@ -194,12 +194,12 @@ const DESIGNS = {
   "birthday-cake": {
     name: "Birthday Cake",
     path: "/birthday-cake/",
-    price: 149,          // what buyers pay now (must match Apps Script PRICES)
+    price: 99,           // what buyers pay now (must match Apps Script PRICES)
     regularPrice: 0,     // crossed-out price: only once you have really sold at it; 0 hides it
-    offerLabel: "Launch price till 31 Oct", // "" to hide
-    offerEnds: "2026-10-31",                // the label hides itself after this date
+    offerLabel: "",      // e.g. "Launch price till 31 Oct"; "" hides it
+    offerEnds: "",       // YYYY-MM-DD: the label hides itself after this date
     numberLabel: "Age they're turning", numberHint: "e.g. 25",   // "(optional)" is added automatically
-    song: "A birthday music-box tune already plays on this design.",
+    song: "A happy birthday song already plays on this design.",
     questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
   },
   "karwa-chauth": {
@@ -221,7 +221,7 @@ const DESIGNS = {
     offerLabel: "Navratri launch price",
     offerEnds: "2026-10-20",
     maxPhotos: 4, maxReasons: 5,      // 9 slots on the ring, one per Navratri night
-    song: "A garba song already plays on this design.", beatGame: true,   // buyer can add their own song; the dhol game follows its beat
+    song: "A garba song already plays on this design.",
     numberLabel: "Navratris together", numberHint: "e.g. 3",
     questionHint: "e.g. Will you be my dandiya partner this Navratri?", yesHint: "e.g. Then tonight we dance till the last aarti."
   }

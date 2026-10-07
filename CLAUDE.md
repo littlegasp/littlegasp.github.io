@@ -6,7 +6,7 @@ Brand Instagram: @littlegasp.co. Owner: Aniket Nandkumar Gurav, Mumbai.
 ## What's where
 - `index.html` – homepage (glass theme, self-playing showcase, designs grid). Has a `DESIGNS` list.
 - `create/index.html` – editor: buyer writes content, live preview (with PREVIEW watermark), Razorpay checkout, shows final link. Has a `DESIGNS` settings object and `API_URL`.
-- `birthday-cake/index.html` – the Birthday Cake template. Modes: `?id=` (paid website, loads from API), `?preview=1` (inside editor, watermark), `?autoplay=1` (silent homepage showcase), no params (demo).
+- `birthday-cake/index.html` – Birthday template 1, the basic one (₹99; default song `audio/happy-birthday.mp3`, NastelBom, Pixabay). A separate, richer Birthday template 2 (₹149, teddy-bear "Make a Wish": drag a flame to light candles, blow to wish, swipe to cut the cake; Canva mockup DAHXXq18GsY; song: saavane "Happy Birthday", Pixabay) is being built alongside it; it does NOT replace template 1. Modes: `?id=` (paid website, loads from API), `?preview=1` (inside editor, watermark), `?autoplay=1` (silent homepage showcase), no params (demo).
 - `garba-circle/index.html` – Navratri Garba Circle v2 (Canva mockup DAHXXCH-zSw; cartoon couple poses from DAHXXLJ4xpk as `img/couple-*.webp`, other painted pieces from asset kit DAHXTApHpwU): open → dance (each tap on the couple lights the next of 9 night-colour gems and shows that night's photo/reason/Devi card beside them) → all nine lit → letter → ask → end. Editor limits it to 4 photos + 5 reasons via `maxPhotos`/`maxReasons`.
 - `karwa-chauth/index.html` – Karwa Chauth Moon template.
 - `style.css` – shared glass theme. `site.js` – shared header, phone menu, footer (edit nav/footer links only here).
