@@ -308,10 +308,11 @@ body.art-scroll .scroll .orn{display:none}
   #bg2{background-image:url(img/bg2-wide.webp) !important;background-position:center !important}
   .roofs,.corner,.d-corner,.d-hang,.d-lantern{display:none !important}   /* the wide paintings already have the window, lantern and palace */
   .d-thali{left:1vw;width:min(17vw,250px)}
-  .moon{left:26vw;top:calc(13 * var(--vh))}
+  body[data-scene="finale"] .d-thali{opacity:0 !important}   /* the finale stays clean, like on phones */
+  .moon{left:30vw;top:calc(13 * var(--vh))}
   .moon.small{transform:translateY(calc(-7 * var(--vh))) scale(.42)}
   main{width:100vw}
-  .scene{max-width:none;width:100%;margin:0;display:grid;grid-template-columns:44vw 44vw;column-gap:4vw;padding:56px 4vw 40px;
+  .scene{max-width:none;width:100%;margin:0;display:grid;grid-template-columns:34vw 34vw;column-gap:4vw;justify-content:center;padding:56px 0 40px;
     grid-auto-rows:auto;align-content:center;justify-items:center;row-gap:16px}
   .scene[hidden]{display:none}
   .scene > *{grid-column:2}
@@ -339,10 +340,15 @@ body.art-scroll .scroll .orn{display:none}
   body:is([data-scene="diyas"],[data-scene="letter"]) .moon{opacity:0}   /* the small moon would sit behind the card / scroll */
   .scene[data-scene="diyas"] > .altar{grid-column:1;grid-row:6;align-self:end;margin-bottom:calc(9 * var(--vh));max-width:calc(100 * var(--vw))}
   body.art-cloth .altar::before{display:none}
+  /* carved chowki under the diyas: the diyas stand on its cloth top (top ~18% of the image) */
+  .scene[data-scene="diyas"] > .altar{width:min(31vw,500px);max-width:none;padding:0 0 calc(min(31vw,500px) / 2.687 * .80);margin-bottom:calc(6 * var(--vh))}
+  .scene[data-scene="diyas"] > .altar::after{content:"";position:absolute;z-index:-1;left:0;right:0;bottom:0;aspect-ratio:900/335;
+    background:url(img/chowki.webp) center / 100% 100% no-repeat;filter:drop-shadow(0 18px 26px rgba(0,0,0,.6))}
+  .scene[data-scene="diyas"] .diyas{padding:0 8%}
   .scene[data-scene="diyas"] .cloth{display:none}
   .scene[data-scene="diyas"] .diya.lit{filter:drop-shadow(0 14px 18px rgba(255,170,60,.55))}
-  .scene[data-scene="photos"] > .gallery{grid-column:1;grid-row:1 / -1;align-self:center;width:calc(100 * var(--vw));margin:0}
-  html{--scroll-w:min(34vw,540px);--scroll-edge:calc(var(--scroll-w) * var(--scroll-slice) / 900)}
+  .scene[data-scene="photos"] > .gallery{grid-column:1;grid-row:1 / -1;align-self:center;width:34vw;margin:0}
+  html{--scroll-w:min(32vw,520px);--scroll-edge:calc(var(--scroll-w) * var(--scroll-slice) / 900)}
   .scene[data-scene="letter"] > .scroll{grid-column:1;grid-row:1 / -1;align-self:start;width:var(--scroll-w);max-width:none;margin:calc(var(--scroll-edge) - 20px) 0 40px}
   .scene[data-scene="letter"] .scroll p{font-size:1.22rem}
   /* question + finale: centred over the dimmed palace band */
@@ -625,7 +631,7 @@ function petalTick(now){
    Intro (moonrise): tanpura + warm pad.  Full (after the channi reveal): + tabla/lo-fi beat, bass,
    santoor-style melody, then a bansuri-style flute section.  Key of D, 78 BPM, I-vi-IV-V.
    Optional: to use an MP3 you have the rights to instead, upload it and put its path in THEME_MP3 (e.g. "audio/theme.mp3"). */
-const THEME_MP3 = "audio/tere-haaton-ki-mehendi.mp3";   // "Tere Haaton Ki Mehendi" by PoorArtistt (Pixabay Content Licence): first 28 s, then its 23-28 s music section repeated (~73 s), looped
+const THEME_MP3 = "audio/tere-haaton-ki-mehendi.mp3";   // "Tere Haaton Ki Mehendi" by PoorArtistt (Pixabay Content Licence): first 28 s, then its 23-28 s music section once (~34 s), then the whole thing loops from the start
 const SONG = { src: THEME_MP3, credit: "Tere Haaton Ki Mehendi by PoorArtistt, Pixabay Content Licence" };
 let actx, master, dry, wet, muted = false, mp3 = null;
 const BPM = 78, BEAT = 60 / BPM, BAR = 4 * BEAT;
@@ -933,7 +939,8 @@ function layoutPhotos(){
   const n = Math.min(5, g.children.length), L = LAYOUTS[n], gw = g.clientWidth;
   const ratio = ART_OK.frame ? 609/1482 : .75;
   // free height = screen minus everything else in the scene
-  const cs = getComputedStyle(sc), kids = [...sc.children].filter(k => k !== g && !k.hidden);
+  const cs = getComputedStyle(sc), wide = matchMedia("(min-width:760px) and (min-aspect-ratio:1/1)").matches;
+  const kids = wide ? [] : [...sc.children].filter(k => k !== g && !k.hidden);   // laptops: the words sit in the other column
   const used = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.rowGap || 16) * kids.length
              + kids.reduce((t,k) => t + k.offsetHeight, 0);
   const free = Math.max(230, H() - used - 8) - STRING;
@@ -944,7 +951,7 @@ function layoutPhotos(){
   Object.values(rows).forEach(xs => { xs.sort((p,q) => p-q);
     for (let k=1;k<xs.length;k++) fh = Math.min(fh, (xs[k]-xs[k-1]) * gw / (ratio * 1.08));
     fh = Math.min(fh, 2 * Math.min(xs[0], 1 - xs[xs.length-1]) * gw / (ratio * 1.04)); });
-  fh = Math.min(fh, gw * .62 / ratio);
+  fh = Math.min(fh, gw * (wide ? .7 : .62) / ratio);
   g.style.height = Math.ceil(fh * tall + STRING) + "px";       // the gallery hugs the frames: no empty gap below
   [...g.children].forEach((b,i) => {
     const [x,y,row,under] = L.at[i];
