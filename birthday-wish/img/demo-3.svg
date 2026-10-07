@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="600" height="750">
+  <rect width="600" height="750" fill="#FFE9D6"/>
+  <g fill="#F7A8C2" opacity=".5"><circle cx="80" cy="90" r="40"/><circle cx="520" cy="140" r="56"/><circle cx="90" cy="620" r="50"/><circle cx="540" cy="640" r="36"/></g>
+  <rect x="60" y="70" width="480" height="40" rx="8" fill="#E8457A"/>
+  <g fill="#FFF7FA"><rect x="60" y="110" width="40" height="22"/><rect x="140" y="110" width="40" height="22"/><rect x="220" y="110" width="40" height="22"/><rect x="300" y="110" width="40" height="22"/><rect x="380" y="110" width="40" height="22"/><rect x="460" y="110" width="40" height="22"/></g>
+  <!-- two silly faces -->
+  <circle cx="225" cy="360" r="110" fill="#FFD2B0"/>
+  <path d="M120 330c10-90 80-130 150-110 40 10 60 40 66 80-40-40-120-60-216 30Z" fill="#2A1F5C"/>
+  <circle cx="190" cy="360" r="12" fill="#2A1F5C"/><circle cx="260" cy="360" r="12" fill="#2A1F5C"/>
+  <path d="M190 410c20 30 50 30 70 0Z" fill="#B82F5C"/><path d="M212 424c6 10 22 10 28 0" fill="#F7A8C2"/>
+  <circle cx="390" cy="380" r="104" fill="#E8B98F"/>
+  <path d="M290 360c-4-70 60-112 120-100 50 10 84 50 84 100-50-30-120-50-204 0Z" fill="#3B2A1E"/>
+  <path d="M350 380l24 6-24 6M430 380l-24 6 24 6" stroke="#2A1F5C" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="392" cy="440" rx="24" ry="18" fill="#B82F5C"/>
+  <!-- cups + table -->
+  <rect x="0" y="560" width="600" height="190" fill="#C98A5E"/>
+  <rect x="0" y="560" width="600" height="14" fill="#B07448"/>
+  <path d="M150 520h80l-8 80c-1 10-9 16-18 16h-28c-9 0-17-6-18-16Z" fill="#FFF7FA"/><ellipse cx="190" cy="522" rx="40" ry="9" fill="#8FD6BD"/>
+  <path d="M380 500h86l-8 100c-1 10-9 16-18 16h-34c-9 0-17-6-18-16Z" fill="#FFF7FA"/><ellipse cx="423" cy="502" rx="43" ry="9" fill="#7A4A2A"/>
+  <path d="M440 505l12-44" stroke="#E8457A" stroke-width="8" stroke-linecap="round"/>
+  <g fill="#FFC857"><path d="M520 240l8 24 24 8-24 8-8 24-8-24-24-8 24-8Z"/><path d="M90 250l6 18 18 6-18 6-6 18-6-18-18-6 18-6Z"/></g>
+</svg>
