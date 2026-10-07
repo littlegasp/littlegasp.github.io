@@ -13,7 +13,7 @@ Brand Instagram: @littlegasp.co. Owner: Aniket Nandkumar Gurav, Mumbai.
 - `terms.html`, `refund.html`, `privacy.html`, `contact.html` – policies.
 - `robots.txt`, `sitemap.xml`, `og-image.png`, icons.
 
-Backend (NOT in this repo): Google Apps Script web app (`API_URL`, ends in `/exec`) with a `PRICES` map in paise; Razorpay keys live in Apps Script Script Properties. Never put API keys or secrets in this repo – it is public.
+Backend (NOT in this repo): Google Apps Script web app — TEMPORARILY deployed in tinysurpriseco.orders@gmail.com since 7 Oct 2026 (littlegasp.orders account disabled, appeal pending; move it back and update API_URL in all 4 files once restored) — (`API_URL`, ends in `/exec`) with a `PRICES` map in paise; Razorpay keys live in Apps Script Script Properties. Never put API keys or secrets in this repo – it is public.
 
 ## Rules
 1. **Every design shares one content model:** to, from, number, photos [{src, caption}] (max 5), reasons (max 6), letter (lines), question, yesReply. New templates must read exactly these fields and support `?id=`, `?preview=1` (+ watermark), `?autoplay=1` (silent, no focus stealing) and demo mode.
