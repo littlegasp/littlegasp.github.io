@@ -188,6 +188,8 @@ textarea{min-height:170px;resize:vertical}
 <script>
 /* ================= SETTINGS ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbxf3nRN3zgwfa7hP3PfyRqLTO9xQ4ukKOo44DbxSdb4eKeXfnQ_MjgdlqVZSLztdr9S/exec";   // same /exec URL as in the birthday template
+/* song: "<what plays now>" shows the "Background song" upload box (every design should have it);
+   beatGame: true tells the buyer a tap game will follow their song's beat. */
 const DESIGNS = {
   "birthday-cake": {
     name: "Birthday Cake",
@@ -197,6 +199,7 @@ const DESIGNS = {
     offerLabel: "Launch price till 31 Oct", // "" to hide
     offerEnds: "2026-10-31",                // the label hides itself after this date
     numberLabel: "Age they're turning", numberHint: "e.g. 25",   // "(optional)" is added automatically
+    song: "A birthday music-box tune already plays on this design.",
     questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
   },
   "karwa-chauth": {
@@ -207,6 +210,7 @@ const DESIGNS = {
     offerLabel: "Launch price till 31 Oct",
     offerEnds: "2026-10-31",
     numberLabel: "Karwa Chauths together", numberHint: "e.g. 3",
+    song: "A soft festive tune already plays on this design.",
     questionHint: "e.g. Dinner on the terrace after the moon comes out?", yesHint: "e.g. It's a date. I've got your favourite sweets."
   },
   "garba-circle": {
@@ -217,7 +221,7 @@ const DESIGNS = {
     offerLabel: "Navratri launch price",
     offerEnds: "2026-10-20",
     maxPhotos: 4, maxReasons: 5,      // 9 slots on the ring, one per Navratri night
-    song: "A garba song already plays on this design.",   // design accepts the buyer's own song
+    song: "A garba song already plays on this design.", beatGame: true,   // buyer can add their own song; the dhol game follows its beat
     numberLabel: "Navratris together", numberHint: "e.g. 3",
     questionHint: "e.g. Will you be my dandiya partner this Navratri?", yesHint: "e.g. Then tonight we dance till the last aarti."
   }
@@ -368,7 +372,7 @@ function renderSong(){
   if (has){
     $("#songName").textContent = "🎵 " + state.song.name;
     if ($("#songPlay").dataset.for !== state.song.name){ $("#songPlay").src = state.song.src; $("#songPlay").dataset.for = state.song.name; }
-    $("#songInfo").textContent = state.song.bpm ? "Ready. The dhol game will follow its beat." : "Ready.";
+    $("#songInfo").textContent = D.beatGame && state.song.bpm ? "Ready. The dhol game will follow its beat." : "Ready. It plays instead of our music.";
     $("#songOk").checked = true;
   }
 }

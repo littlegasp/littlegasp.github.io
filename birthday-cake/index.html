@@ -386,6 +386,11 @@ function build(d){
     question: (d.question || "").trim(), yesReply: (d.yesReply || "").trim()
   };
   if (id) C.photos = C.photos.filter(p => p.src);
+  if (d.song && d.song.src && !isAuto){
+    song = new Audio(d.song.src); song.loop = true; song.preload = "auto"; song.volume = .8;
+    song.addEventListener("error", () => { const was = songOn; song = null; if (was) playTune(); });   // won't load: our tune instead
+    document.addEventListener("visibilitychange", () => { if (song && songOn) document.hidden ? song.pause() : song.play().catch(() => {}); });
+  }
 
   document.title = "A surprise for " + C.to;
   document.querySelectorAll("[data-to]").forEach(el => el.textContent = C.to);
@@ -433,7 +438,7 @@ document.querySelectorAll("[data-next]").forEach(b => b.addEventListener("click"
 }));
 
 /* ---------- audio: music-box synth ---------- */
-let ctx, master, muted = false;
+let ctx, master, muted = false, song = null, songOn = false;   // song = the buyer's own track, if they added one
 function ensureAudio(){
        if (isAuto) return;   // homepage showcase is always silent
   const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
@@ -467,7 +472,7 @@ function whoosh(){
   src.buffer = buf; src.connect(f); f.connect(g); g.connect(master); src.start();
 }
 $("#muteBtn").addEventListener("click", e => {
-  muted = !muted; if (master) master.gain.value = muted ? 0 : .22;
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .22; if (song) song.muted = muted;
   e.currentTarget.setAttribute("aria-pressed", muted);
   e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
   e.currentTarget.textContent = muted ? "✕" : "♪";
@@ -499,6 +504,7 @@ const cake = $("#cake"), holdBtn = $("#holdBtn");
 let blown = false, holdStart = 0, raf;
 $("#lightBtn").addEventListener("click", () => {
   ensureAudio(); cake.classList.add("lit");
+  if (song){ song.muted = true; song.play().then(() => { song.pause(); song.currentTime = 0; song.muted = muted; }).catch(() => {}); }   // unlock it inside this tap (phones)
   $("#lightBtn").hidden = true; holdBtn.hidden = false;
   $("#s0title").textContent = "Make a wish.";
   $("#s0sub").textContent = "Close your eyes, wish, then hold the button to blow.";
@@ -523,7 +529,8 @@ function blow(){
     $("#s0title").textContent = `Happy birthday, ${C.to}!`;
     $("#s0sub").textContent = C.from ? `From ${C.from}, with a lot of love.` : "With a lot of love.";
     $("#next0").hidden = false; $("#muteBtn").hidden = false;
-    playTune(); burst(180); $("#s0title").focus({preventScroll:true});
+    if (song){ songOn = true; song.muted = muted; song.play().catch(() => { song = null; playTune(); }); } else playTune();
+    burst(180); $("#s0title").focus({preventScroll:true});
   }, 700);
 }
 
