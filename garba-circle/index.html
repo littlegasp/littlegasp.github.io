@@ -306,6 +306,9 @@ const NIGHTS = [
   { c:"#0F8F86", name:"Peacock green", devi:"Siddhidatri" }
 ];
 const LABELS = { letter:"Read your letter", ask:"One last question", end:"Finish" };
+/* Background song. With a src it plays this licensed track (and the dhol game follows its beat: bpm + offset of the first beat in seconds);
+   without one it plays our own synthesised garba groove. Only use tracks we have the rights to (e.g. Pixabay licence). */
+const SONG = { src: "", bpm: 0, offset: 0, volume: .85, credit: "" };
 
 const $ = s => document.querySelector(s);
 const NS = "http://www.w3.org/2000/svg";
@@ -385,6 +388,7 @@ function build(d){
   });
 
   buildRing(); buildLetter();
+  if (SONG.src && !isAuto){ song = new Audio(SONG.src); song.loop = true; song.preload = "auto"; }
   $("#question").textContent = C.question;
   $("#yesReply").textContent = C.yesReply;
   if (!C.question) $("#endTitle").textContent = C.from ? "With love, " + C.from : "Nine nights. One circle.";
@@ -516,7 +520,10 @@ function ensureAudio(){
   }
   if (ctx.state === "suspended") ctx.resume();
 }
-document.addEventListener("visibilitychange", () => { if (!ctx) return; document.hidden ? ctx.suspend() : ctx.resume(); });
+document.addEventListener("visibilitychange", () => {
+  if (ctx) document.hidden ? ctx.suspend() : ctx.resume();
+  if (song && song.dataset.started) document.hidden ? song.pause() : song.play().catch(() => {});
+});
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
 function env(g, t, a, peak, rel){ g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + rel); }
 let noiseBuf;
@@ -579,7 +586,7 @@ const B = [ [[12,0,2],[10,2,1],[9,3,1],[7,4,2],[9,6,1],[10,7,1]],
             [[12,0,3],[14,3,1],[12,4,2],[10,6,2]],
             [[9,0,1],[7,1,1],[9,2,1],[10,3,1],[12,4,2],[9,6,2]],
             [[7,0,1],[5,1,1],[4,2,1],[5,3,1],[4,4,1],[2,5,1],[0,6,2]] ];
-const SONG = [...A, ...A, ...B, ...A];
+const TUNE = [...A, ...A, ...B, ...A];
 const Music = { on:false, bar:0, next:0, timer:null, t0:0,
   start(){
     if (!ctx || this.on) return;
@@ -597,11 +604,11 @@ const Music = { on:false, bar:0, next:0, timer:null, t0:0,
     for (let k = 1; k < 8; k += 2) manjira(e(k), .03, .12);
     if (i % 2 === 0) manjira(t, .06, .9);
     if (i < 2) return;                                             // two bars of drums first, then the tune
-    SONG[(i - 2) % SONG.length].forEach(([sw, at, len]) => shehnai(SA + sw, e(at), len * EIGHTH - .02));
+    TUNE[(i - 2) % TUNE.length].forEach(([sw, at, len]) => shehnai(SA + sw, e(at), len * EIGHTH - .02));
   }
 };
 $("#muteBtn").addEventListener("click", e => {
-  muted = !muted; if (master) master.gain.value = muted ? 0 : .6;
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .6; if (song) song.muted = muted;
   e.currentTarget.setAttribute("aria-pressed", muted);
   e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
   e.currentTarget.textContent = muted ? "✕" : "♪";
@@ -611,23 +618,32 @@ $("#muteBtn").addEventListener("click", e => {
 const BEAT = 600, NEED = 4;
 let playing = false, beatT0 = 0, beatTimer, night = 0, score = 0, paused = false;
 function now(){ return performance.now(); }
-function scheduleBeats(){
-  /* the ring pulses on the song's beat; without sound it keeps its own steady beat */
-  clearInterval(beatTimer); clearTimeout(beatTimer);
-  const tickBeat = () => {
-    if (!playing || paused) return;
-    const p = $("#pulse"); p.classList.remove("go"); void p.offsetWidth; p.classList.add("go");
-  };
-  const wait = BEAT - ((now() - beatT0) % BEAT);
-  beatTimer = setTimeout(() => { tickBeat(); beatTimer = setInterval(tickBeat, BEAT); }, wait);
+let song = null;                                   // the <audio> for SONG.src, when there is one
+const songOn = () => song && !song.paused && SONG.bpm > 0;
+function beatMs(){ if (!songOn()) return BEAT; const b = 60000 / SONG.bpm; return SONG.bpm > 125 ? b * 2 : b; }   // fast songs: tap every other beat
+function beatClock(){                                 // ms since the start of the song/groove, on the beat grid
+  return songOn() ? (song.currentTime - SONG.offset) * 1000 : now() - beatT0;
 }
+function phase(){ const m = beatMs(); return ((beatClock() % m) + m) % m; }
+let lastBeat = -1;
+function scheduleBeats(){
+  /* the ring pulses on the music's beat */
+  lastBeat = Math.floor(beatClock() / beatMs());
+}
+(function beatLoop(){
+  if (playing && !paused){
+    const b = Math.floor(beatClock() / beatMs());
+    if (b !== lastBeat){ lastBeat = b; const p = $("#pulse"); p.classList.remove("go"); void p.offsetWidth; p.classList.add("go"); }
+  }
+  requestAnimationFrame(beatLoop);
+})();
 const GOOD = ["On the beat!","Beautiful","Keep going","Shabaash!","Perfect step"];
 function onDhol(){
   if (!playing || paused) return;
   ensureAudio(); if (ctx) dhum(ctx.currentTime, .9);
   const d = $("#dhol"); d.classList.add("hit"); setTimeout(() => d.classList.remove("hit"), 90);
-  const off = (now() - beatT0) % BEAT, dist = Math.min(off, BEAT - off);
-  const good = dist < 170;
+  const off = phase(), dist = Math.min(off, beatMs() - off);
+  const good = dist < Math.min(170, beatMs() * .28);
   score += good ? 1 : .5;
   target = Math.min(2.6, target + (good ? .5 : .2));
   $("#feedback").textContent = good ? GOOD[Math.floor(Math.random() * GOOD.length)] : "Feel the dhol…";
@@ -642,9 +658,10 @@ $("#startBtn").addEventListener("click", startRaas);
 function startRaas(){
   ensureAudio();
   beatT0 = now();
-  const t0 = ctx && Music.start();
+  if (song){ song.dataset.started = 1; song.volume = SONG.volume; song.muted = muted; song.play().catch(() => { song = null; if (ctx){ const t = Music.start(); if (t) beatT0 = now() + (t - ctx.currentTime) * 1000; } }); }
+  const t0 = ctx && !song && Music.start();
   if (t0) beatT0 = now() + (t0 - ctx.currentTime + (ctx.outputLatency || ctx.baseLatency || 0)) * 1000;   // tap timing follows the song
-  $("#startBtn").hidden = true; $("#play").hidden = false; $("#muteBtn").hidden = !ctx;
+  $("#startBtn").hidden = true; $("#play").hidden = false; $("#muteBtn").hidden = !ctx && !song;
   document.body.classList.add("playing"); requestAnimationFrame(fitProps);
   playing = true; target = 1.1; nextNight(true);
 }

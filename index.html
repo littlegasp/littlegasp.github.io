@@ -90,6 +90,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .ph.side{width:210px;position:absolute;z-index:2}
 .ph.side .scr{height:420px;display:flex;align-items:center;justify-content:center}
 .ph.side svg{width:78%}
+.ph.side .scr img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .ph.left{left:3%;transform:rotate(-9deg) translateY(16px);animation:bobL 6s ease-in-out infinite}
 .ph.right{right:3%;transform:rotate(9deg) translateY(16px);animation:bobR 7s ease-in-out infinite}
 @keyframes bobL{50%{transform:rotate(-7deg) translateY(4px)}}
@@ -262,6 +263,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
    status "live" designs play in the hero and get Create/Demo buttons.
    featured: true = named in the "Live now" pill and played first in the hero (use it for the seasonal design).
    image = card picture (1200x900 webp in /img/cards/); art = simple drawing used when there's no image.
+   screen = still of the design's first screen (375x750 webp in /img/cards/), shown on the hero's side phones.
    regularPrice: only set it (to show a crossed-out price) once you have really sold at that price; 0 hides it.
    offer + offerEnds: the offer badge disappears by itself after offerEnds (YYYY-MM-DD).
    Prices must match the editor and the Apps Script. */
@@ -269,15 +271,15 @@ const DESIGNS = [
   { key: "garba-circle", name: "Garba Circle", status: "live", featured: true, price: 149, regularPrice: 0,
     offer: "Navratri launch price", offerEnds: "2026-10-20",
     text: "Tap the dhol on the beat to light all nine nights of Navratri, one photo or reason at a time.",
-    demo: "/garba-circle/", art: "diya", image: "/img/cards/garba-circle.webp" },
+    demo: "/garba-circle/", art: "diya", image: "/img/cards/garba-circle.webp", screen: "/img/cards/garba-circle-screen.webp" },
   { key: "karwa-chauth", name: "Karwa Chauth Moon", status: "live", price: 149, regularPrice: 0,
     offer: "Launch price till 31 Oct", offerEnds: "2026-10-31",
     text: "A moonlit surprise for your partner, revealed the moment the moon rises.",
-    demo: "/karwa-chauth/", art: "moon", image: "/img/cards/karwa-chauth.webp" },
+    demo: "/karwa-chauth/", art: "moon", image: "/img/cards/karwa-chauth.webp", screen: "/img/cards/karwa-chauth-screen.webp" },
   { key: "birthday-cake", name: "Birthday Cake", status: "live", price: 149, regularPrice: 0,
     offer: "Launch price till 31 Oct", offerEnds: "2026-10-31",
     text: "Candles, a wish, confetti and a birthday tune, then your photos, notes and letter unfold.",
-    demo: "/birthday-cake/", art: "cake", image: "/img/cards/birthday-cake.webp" },
+    demo: "/birthday-cake/", art: "cake", image: "/img/cards/birthday-cake.webp", screen: "/img/cards/birthday-cake-screen.webp" },
   { key: "diwali", name: "Diwali Diyas", status: "soon",
     text: "Light the diyas one by one to reveal your wishes, photos and a festive letter. Bhai Dooj version included.", art: "diya" }
 ];
@@ -321,7 +323,7 @@ const soonDesigns = DESIGNS.filter(d => d.status !== "live");
 const mainScr = document.getElementById("mainScr");
 let showIdx = 0, showTimer;
 function setSide(scr, chip, d){
-  document.getElementById(scr).innerHTML = d ? (ART[d.art] || "") : "";
+  document.getElementById(scr).innerHTML = !d ? "" : d.screen ? `<img src="${d.screen}" alt="" loading="lazy">` : (ART[d.art] || "");
   const c = document.getElementById(chip), live = !!d && d.status === "live";
   c.hidden = !d; if (!d) return;
   c.textContent = live ? "Live now" : "Coming soon"; c.classList.toggle("is-live", live);
