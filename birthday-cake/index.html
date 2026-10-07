@@ -149,22 +149,42 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
 .made{font-size:.8rem;color:var(--muted);margin-top:6px}
 .made a{color:var(--berry-dark);font-weight:600}
 
-/* ===== Laptops: centred phone-shaped stage (same idea as Karwa Chauth), soft blurred sides ===== */
-@media (min-width:700px) and (min-aspect-ratio:4/5){
+/* phones: the picture/words wrappers don't change the single column */
+.words,.art{display:contents}
+
+/* ===== Laptops: full screen (owner decision 8 Oct 2026): picture on the left, words on the right ===== */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
   html,body{height:100%;overflow:hidden}
-  body{display:flex;justify-content:center;background:#E9DDF0}
-  body[data-lights="off"]{background:#0F0C26}
-  body::before{content:"";position:fixed;inset:-60px;z-index:0;filter:blur(40px);opacity:.9;transition:background 1.2s;
-    background:radial-gradient(circle at 20% 30%,#F7A8C2,transparent 45%),radial-gradient(circle at 80% 70%,#8FD6BD,transparent 45%),radial-gradient(circle at 70% 15%,#FFC857,transparent 40%),#FDEFF4}
-  body[data-lights="off"]::before{background:radial-gradient(circle at 50% 40%,#2A1F5C,#0E0A24 70%)}
-  #stage{position:relative;z-index:1;width:min(100vw,56.25vh);height:100vh;overflow:hidden;transform:translateZ(0);
-    background:var(--bg);box-shadow:0 0 0 1px rgba(42,31,92,.08),0 30px 80px rgba(42,31,92,.35);transition:background-color 1.2s}
-  body[data-lights="off"] #stage{background:var(--night)}
-  #stage > main,#stage > .loader{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}   /* the flung photo must not create a sideways scrollbar */
-  .stack{width:min(74%,290px)}
-  .cake-wrap{width:min(80%,300px)}
+  body{background:#FDEFF4}
+  body::before{content:"";position:fixed;inset:-60px;z-index:0;filter:blur(50px);opacity:.75;transition:opacity 1.2s;pointer-events:none;
+    background:radial-gradient(circle at 15% 25%,#F7A8C2,transparent 40%),radial-gradient(circle at 85% 75%,#8FD6BD,transparent 40%),radial-gradient(circle at 75% 12%,#FFC857,transparent 35%),#FDEFF4}
+  body[data-lights="off"]{background:var(--night)}
+  body[data-lights="off"]::before{opacity:0}
+  #stage{position:relative;z-index:1;width:100vw;height:100vh;overflow:hidden}
+  #stage > main,#stage > .loader{height:100%;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+  main{max-width:none}
+  .scene{padding:56px 5vw 40px}
+  .scene:not(.two){max-width:720px;margin:0 auto}
+  .scene.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:1fr auto auto 1fr;column-gap:5vw;row-gap:28px;align-items:center}
+  .scene.two::before,.scene.two::after{display:none}
+  .scene.two[hidden]{display:none}
+  .scene.two > .art{display:flex;justify-content:center;align-items:center;grid-column:1;grid-row:1 / -1}
+  .scene.two > .words{display:flex;flex-direction:column;align-items:center;gap:18px;grid-column:2;grid-row:2;align-self:end}
+  .scene.two > .words.act{grid-row:3;align-self:start}
+  h1{font-size:clamp(2.8rem,4.2vw,4.4rem)}
+  h2{font-size:clamp(2.2rem,3.4vw,3.4rem)}
+  .sub{font-size:1.15rem}
+  .whisper{font-size:2.2rem}
+  .cake-wrap{width:min(38vw,64vh,560px)}
+  .stack{width:min(30vw,56vh,460px)}
+  .grid{max-width:min(40vw,calc((100vh - 140px - (var(--rows,3) - 1) * 12px) * 2 / (var(--rows,3) * 1.05)))}
+  .back{font-size:1.15rem}
+  .letter{padding:40px 44px}
+  .letter p{font-size:2rem}
 }
-@supports (height:1dvh){ @media (min-width:700px) and (min-aspect-ratio:4/5){ #stage{width:min(100vw,56.25dvh);height:100dvh} } }
+@supports (height:1dvh){ @media (min-width:760px) and (min-aspect-ratio:1/1){ #stage{height:100dvh}
+  .cake-wrap{width:min(38vw,64dvh,560px)} .stack{width:min(30vw,56dvh,460px)}
+  .grid{max-width:min(40vw,calc((100dvh - 140px - (var(--rows,3) - 1) * 12px) * 2 / (var(--rows,3) * 1.05)))} } }
 
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -181,10 +201,13 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
 <div id="loader" class="loader" role="status"><p class="whisper" id="loaderText">Preparing your surprise…</p></div>
 <main hidden>
   <!-- 1. Cake -->
-  <section class="scene" data-scene="cake">
+  <section class="scene two" data-scene="cake">
+    <div class="words">
     <p class="whisper" id="s0whisper">Psst, <span data-to></span>.</p>
     <h1 tabindex="-1" id="s0title">Someone baked you something.</h1>
     <p class="sub" id="s0sub">Turn your sound on, then light the candles.</p>
+    </div>
+    <div class="art">
     <div class="cake-wrap" id="cake">
       <svg viewBox="0 0 240 220" role="img" aria-label="A two-tier birthday cake with three candles">
         <g class="cake-body">
@@ -242,25 +265,32 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
         </g>
       </svg>
     </div>
+    </div>
+    <div class="words act">
     <button class="btn" id="lightBtn"><span class="lbl">Light the candles</span></button>
     <button class="btn" id="holdBtn" hidden><span class="fill"></span><span class="lbl">Hold to blow them out</span></button>
     <button class="btn" id="next0" hidden data-next><span class="lbl"></span></button>
+    </div>
   </section>
 
   <!-- 2. Photos -->
-  <section class="scene" data-scene="photos" hidden>
+  <section class="scene two" data-scene="photos" hidden>
+    <div class="words">
     <h2 tabindex="-1">A few days I keep replaying</h2>
     <p class="sub">Tap the photo to see the next one.</p>
-    <button class="stack" id="stack" aria-label="Show next photo"></button>
-    <button class="btn" data-next><span class="lbl"></span></button>
+    </div>
+    <div class="art"><button class="stack" id="stack" aria-label="Show next photo"></button></div>
+    <div class="words act"><button class="btn" data-next><span class="lbl"></span></button></div>
   </section>
 
   <!-- 3. Reasons -->
-  <section class="scene" data-scene="notes" hidden>
+  <section class="scene two" data-scene="notes" hidden>
+    <div class="words">
     <h2 tabindex="-1" id="notesTitle">Things I love about you</h2>
     <p class="sub">Tap each card to open it.</p>
-    <div class="grid" id="grid"></div>
-    <button class="btn" id="next2" data-next disabled><span class="lbl" id="next2lbl">0 of 6 opened</span></button>
+    </div>
+    <div class="art"><div class="grid" id="grid"></div></div>
+    <div class="words act"><button class="btn" id="next2" data-next disabled><span class="lbl" id="next2lbl">0 of 6 opened</span></button></div>
   </section>
 
   <!-- 4. Letter -->
