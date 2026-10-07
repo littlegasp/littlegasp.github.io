@@ -104,14 +104,14 @@ textarea{min-height:170px;resize:vertical}
     </fieldset>
 
     <fieldset>
-      <legend>Photos <span class="hint">up to 5</span></legend>
+      <legend>Photos <span class="hint" id="photoMax">up to 5</span></legend>
       <div class="photos" id="photos"></div>
       <input type="file" id="fileIn" accept="image/*" multiple hidden>
     </fieldset>
 
     <fieldset>
       <legend>Things you love about them</legend>
-      <p class="hint" style="margin:0 0 8px">Short and sweet works best. Fill as many as you like, up to 6.</p>
+      <p class="hint" style="margin:0 0 8px">Short and sweet works best. Fill as many as you like, up to <span id="reasonMax">6</span>.</p>
       <div class="notes" id="notes"></div>
     </fieldset>
 
@@ -184,6 +184,17 @@ const DESIGNS = {
     offerEnds: "2026-10-31",
     numberLabel: "Karwa Chauths together", numberHint: "e.g. 3",
     questionHint: "e.g. Dinner on the terrace after the moon comes out?", yesHint: "e.g. It's a date. I've got your favourite sweets."
+  },
+  "garba-circle": {
+    name: "Garba Circle",
+    path: "/garba-circle/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "Navratri launch price",
+    offerEnds: "2026-10-20",
+    maxPhotos: 4, maxReasons: 5,      // 9 slots on the ring, one per Navratri night
+    numberLabel: "Navratris together", numberHint: "e.g. 3",
+    questionHint: "e.g. Will you be my dandiya partner this Navratri?", yesHint: "e.g. Then tonight we dance till the last aarti."
   }
 };
 /* ============================================ */
@@ -195,6 +206,9 @@ const D = DESIGNS[designKey];
 if (!D) { document.querySelector("main").innerHTML = '<p style="padding:40px 0">That design wasn\'t found. <a href="/#designs">See all designs</a>.</p>'; throw new Error("bad design"); }
 
 $("#title").textContent = "Make your " + D.name + " surprise";
+const MAXP = D.maxPhotos || 5, MAXR = D.maxReasons || 6;
+$("#photoMax").textContent = "up to " + MAXP;
+$("#reasonMax").textContent = MAXR;
 $("#numberLabel").textContent = D.numberLabel || "Special number";
 if (D.numberHint) $("#f-number").placeholder = D.numberHint;
 if (D.questionHint) $("#f-question").placeholder = D.questionHint;
@@ -234,6 +248,7 @@ function bindFields(){
 }
 function renderNotes(){
   const box = $("#notes"); box.innerHTML = "";
+  state.reasons = state.reasons.slice(0, MAXR); while (state.reasons.length < MAXR) state.reasons.push("");
   state.reasons.forEach((r, i) => {
     const inp = document.createElement("input");
     inp.type = "text"; inp.maxLength = 70; inp.value = r;
@@ -262,6 +277,7 @@ function compress(file){
 }
 function renderPhotos(){
   const box = $("#photos"); box.innerHTML = "";
+  if (state.photos.length > MAXP) state.photos = state.photos.slice(0, MAXP);
   state.photos.forEach((p, i) => {
     const s = document.createElement("div"); s.className = "slot";
     const img = document.createElement("img"); img.src = p.src; img.alt = "Photo " + (i+1);
@@ -271,7 +287,7 @@ function renderPhotos(){
     rm.onclick = () => { state.photos.splice(i, 1); renderPhotos(); changed(); };
     s.append(img, cap, rm); box.appendChild(s);
   });
-  if (state.photos.length < 5){
+  if (state.photos.length < MAXP){
     const add = document.createElement("button"); add.type = "button"; add.className = "add";
     add.innerHTML = "<span>+</span>Add photo";
     add.onclick = () => $("#fileIn").click();
@@ -279,7 +295,7 @@ function renderPhotos(){
   }
 }
 $("#fileIn").addEventListener("change", async e => {
-  const files = [...e.target.files].slice(0, 5 - state.photos.length);
+  const files = [...e.target.files].slice(0, MAXP - state.photos.length);
   e.target.value = "";
   for (const f of files){
     try { state.photos.push({ src: await compress(f), caption: "" }); }

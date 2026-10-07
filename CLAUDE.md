@@ -7,6 +7,8 @@ Brand Instagram: @littlegasp.co. Owner: Aniket Nandkumar Gurav, Mumbai.
 - `index.html` – homepage (glass theme, self-playing showcase, designs grid). Has a `DESIGNS` list.
 - `create/index.html` – editor: buyer writes content, live preview (with PREVIEW watermark), Razorpay checkout, shows final link. Has a `DESIGNS` settings object and `API_URL`.
 - `birthday-cake/index.html` – the Birthday Cake template. Modes: `?id=` (paid website, loads from API), `?preview=1` (inside editor, watermark), `?autoplay=1` (silent homepage showcase), no params (demo).
+- `garba-circle/index.html` – Navratri Garba Circle: one live top-down garba scene; tap the dhol on the beat to light 9 night-colour slots (photos + reasons spread across them, empty nights show the night's colour and Devi). Editor limits it to 4 photos + 5 reasons via `maxPhotos`/`maxReasons`.
+- `karwa-chauth/index.html` – Karwa Chauth Moon template.
 - `style.css` – shared glass theme. `site.js` – shared header, phone menu, footer (edit nav/footer links only here).
 - `terms.html`, `refund.html`, `privacy.html`, `contact.html` – policies.
 - `robots.txt`, `sitemap.xml`, `og-image.png`, icons.
@@ -28,3 +30,6 @@ Backend (NOT in this repo): Google Apps Script web app (`API_URL`, ends in `/exe
 14. Decorative props near text (Karwa Chauth thali + lantern) are hidden by measuring overlap (`fitProps()`), not by fixed screen heights; related props always hide together.
 13. Every template's last screen ends with the "Made with love on Little Gasp" link.
 11. In page CSS, any class that sets `display` on an element that uses the `hidden` attribute needs its own `[hidden]{display:none}` rule.
+
+15. **Every new template must play differently** (its own interaction and structure), not the same slides with new art. Design it in Canva first and get the owner's approval before building.
+16. Editor `DESIGNS` may set `maxPhotos` / `maxReasons` when a design needs fewer than 5 / 6; templates must still work with any smaller number.
