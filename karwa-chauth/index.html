@@ -572,7 +572,8 @@ function petalTick(now){
    Intro (moonrise): tanpura + warm pad.  Full (after the channi reveal): + tabla/lo-fi beat, bass,
    santoor-style melody, then a bansuri-style flute section.  Key of D, 78 BPM, I-vi-IV-V.
    Optional: to use an MP3 you have the rights to instead, upload it and put its path in THEME_MP3 (e.g. "audio/theme.mp3"). */
-const THEME_MP3 = "";
+const THEME_MP3 = "audio/tere-haaton-ki-mehendi.mp3";   // first 28 s of "Tere Haaton Ki Mehendi" by PoorArtistt (Pixabay Content Licence), looped
+const SONG = { src: THEME_MP3, credit: "Tere Haaton Ki Mehendi by PoorArtistt, Pixabay Content Licence" };
 let actx, master, dry, wet, muted = false, mp3 = null;
 const BPM = 78, BEAT = 60 / BPM, BAR = 4 * BEAT;
 const hz = m => 440 * Math.pow(2, (m - 69) / 12);
@@ -695,7 +696,8 @@ const Music = {
   },
   full(){ level = 1; if (actx || mp3) $("#muteBtn").hidden = false; }
 };
-if (THEME_MP3 && !isAuto){ mp3 = new Audio(THEME_MP3); mp3.loop = true; mp3.preload = "auto"; }
+if (THEME_MP3 && !isAuto){ mp3 = new Audio(THEME_MP3); mp3.loop = true; mp3.preload = "auto";
+  mp3.addEventListener("error", function onErr(){ if (mp3 && mp3.src.endsWith(THEME_MP3)){ mp3 = null; if (Music.started){ ensureAudio(); Music.start(); } } }); }   // our song won't load: synth tune
 function chime(i){ if (!actx) return; const t = actx.currentTime; const m = [74,76,78,81,83,86][i % 6]; santoor(m, t, .9, .2); santoor(m + 12, t + .07, .6, .07); }
 $("#muteBtn").addEventListener("click", e => {
   muted = !muted;
@@ -928,7 +930,10 @@ function apply(d){
   /* the buyer's own song (from the editor) plays instead of our tune; if it won't load, our tune plays */
   if (d.song && d.song.src && !isAuto){
     mp3 = new Audio(d.song.src); mp3.loop = true; mp3.preload = "auto";
-    mp3.addEventListener("error", () => { mp3 = null; if (Music.started){ ensureAudio(); Music.start(); } });
+    mp3.addEventListener("error", () => {                 // their song won't load: our song, then our synth tune
+      if (THEME_MP3 && !mp3.src.endsWith(THEME_MP3)){ mp3.src = THEME_MP3; if (Music.started) mp3.play().catch(() => {}); return; }
+      mp3 = null; if (Music.started){ ensureAudio(); Music.start(); }
+    });
   }
   document.title = "Happy Karwa Chauth, " + C.to;
   $$("[data-to]").forEach(el => el.textContent = C.to);
