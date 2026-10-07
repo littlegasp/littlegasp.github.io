@@ -308,7 +308,8 @@ const NIGHTS = [
 const LABELS = { letter:"Read your letter", ask:"One last question", end:"Finish" };
 /* Background song. With a src it plays this licensed track (and the dhol game follows its beat: bpm + offset of the first beat in seconds);
    without one it plays our own synthesised garba groove. Only use tracks we have the rights to (e.g. Pixabay licence). */
-const SONG = { src: "", bpm: 0, offset: 0, volume: .85, credit: "" };
+const SONG = { src: "audio/aavi-garba-ni-raat.mp3", bpm: 120, offset: .44, volume: .85,
+               credit: "Aavi Garba Ni Raat by kalsstockmedia, Pixabay Content Licence" };   // a buyer's own song (d.song) replaces this
 
 const $ = s => document.querySelector(s);
 const NS = "http://www.w3.org/2000/svg";
@@ -388,7 +389,17 @@ function build(d){
   });
 
   buildRing(); buildLetter();
-  if (SONG.src && !isAuto){ song = new Audio(SONG.src); song.loop = true; song.preload = "auto"; }
+  /* the buyer's own song, if they added one (bpm/offset measured in the editor), else our garba track */
+  const DEFAULT_SONG = Object.assign({}, SONG);
+  if (d.song && d.song.src) Object.assign(SONG, { src: d.song.src, bpm: +d.song.bpm || 0, offset: +d.song.offset || 0, credit: "" });
+  if (SONG.src && !isAuto){
+    song = new Audio(SONG.src); song.loop = true; song.preload = "auto";
+    song.addEventListener("error", () => {               // their song won't load: fall back to ours
+      if (SONG.src === DEFAULT_SONG.src) return;
+      Object.assign(SONG, DEFAULT_SONG); const wasOn = song.dataset.started;
+      song.src = SONG.src; if (wasOn) song.play().catch(() => {});
+    });
+  }
   $("#question").textContent = C.question;
   $("#yesReply").textContent = C.yesReply;
   if (!C.question) $("#endTitle").textContent = C.from ? "With love, " + C.from : "Nine nights. One circle.";

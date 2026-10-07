@@ -65,6 +65,16 @@ textarea{min-height:170px;resize:vertical}
 .toast{position:fixed;left:50%;bottom:calc(var(--payH,110px) + 16px);transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;z-index:20;max-width:90vw;text-align:center}
 .restore{background:rgba(255,200,87,.85);border-radius:14px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
 .restore[hidden]{display:none}   /* display:flex above would otherwise show it to every new visitor */
+/* own song */
+.agree{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:.92rem;line-height:1.4;cursor:pointer;margin:10px 0 12px}
+.agree input{width:20px;height:20px;flex:none;margin:1px 0 0;accent-color:var(--berry-dark)}
+.songadd{width:100%;border:2px dashed #E7B5C7;background:var(--bg);border-radius:14px;padding:14px;font:700 .95rem var(--body);color:var(--berry-dark);cursor:pointer}
+.songadd:disabled{opacity:.45;cursor:not-allowed}
+.songnow{background:var(--bg);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.songnow[hidden]{display:none}
+.songnow b{font-size:.92rem;word-break:break-word}
+.songnow audio{width:100%;height:36px}
+.songnow .rm{align-self:flex-start;border:0;background:none;color:var(--muted);font:600 .85rem var(--body);cursor:pointer;padding:2px 0}
 .linkbtn{border:0;background:none;font:700 .92rem var(--body);color:var(--berry-dark);cursor:pointer;text-decoration:underline}
 .ov{position:fixed;inset:0;background:rgba(27,22,64,.62);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
 .ov[hidden]{display:none}
@@ -127,6 +137,20 @@ textarea{min-height:170px;resize:vertical}
       <input type="text" id="f-question" data-field="question" maxlength="80" placeholder="e.g. Birthday dinner, just us, this Saturday?">
       <label for="f-yes">What they see after tapping Yes</label>
       <input type="text" id="f-yes" data-field="yesReply" maxlength="120" placeholder="e.g. I'll pick you up at 8.">
+    </fieldset>
+
+    <fieldset id="songBox" hidden>
+      <legend>Background song <span class="hint">(optional)</span></legend>
+      <p class="hint" style="margin:0" id="songIntro">A song already plays on this design. Want your own instead? MP3 or M4A, up to 8 MB.</p>
+      <label class="agree"><input type="checkbox" id="songOk"> <span>By uploading, I confirm I have the right to use this audio for a personal gift.</span></label>
+      <button type="button" class="songadd" id="songAdd" disabled>+ Upload your song</button>
+      <div class="songnow" id="songNow" hidden>
+        <b id="songName"></b>
+        <audio id="songPlay" controls preload="none"></audio>
+        <span class="hint" id="songInfo"></span>
+        <button type="button" class="rm" id="songRm">Remove song (use ours)</button>
+      </div>
+      <input type="file" id="songIn" accept="audio/mpeg,audio/mp3,audio/mp4,audio/x-m4a,audio/aac,.mp3,.m4a,.aac" hidden>
     </fieldset>
 
     <fieldset>
@@ -193,6 +217,7 @@ const DESIGNS = {
     offerLabel: "Navratri launch price",
     offerEnds: "2026-10-20",
     maxPhotos: 4, maxReasons: 5,      // 9 slots on the ring, one per Navratri night
+    song: "A garba song already plays on this design.",   // design accepts the buyer's own song
     numberLabel: "Navratris together", numberHint: "e.g. 3",
     questionHint: "e.g. Will you be my dandiya partner this Navratri?", yesHint: "e.g. Then tonight we dance till the last aarti."
   }
@@ -218,7 +243,7 @@ const pb = $("#pricebox");
 pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (offerOn ? `<span class="offer">${D.offerLabel}</span>` : "");
 
 /* ---------- state ---------- */
-let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"" };
+let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null };
 
 function payload(){
   return {
@@ -226,7 +251,8 @@ function payload(){
     photos: state.photos.filter(p => p.src).map(p => ({ src: p.src, caption: (p.caption || "").trim() })),
     reasons: state.reasons.map(r => r.trim()).filter(Boolean),
     letter: state.letter.split(/\n+/).map(l => l.trim()).filter(Boolean),
-    question: state.question.trim(), yesReply: state.yesReply.trim()
+    question: state.question.trim(), yesReply: state.yesReply.trim(),
+    song: D.song && state.song ? { src: state.song.src, bpm: state.song.bpm, offset: state.song.offset } : null
   };
 }
 
@@ -302,6 +328,65 @@ $("#fileIn").addEventListener("change", async e => {
     catch(err){ toast("One photo couldn't be read. Try a JPG or PNG."); }
   }
   renderPhotos(); changed();
+});
+
+/* ---------- own song (designs with song set) ---------- */
+/* We measure the song's beat here, in the browser, so the design's tap game can follow it. */
+async function analyseSong(buf){
+  const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const audio = await new AC(1, 44100, 44100).decodeAudioData(buf.slice(0));
+  const sr = audio.sampleRate, ch = audio.getChannelData(0), ch2 = audio.numberOfChannels > 1 ? audio.getChannelData(1) : null;
+  const hop = 512, frames = Math.min(Math.floor(ch.length / hop) - 1, Math.floor(90 * sr / hop));
+  const env = new Float32Array(frames); let prevL = 0, prevF = 0, lp = 0, a = Math.exp(-2 * Math.PI * 180 / sr);
+  for (let f = 0; f < frames; f++){
+    let el = 0, ef = 0;
+    for (let i = f * hop, e = i + hop; i < e; i++){ const x = ch2 ? (ch[i] + ch2[i]) / 2 : ch[i]; lp = (1 - a) * x + a * lp; el += lp * lp; ef += x * x; }
+    const L = Math.log(1e-6 + el), F = Math.log(1e-6 + ef);
+    env[f] = Math.max(0, L - prevL) + Math.max(0, F - prevF); prevL = L; prevF = F;
+  }
+  const fps = sr / hop, mean = env.reduce((p, v) => p + v, 0) / frames;
+  for (let f = 0; f < frames; f++) env[f] -= mean;
+  const ac = lag => { let s = 0; const L = Math.floor(lag), fr = lag - L; for (let f = 0; f + L + 1 < frames; f++) s += env[f] * (env[f + L] * (1 - fr) + env[f + L + 1] * fr); return s; };
+  let best = [0, -Infinity];
+  for (let bpm = 80; bpm <= 170; bpm += .25){ const lag = 60 * fps / bpm, sc = ac(lag) + .5 * ac(2 * lag); if (sc > best[1]) best = [bpm, sc]; }
+  /* fine-tune: the exact tempo and first beat that line up best with the hits across the whole clip */
+  const at = t => { const x = t * fps, i = Math.floor(x); return i + 1 < frames ? env[i] * (1 - (x - i)) + env[i + 1] * (x - i) : 0; };
+  let ob = [best[0], 0, -Infinity];
+  for (let bpm = best[0] - 1; bpm <= best[0] + 1; bpm += .02){
+    const per = 60 / bpm;
+    for (let off = 0; off < per; off += .01){ let s = 0; for (let t = off; t * fps < frames - 1; t += per) s += at(t); if (s > ob[2]) ob = [bpm, off, s]; }
+  }
+  return { duration: audio.duration, bpm: Math.round(ob[0] * 100) / 100, offset: Math.round(ob[1] * 1000) / 1000 };
+}
+const readUrl = file => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(file); });
+function renderSong(){
+  if (!D.song) return;
+  $("#songBox").hidden = false; $("#songIntro").textContent = D.song + " Want your own instead? MP3 or M4A, up to 8 MB.";
+  const has = !!state.song;
+  $("#songNow").hidden = !has; $("#songAdd").hidden = has;
+  $("#songAdd").disabled = !$("#songOk").checked;
+  if (has){
+    $("#songName").textContent = "🎵 " + state.song.name;
+    if ($("#songPlay").dataset.for !== state.song.name){ $("#songPlay").src = state.song.src; $("#songPlay").dataset.for = state.song.name; }
+    $("#songInfo").textContent = state.song.bpm ? "Ready. The dhol game will follow its beat." : "Ready.";
+    $("#songOk").checked = true;
+  }
+}
+$("#songOk").addEventListener("change", renderSong);
+$("#songAdd").addEventListener("click", () => { if ($("#songOk").checked) $("#songIn").click(); });
+$("#songRm").addEventListener("click", () => { state.song = null; $("#songPlay").removeAttribute("src"); $("#songPlay").dataset.for = ""; renderSong(); changed(); });
+$("#songIn").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = "";
+  if (!f) return;
+  if (f.size > 8 * 1024 * 1024){ toast("That song is over 8 MB. Try a shorter clip or a smaller MP3."); return; }
+  const btn = $("#songAdd"); btn.disabled = true; btn.textContent = "Checking your song…";
+  try {
+    const info = await analyseSong(await f.arrayBuffer());
+    if (info.duration < 15) throw new Error("short");
+    state.song = { name: f.name.replace(/\.[^.]+$/, "").slice(0, 60), src: await readUrl(f), bpm: info.bpm, offset: info.offset };
+    renderSong(); changed();
+  } catch(err){ toast(err.message === "short" ? "That song is too short. Pick one at least 15 seconds long." : "That file couldn't be played. Try an MP3."); }
+  finally { btn.textContent = "+ Upload your song"; renderSong(); }
 });
 
 /* ---------- live preview ---------- */
@@ -396,7 +481,7 @@ payBtn.onclick = async () => {
   busy(true, "Preparing secure payment…");
   let order;
   try {
-    const content = payload(); delete content.photos;
+    const content = payload(); delete content.photos; delete content.song;
     order = await api("createOrder", { design: designKey, email: state.email.trim(), content });
   } catch(e){ busy(false); toast("Couldn't start payment: " + e.message); return; }
 
@@ -417,9 +502,9 @@ payBtn.onclick = async () => {
 };
 
 async function finish(paid){
-  overlay({ spin: true, title: "Payment received 🎉", text: "Creating your website and saving your photos. This takes a few seconds, please don't close this page." });
+  overlay({ spin: true, title: "Payment received 🎉", text: "Creating your website and saving your photos" + (payload().song ? " and song" : "") + ". This takes a few seconds, please don't close this page." });
   try {
-    const r = await api("complete", Object.assign({}, paid, { photos: payload().photos }));
+    const r = await api("complete", Object.assign({}, paid, { photos: payload().photos, song: payload().song }));
     const done = { link: r.link, to: state.to.trim(), email: state.email.trim() };
     await idbPut("done:" + designKey, done);
     await setPending(null); await clearDraft();
@@ -475,7 +560,7 @@ $("#startOver").onclick = async () => {
 (async () => {
   const saved = await loadDraft();
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
-  bindFields(); renderNotes(); renderPhotos(); fitLayout();
+  bindFields(); renderNotes(); renderPhotos(); renderSong(); fitLayout();
   if (desktop()) loadPreview();
   const done = await idbGet("done:" + designKey);
   if (done && done.link){ showLink(done); return; }
