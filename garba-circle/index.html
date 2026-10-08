@@ -152,6 +152,29 @@ body.allLit .lit-ring .slot{animation:glowy 2s ease-in-out infinite;animation-de
 .spinning{animation:sway 2.4s ease-in-out infinite}
 @keyframes sway{25%{rotate:-7deg}75%{rotate:7deg}}
 
+/* dandiya round: tap on the beat */
+.dbox{position:relative;width:min(86vw,40dvh,560px);aspect-ratio:1;flex:none;border:0;padding:0;background:none;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;color:inherit}
+@media (min-width:760px) and (min-aspect-ratio:1/1){ .dbox{width:min(44vw,74dvh,760px)} }
+.dbox .couple{position:absolute;inset:0}
+.dbox.hit .couple{animation:clack .25s ease}
+@keyframes clack{40%{transform:scale(1.035) rotate(-1deg)}}
+.tgt{position:absolute;left:50%;top:12%;width:22%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:3px solid rgba(233,180,76,.9);box-shadow:0 0 18px rgba(233,180,76,.55),inset 0 0 14px rgba(233,180,76,.35);pointer-events:none;transition:opacity .3s}
+.tgt.pulse{animation:tpulse .35s ease-out}
+@keyframes tpulse{40%{transform:scale(1.25);box-shadow:0 0 34px rgba(255,231,168,.9),inset 0 0 18px rgba(233,180,76,.6)}}
+.appr{position:absolute;inset:-4px;border-radius:50%;border:4px solid #FFE7A8;opacity:0;pointer-events:none;will-change:transform}
+.judge{position:absolute;left:50%;bottom:108%;translate:-50% 0;font:400 clamp(1.5rem,2.8vw,2.6rem)/1 var(--display);white-space:nowrap;pointer-events:none;opacity:0;color:#FFE7A8;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.judge.miss{color:#B9A9C9}
+.judge.show{animation:judge .7s ease-out}
+@keyframes judge{0%{opacity:0;transform:translateY(10px) scale(.8)}20%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-22px)}}
+.beats{display:flex;gap:clamp(8px,1vw,12px);justify-content:center}
+.beats i{width:clamp(16px,1.6vw,22px);aspect-ratio:1;border-radius:50%;background:#2A1C44;box-shadow:0 0 0 1.5px rgba(233,180,76,.55);transition:background .2s,opacity .2s}
+.beats i.good{background:var(--c);opacity:.6}
+.beats i.perfect{background:var(--c);box-shadow:0 0 0 1.5px #E9B44C,0 0 12px var(--c)}
+.beats i.miss{opacity:.3}
+.dstatus{font:400 clamp(1.6rem,2.8vw,2.6rem)/1.1 var(--display);min-height:1.15em}
+.dresult{display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.6dvh,14px)}
+.dresult[hidden]{display:none}
+
 /* letter */
 .scroll{position:relative;width:min(84vw,380px);min-height:calc(min(84vw,380px) * 1.3);background:url(img/letter-scroll.webp) center top / 100% 100% no-repeat;padding:15% 18% 34% 21%;text-align:left;color:var(--ink)}
 @media (min-width:760px) and (min-aspect-ratio:1/1){ .scroll{width:min(30vw,46dvh,500px);min-height:calc(min(30vw,46dvh,500px) * 1.3)} }
@@ -238,6 +261,29 @@ canvas#petals{position:absolute;inset:0;width:100%;height:100%;pointer-events:no
     <button class="btn next" data-next></button>
   </section>
 
+  <!-- 3b. Dandiya round: tap with the dhol -->
+  <section class="scene two" data-scene="dandiya" hidden id="dScene">
+    <div class="art solo" style="width:auto;aspect-ratio:auto">
+      <button class="dbox" id="dtap" aria-label="Tap on the beat">
+        <div class="glow"></div>
+        <img class="couple" src="img/couple-clash.webp" alt="The couple ready to clash their dandiyas">
+        <span class="tgt" id="tgt"><span class="appr" id="appr"></span><span class="judge" id="judge"></span></span>
+      </button>
+    </div>
+    <div class="side">
+      <h2 tabindex="-1" class="gold">Dandiya round</h2>
+      <p class="sub" id="dSub">Tap when the gold ring closes on the sticks. Eight beats with <span data-from>me</span>.</p>
+      <div class="beats" id="beats" aria-hidden="true"></div>
+      <p class="dstatus gold" id="dStatus" aria-live="polite"></p>
+      <button class="btn" id="dGo">I'm ready</button>
+      <div class="dresult" id="dResult" hidden>
+        <p class="sub" id="dLine"></p>
+        <button class="btn next" data-next></button>
+        <button class="btn ghost" id="dAgain">Play again</button>
+      </div>
+    </div>
+  </section>
+
   <!-- 4. Letter -->
   <section class="scene two" data-scene="letter" hidden>
     <div class="art solo" style="flex-direction:column"><div class="glow"></div><img class="couple" src="img/couple-heart.webp" alt="The couple making a heart with their dandiyas"></div>
@@ -306,7 +352,7 @@ const NIGHTS = [
   { c:"#7B2FBE", name:"Purple",        devi:"Mahagauri" },
   { c:"#0F8F86", name:"Peacock green", devi:"Siddhidatri" }
 ];
-const LABELS = { lit:"See all nine lit", letter:"Read your letter", ask:"One last question", end:"Finish" };
+const LABELS = { lit:"See all nine lit", dandiya:"Play a dandiya round", letter:"Read your letter", ask:"One last question", end:"Finish" };
 /* Background song. With a src it plays this licensed track (bpm + offset of its first beat are kept for designs that tap along);
    without one it plays our own synthesised garba groove. Only use tracks we have the rights to (e.g. Pixabay licence). */
 const SONG = { src: "audio/aavi-garba-ni-raat.mp3", bpm: 120, offset: .44, volume: .85,
@@ -378,7 +424,7 @@ function build(d){
   items = Array(9).fill(null);
   mixed.slice(0, 9).forEach((it, i, a) => { items[Math.floor(i * 9 / a.length)] = it; });
 
-  seq = ["open", "dance", "lit"];
+  seq = ["open", "dance", "lit", "dandiya"];
   if (C.letter.length) seq.push("letter");
   if (C.question) seq.push("ask");
   seq.push("end");
@@ -414,6 +460,7 @@ function go(name){
   const h = document.querySelector(`[data-scene="${name}"]`).querySelector("h1,h2");
   if (h && !isPreview) h.focus({ preventScroll:true });
   if (name === "letter"){ $("#letter").classList.add("reveal"); fitLetter(); }
+  if (name === "dandiya") resetRound();
   if (name === "lit"){ document.body.classList.add("allLit"); petals(200); if (ctx) [0, 250, 500].forEach((d, k) => setTimeout(() => bell(990 + k * 330), d)); }
 }
 document.querySelectorAll("[data-next]").forEach(b => b.addEventListener("click", () => {
@@ -626,6 +673,106 @@ $("#muteBtn").addEventListener("click", e => {
   e.currentTarget.textContent = muted ? "✕" : "♪";
 });
 
+/* ---------- dandiya round: 8 taps on the beat of whatever song is playing ---------- */
+const ROUND = 8;
+let G = null;
+function resetRound(){
+  if (G && G.raf) cancelAnimationFrame(G.raf);
+  G = null;
+  const B = $("#beats"); B.innerHTML = "";
+  for (let i = 0; i < ROUND; i++){ const d = document.createElement("i"); d.style.setProperty("--c", NIGHTS[i].c); B.appendChild(d); }
+  $("#dStatus").textContent = ""; $("#dResult").hidden = true; $("#dGo").hidden = false; $("#tgt").style.opacity = 1;
+}
+/* when do the beats land? Follow the song (its bpm + first-beat offset), else our own groove, else a steady count with our own taps */
+function beatPlan(){
+  const p0 = performance.now(), want = isAuto ? .75 : .95;
+  const fit = beat => beat * Math.max(1, Math.round(want / beat));
+  if (song && song.dataset.started && !song.paused && SONG.bpm > 0){
+    const step = fit(60 / SONG.bpm), ct = song.currentTime;
+    const k = Math.ceil((ct - SONG.offset) / step) + 3;
+    return { step, first: p0 + (SONG.offset + k * step - ct) * 1000, cue: false };
+  }
+  if (ctx && Music.on){
+    const step = fit(2 * EIGHTH), t = ctx.currentTime;
+    const k = Math.ceil((t - Music.t0) / step) + 3;
+    return { step, first: p0 + (Music.t0 + k * step - t) * 1000, cue: false };
+  }
+  return { step: want, first: p0 + 3 * want * 1000, cue: true };
+}
+function startRound(){
+  ensureAudio();
+  const P = beatPlan(), ms = P.step * 1000;
+  G = { ...P, ms, times: [...Array(ROUND)].map((_, i) => P.first + i * ms), res: Array(ROUND).fill(null), next: 0, raf: 0, count: 3, score: 0 };
+  $("#dGo").hidden = true; $("#dStatus").textContent = "Get ready…";
+  const loop = () => { G.raf = requestAnimationFrame(loop); frame(); };
+  loop();
+}
+function frame(){
+  const now = performance.now(), ms = G.ms;
+  /* count-in: 3, 2, 1 on the three beats before the first one */
+  const left = Math.ceil((G.first - now) / ms);
+  if (left > 0 && left <= 3 && left !== G.shown){ G.shown = left; $("#dStatus").textContent = left === 3 ? "3" : left === 2 ? "2" : "1";
+    pulse(); if (ctx) tak(ctx.currentTime, .18); }
+  if (left <= 0 && G.shown !== 0){ G.shown = 0; $("#dStatus").textContent = "Dance!"; }
+  /* our own cue on every beat when there's no song beat to follow */
+  if (G.cue && ctx){ while ((G.cued || 0) < ROUND && G.times[G.cued || 0] - now < 60){ const i = G.cued || 0; dhum(ctx.currentTime + Math.max(0, (G.times[i] - now) / 1000), .5); G.cued = i + 1; } }
+  /* misses: the window closed without a tap */
+  while (G.next < ROUND && now > G.times[G.next] + 230) judge(G.next, "miss");
+  if (isAuto && G.next < ROUND && now >= G.times[G.next] - 15) tapBeat();
+  /* the closing ring for the next beat */
+  const a = $("#appr");
+  if (G.next < ROUND){
+    const dt = G.times[G.next] - now;
+    if (dt < ms * 1.15 && dt > -230){ const k = Math.max(0, dt) / ms; a.style.transform = `scale(${1 + k * 1.8})`; a.style.opacity = dt > 0 ? .25 + (1 - k) * .75 : .9; }
+    else a.style.opacity = 0;
+  } else a.style.opacity = 0;
+  if (G.next >= ROUND && !G.done){ G.done = true; setTimeout(finishRound, 700); }
+}
+function tapBeat(){
+  if (!G || G.done || G.next >= ROUND) return;
+  const now = performance.now(), i = G.next, diff = now - G.times[i];
+  if (diff < -260) return;                                       // far too early: ignore
+  judge(i, Math.abs(diff) <= 110 ? "perfect" : Math.abs(diff) <= 230 ? "good" : "miss", true);
+}
+function judge(i, kind, tapped){
+  if (G.res[i]) return;
+  G.res[i] = kind; G.next = i + 1; G.score += kind === "perfect" ? 2 : kind === "good" ? 1 : 0;
+  $("#beats").children[i].className = kind;
+  const j = $("#judge"); j.textContent = kind === "perfect" ? "Perfect!" : kind === "good" ? "Good" : "Miss";
+  j.className = "judge" + (kind === "miss" ? " miss" : ""); void j.offsetWidth; j.classList.add("show");
+  if (kind !== "miss"){
+    const bx = $("#dtap"); bx.classList.remove("hit"); void bx.offsetWidth; bx.classList.add("hit");
+    pulse();
+    if (ctx){ const t = ctx.currentTime; dandiya(t, kind === "perfect" ? .6 : .4); if (kind === "perfect") dhum(t, .45); }
+    const r = $("#tgt").getBoundingClientRect(), st = $("#stage").getBoundingClientRect();
+    burst(r.left - st.left + r.width / 2, r.top - st.top + r.height / 2, kind === "perfect" ? 22 : 10);
+  }
+}
+function pulse(){ const t = $("#tgt"); t.classList.remove("pulse"); void t.offsetWidth; t.classList.add("pulse"); }
+function finishRound(){
+  cancelAnimationFrame(G.raf); $("#tgt").style.opacity = .35;
+  const hits = G.res.filter(r => r !== "miss").length, who = C.from || "me";
+  const [title, line] = hits === ROUND && G.score >= 14 ? ["Perfect raas!", `Every beat, right on time. ${who} is impressed.`]
+                      : hits >= 5 ? ["Nicely danced!", "The dhol approves."]
+                      :             ["The dhol forgives you", "It's the dancing together that counts."];
+  $("#dStatus").textContent = title;
+  $("#dLine").textContent = `${hits} of ${ROUND} on the beat. ${line}`;
+  $("#dResult").hidden = false;
+  if (hits >= 5) petals(120);
+  if (!isAuto) setTimeout(() => $("#dResult .btn.next").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 300);
+}
+$("#dGo").addEventListener("click", startRound);
+$("#dAgain").addEventListener("click", () => { resetRound(); startRound(); });
+$("#dScene").addEventListener("pointerdown", e => { if (e.target.closest(".btn")) return; tapBeat(); });
+$("#dtap").addEventListener("click", e => { if (e.detail === 0) tapBeat(); });   // keyboard: Enter / Space
+/* gold sparks at a point (used by the dandiya round) */
+function burst(x, y, n){
+  if (reduce) return;
+  for (let k = 0; k < n; k++){ const a = Math.random() * Math.PI * 2, v = 2 + Math.random() * 4;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1.5, g: .12, s: 2.5 + Math.random() * 3, r: 0, vr: .2, c: ["#FFE7A8","#F2C25E","#FFF4DF","#F59E1B"][k % 4], w: 0, life: 40 + Math.random() * 20 }); }
+  if (!running){ running = true; requestAnimationFrame(tick); }
+}
+
 /* ---------- letter ---------- */
 function buildLetter(){
   const L = $("#letter");
@@ -676,6 +823,7 @@ async function runAutoplay(){
   for (let i = 0; i < 9; i++){ await wait(i < 3 ? 2300 : 1300); danceNight(); }
   await wait(2200); go("lit");
   await wait(3000);
+  go("dandiya"); await wait(1200); startRound(); await wait(11 * 750 + 2600);
   if (seq.includes("letter")){ go("letter"); await wait(4200); }
   if (seq.includes("ask")){ go("ask"); await wait(1600); $("#againBtn").click(); await wait(1000); sayYes(); await wait(3600); }
   else { go("end"); await wait(3000); }
