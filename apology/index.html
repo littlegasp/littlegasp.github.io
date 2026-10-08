@@ -138,6 +138,61 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .jump{animation:jump 1.6s ease-in-out infinite}
 @keyframes jump{30%{transform:translateY(-14px) rotate(-3deg)}60%{transform:translateY(0) rotate(2deg)}}
 
+.linkline{display:flex;flex-direction:column;align-items:center;gap:2px}
+.small-note{font-size:.88rem;color:var(--muted);max-width:34ch}
+.small-note:empty{display:none}
+#gloom{position:fixed;inset:0;z-index:1;pointer-events:none;background:#2B2346;opacity:0;transition:opacity .5s}
+#gloom.flash{animation:flash .5s}
+@keyframes flash{30%{background:#fff;opacity:.55}}
+body.sunny #gloom{opacity:0 !important}
+
+/* promise jar: tap or shake, a paper star unfolds into a promise */
+.jarbox{position:relative;width:min(52vw,32dvh);aspect-ratio:3/4;flex:none;cursor:pointer;border:0;padding:0;background:none;appearance:none;
+  user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transform-origin:50% 90%}
+.jarbox img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 14px 20px rgba(59,42,92,.25))}
+.jarbox.wiggle{animation:wiggle .55s}
+.jarbox.empty img{filter:drop-shadow(0 14px 20px rgba(59,42,92,.25)) saturate(.55) brightness(1.05)}
+@keyframes wiggle{20%{transform:rotate(-8deg)}40%{transform:rotate(7deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(2deg)}}
+.flystar{position:fixed;z-index:30;width:46px;height:46px;pointer-events:none;transition:transform .8s cubic-bezier(.3,1.3,.5,1),opacity .4s .7s}
+.flystar svg{width:100%;height:100%;animation:spin .8s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stars{display:flex;gap:7px;justify-content:center;min-height:22px}
+.stars i{width:20px;height:20px;background:#D9C9DD;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);transition:background .3s,transform .3s}
+.stars i.on{background:var(--gold);transform:scale(1.15)}
+.note.unfold{animation:unfold .6s cubic-bezier(.2,1.3,.4,1) both;transform-origin:50% 0}
+@keyframes unfold{from{transform:perspective(500px) rotateX(-85deg) scale(.6);opacity:0}}
+
+/* forgive-o-meter */
+.gauge{width:min(100%,300px);flex:none;touch-action:none;cursor:pointer;user-select:none;-webkit-user-select:none}
+.gauge svg{display:block;width:100%;height:auto;overflow:visible}
+#needle{transform-origin:100px 100px;transition:transform .12s}
+.reading{font:400 clamp(1.3rem,5.4vw,1.6rem)/1.1 var(--display);color:var(--accent);min-height:1.2em}
+.dial{width:min(100%,300px);accent-color:var(--accent);margin:0}
+[data-scene="meter"] .pup{width:min(46vw,26dvh)}
+.pup.shiver{animation:shiver .25s linear infinite}
+@keyframes shiver{25%{transform:translateX(-2px) rotate(-1deg)}75%{transform:translateX(2px) rotate(1deg)}}
+
+/* make-up menu */
+.menu{width:min(86vw,340px);flex:none;position:relative;text-align:left;padding:22px 20px 18px;background:#FFFDF8;border-radius:10px;
+  box-shadow:0 0 0 6px #fff,0 0 0 7px #E9D7E3,0 16px 32px rgba(59,42,92,.22)}
+.menu h3{margin:0;text-align:center;font:400 1.7rem/1 var(--display);color:var(--accent)}
+.menu .chef{text-align:center;font:600 .82rem var(--body);color:var(--muted);letter-spacing:.04em;margin:6px 0 10px;padding-bottom:10px;border-bottom:2px dashed #EADFEA}
+.menu label{display:flex;align-items:center;gap:10px;padding:9px 2px;cursor:pointer;font:600 1rem/1.25 var(--body);color:var(--ink);border-bottom:1px dotted #EADFEA}
+.menu label:last-of-type{border-bottom:0}
+.menu input{appearance:none;width:24px;height:24px;flex:none;margin:0;border-radius:7px;box-shadow:inset 0 0 0 2px #D8C3D3;background:#fff;display:grid;place-items:center;cursor:pointer;transition:background .15s}
+.menu input:checked{background:var(--accent);box-shadow:none}
+.menu input:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:translateY(-1px) rotate(45deg)}
+.menu input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.menu .it{flex:1}
+.menu .pr{font:400 1.2rem var(--hand);color:var(--accent-dark);white-space:nowrap}
+.stamp{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) rotate(-14deg);padding:10px 18px;border:4px solid var(--accent);border-radius:12px;
+  font:400 1.6rem/1 var(--display);color:var(--accent);background:rgba(255,253,248,.6);white-space:nowrap;pointer-events:none;animation:stamp .45s cubic-bezier(.3,1.6,.5,1) both}
+.stamp[hidden]{display:none}
+@keyframes stamp{from{transform:translate(-50%,-50%) rotate(-14deg) scale(2.2);opacity:0}}
+.extra-in{width:100%;font:500 1rem var(--body);color:var(--ink);padding:12px 14px;border-radius:14px;border:0;background:#fff;box-shadow:inset 0 0 0 2px #F1D9E4}
+.extra-in:focus{outline:3px solid var(--gold);outline-offset:1px}
+#endOrder:empty{display:none}
+
 /* laptops: full-screen, art | words */
 @media (min-width:760px) and (min-aspect-ratio:1/1){
   #bg{background-position:center}
@@ -148,6 +203,9 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .pup{width:min(30vw,62dvh)}
   .heartbox{width:min(28vw,56dvh)}
   .pane{width:min(24vw,56dvh,400px)}
+  .jarbox{width:min(22vw,52dvh)}
+  [data-scene="meter"] .pup{width:min(26vw,56dvh)}
+  .menu{width:min(30vw,420px)}
   h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
   .name{font-size:clamp(3.2rem,5vw,5rem)}
   h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
@@ -161,6 +219,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 <body>
 <div id="bg" aria-hidden="true"></div>
 <canvas id="rain" aria-hidden="true"></canvas>
+<div id="gloom" aria-hidden="true"></div>
 <nav class="dots" id="dots" aria-label="Progress" hidden></nav>
 <button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -210,6 +269,18 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
   </section>
 
+  <!-- 3b. Promise jar (extra.promises) -->
+  <section class="scene two" data-scene="jar" hidden>
+    <div class="art"><button class="jarbox" id="jar" type="button" aria-label="Take a promise out of the jar"><img src="img/jar.webp" alt="" width="450" height="600"></button></div>
+    <div class="words">
+      <h2 tabindex="-1">A jar of promises</h2>
+      <p class="sub" id="jarSub">Tap the jar. Every star inside is a promise I mean to keep.</p>
+      <div class="note" id="jarNote" aria-live="polite"><p class="hint">Go on, take one out.</p></div>
+      <div class="stars" id="jarStars" aria-hidden="true"></div>
+      <button class="btn" data-next id="afterJar" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
   <!-- 4. Letter -->
   <section class="scene" data-scene="letter" hidden>
     <h2 tabindex="-1">What I really want to say</h2>
@@ -217,17 +288,64 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <button class="btn" data-next><span class="lbl"></span></button>
   </section>
 
+  <!-- 4b. Forgive-o-meter -->
+  <section class="scene two" data-scene="meter" hidden>
+    <div class="art"><img class="pup" id="meterPup" src="img/puppy-sorry.webp" alt="The puppy, waiting for your answer" width="1200" height="1200"></div>
+    <div class="words">
+      <h2 tabindex="-1">Be honest. How mad are you?</h2>
+      <div class="gauge" id="gauge" aria-hidden="true">
+        <svg viewBox="0 0 200 116">
+          <defs><linearGradient id="meterGrad" x1="0" x2="1"><stop offset="0" stop-color="#D9452F"/><stop offset=".3" stop-color="#F08A3C"/><stop offset=".55" stop-color="#F2C451"/><stop offset=".78" stop-color="#8FD6BD"/><stop offset="1" stop-color="#E8457A"/></linearGradient></defs>
+          <path d="M18 100 A82 82 0 0 1 182 100" fill="none" stroke="#EFE3EC" stroke-width="22" stroke-linecap="round"/>
+          <path d="M18 100 A82 82 0 0 1 182 100" fill="none" stroke="url(#meterGrad)" stroke-width="16" stroke-linecap="round"/>
+          <text x="10" y="114" font-size="13">🔥</text><text x="176" y="114" font-size="13">💗</text>
+          <g id="needle"><line x1="100" y1="100" x2="100" y2="34" stroke="#3B2A5C" stroke-width="5" stroke-linecap="round"/></g>
+          <circle cx="100" cy="100" r="9" fill="#3B2A5C"/><circle cx="100" cy="100" r="3.5" fill="#FFE3A1"/>
+        </svg>
+      </div>
+      <input class="dial" id="dial" type="range" min="0" max="100" value="15" aria-label="How mad are you, from still furious to all good">
+      <p class="reading" id="reading" aria-live="polite"></p>
+      <p class="whisper" id="meterLine"></p>
+      <div class="linkline">
+        <button class="btn" data-next id="afterMeter"><span class="lbl"></span></button>
+        <p class="small-note" id="meterNote"></p>
+      </div>
+    </div>
+  </section>
+
   <!-- 5. Question -->
   <section class="scene two" data-scene="ask" hidden>
-    <div class="art"><img class="pup" src="img/puppy-sorry.webp" alt="The puppy waiting hopefully" width="1200" height="1200"></div>
+    <div class="art"><img class="pup" id="askPup" src="img/puppy-sorry.webp" alt="The puppy waiting hopefully" width="1200" height="1200"></div>
     <div class="words">
       <p class="kicker">Forgive me?</p>
       <h2 tabindex="-1" class="q" id="question"></h2>
       <div class="ask-btns">
         <button class="btn" id="yesBtn"><span class="lbl">Yes</span></button>
-        <button class="btn ghost" id="waitBtn"><span class="lbl">I need a minute</span></button>
+        <button class="btn ghost" id="madBtn"><span class="lbl">Still mad 😤</span></button>
       </div>
       <p class="wait" id="waitLine"></p>
+      <button class="linkish" id="waitBtn">I need a minute</button>
+    </div>
+  </section>
+
+  <!-- 5b. Make-up menu (extra.menu, or ours) -->
+  <section class="scene two" data-scene="menu" hidden>
+    <div class="art">
+      <form class="menu" id="menu" onsubmit="return false">
+        <h3>Make-up Menu</h3>
+        <p class="chef" id="menuChef"></p>
+        <div id="menuItems"></div>
+        <p class="stamp" id="stamp" hidden>Order placed ✓</p>
+      </form>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1">Now let me make it up to you</h2>
+      <p class="sub" id="menuSub">Pick as many as you like. Everything on this menu is on me.</p>
+      <input class="extra-in" id="menuExtra" type="text" maxlength="100" placeholder="Anything else? (optional)" aria-label="Anything else you'd like">
+      <button class="btn" id="orderBtn"><span class="lbl">Place my order</span></button>
+      <p class="small-note" id="orderNote" aria-live="polite"></p>
+      <button class="btn" data-next id="afterMenu" hidden><span class="lbl"></span></button>
+      <button class="linkish" id="skipMenu">Maybe later</button>
     </div>
   </section>
 
@@ -238,6 +356,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <p class="whisper" id="endPre"></p>
       <h1 tabindex="-1" class="name" id="endTitle"></h1>
       <p class="sub" id="endLine"></p>
+      <p class="sub" id="endOrder"></p>
       <p class="sub" id="endFrom"></p>
       <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
       <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
@@ -260,11 +379,17 @@ const DEMO = {
     { src: "img/demo-2.svg", caption: "The day you forgave my cooking" },
     { src: "img/demo-3.svg", caption: "Us, before I was an idiot" }
   ],
-  reasons: ["I'm sorry I didn't listen","I'm sorry I made you feel small","You deserved better from me","I'll call when I'm running late","I'll stop saying 'calm down'","I'll show up, every time"],
+  reasons: ["I'm sorry I didn't listen","I'm sorry I made you feel small","I'm sorry I picked my phone over you","I'm sorry I said things I didn't mean","You deserved better from me","I'm sorry. No excuses."],
   letter: ["Ananya,","I've been replaying it all day, and you were right.","I don't want to win arguments with you. I want to be on your side, even when I'm the problem.","No excuses this time. Just me, saying sorry, and meaning it."],
   question: "Coffee tomorrow, my treat, and I'll listen this time?",
-  yesReply: "Thank you. I'll be there at 6, with your favourite."
+  yesReply: "Thank you. I'll be there at 6, with your favourite.",
+  extra: {
+    promises: ["I'll call when I'm running late","I'll stop saying 'calm down'","Phones away at dinner, every night","I'll listen before I try to fix","I'll show up, every time"],
+    menu: ["Pani puri date, unlimited plates","I do the dishes for a week","Foot massage, no complaints","You pick every movie this month","Breakfast in bed on Sunday","A long drive, your playlist"]
+  }
 };
+/* our make-up menu, used when the buyer leaves theirs empty */
+const MENU = ["Your favourite food, my treat","I do the dishes for a week","A long walk, phones away","You pick the movie, no complaints","One very long hug","Breakfast in bed"];
 
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const qs = new URLSearchParams(location.search);
@@ -272,7 +397,7 @@ const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autopla
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const LABELS = { heart:"Hear me out", window:"Remember these?", letter:"Read my letter", ask:"One question", end:"Finish" };
+const LABELS = { heart:"Hear me out", window:"Remember these?", jar:"Open the promise jar", letter:"Read my letter", meter:"One honest answer", ask:"One question", menu:"Your make-up menu", end:"Finish" };
 let C, seq = [], current = 0;
 
 /* ---------- load ---------- */
@@ -313,6 +438,10 @@ function build(d){
     reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
     letter: (d.letter || []).map(t).filter(Boolean),
     question: t(d.question), yesReply: t(d.yesReply) };
+  const x = d.extra && typeof d.extra === "object" ? d.extra : {};
+  const list = (a, n, m) => (Array.isArray(a) ? a : []).map(v => t(v).slice(0, m)).filter(Boolean).slice(0, n);
+  C.promises = list(x.promises, 6, 80);
+  C.menu = list(x.menu, 6, 50); if (!C.menu.length) C.menu = MENU;
   if (id) C.photos = C.photos.filter(p => p.src);
   document.title = C.to + ", I'm sorry";
   $$("[data-to]").forEach(e => e.textContent = C.to + ",");
@@ -321,16 +450,18 @@ function build(d){
 
   seq = ["open", "heart"];
   if (C.photos.length) seq.push("window");
+  if (C.promises.length) seq.push("jar");
   if (C.letter.length) seq.push("letter");
+  seq.push("meter");
   if (C.question) seq.push("ask");
-  seq.push("end");
+  seq.push("menu", "end");
   $$("[data-scene]").forEach(sc => {
     const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl");
     if (b && i > -1 && seq[i + 1]) b.textContent = LABELS[seq[i + 1]];
   });
   const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
 
-  buildHeart(); buildLetter();
+  buildHeart(); buildLetter(); buildJar(); buildMeter(); buildMenu();
   $("#question").textContent = C.question;
   $("#endPre").textContent = C.question ? "You said yes." : "";
   $("#endTitle").textContent = "Thank you, " + C.to;
@@ -364,9 +495,11 @@ function go(name){
   if (name === "heart"){ startMusic(); scatter(); }
   if (name === "window") showPhoto(0);
   if (name === "letter") $("#letter").classList.add("reveal");
+  if (name === "meter") setMeter(+$("#dial").value, true);
+  if (name === "ask") ["puppy-choc", "puppy-bouquet", "puppy-roll"].forEach(f => { new Image().src = "img/" + f + ".webp"; });
   if (name === "end"){ document.body.classList.add("sunny"); hearts(90); chimeUp(); }
 }
-$$("[data-next]").forEach(b => b.addEventListener("click", () => { ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n) go(n); }));
+$$("[data-next]").forEach(b => b.addEventListener("click", () => { ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n === "jar") askMotion(); if (n) go(n); }));
 $("#replay").addEventListener("click", () => location.reload());
 
 /* ---------- sound: a soft music-box tune (our own), or the buyer's song ---------- */
@@ -561,27 +694,178 @@ function buildLetter(){
   if (C.from){ const s = document.createElement("p"); s.className = "sign"; s.textContent = "Yours, " + C.from; s.style.setProperty("--i", C.letter.length); L.appendChild(s); }
 }
 
-/* ---------- 5. ask: no pressure, a minute is allowed ---------- */
-let waits = 0;
+/* ---------- 3b. promise jar: tap it or shake the phone ---------- */
+let jarTaken = 0, motionOn = false, lastShake = 0;
+const coarse = matchMedia("(pointer: coarse)").matches;
+const STAR_COLS = ["#F6B8CF", "#C9B5EC", "#FFD3A8", "#F49AB6", "#BFD9F5", "#FFE3A1"];
+function buildJar(){
+  const n = C.promises.length; if (!n) return;
+  for (let i = 0; i < n; i++) $("#jarStars").appendChild(document.createElement("i"));
+  if (coarse && window.DeviceMotionEvent) $("#jarSub").textContent = "Shake your phone, or tap the jar. Every star inside is a promise I mean to keep.";
+}
+function askMotion(){   // iPhones ask permission, and only inside a tap
+  if (motionOn || isAuto || !coarse || !window.DeviceMotionEvent) return; motionOn = true;
+  const on = () => addEventListener("devicemotion", onMotion);
+  if (typeof DeviceMotionEvent.requestPermission === "function") DeviceMotionEvent.requestPermission().then(r => { if (r === "granted") on(); }).catch(() => {});
+  else on();
+}
+function onMotion(e){
+  if (seq[current] !== "jar") return;
+  const a = e.accelerationIncludingGravity || e.acceleration; if (!a) return;
+  const m = Math.hypot(a.x || 0, a.y || 0, a.z || 0), now = performance.now();
+  if (m > 23 && now - lastShake > 900){ lastShake = now; popStar(); }
+}
+function popStar(){
+  ensureAudio(); startMusic();
+  const jar = $("#jar"), n = C.promises.length;
+  jar.classList.remove("wiggle"); void jar.offsetWidth; jar.classList.add("wiggle");
+  if (jarTaken >= n){ if (ctx) bell(660, ctx.currentTime, .05, .4); return; }
+  const i = jarTaken++, r = jar.getBoundingClientRect(), note = $("#jarNote"), nr = note.getBoundingClientRect();
+  const st = document.createElement("div"); st.className = "flystar";
+  st.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 1.8l3 6.6 7.2.7-5.4 4.8 1.6 7.1L12 17.3 5.6 21l1.6-7.1L1.8 9.1 9 8.4z" fill="${STAR_COLS[i % 6]}" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"/></svg>`;
+  st.style.left = (r.left + r.width / 2 - 23) + "px"; st.style.top = (r.top + r.height * .3) + "px";
+  document.body.appendChild(st);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const dx = nr.left + nr.width / 2 - (r.left + r.width / 2), dy = nr.top + 10 - (r.top + r.height * .3);
+    st.style.transform = `translate(${dx}px,${Math.min(dy, -60)}px) scale(1.4)`; st.style.opacity = "0";
+  }));
+  setTimeout(() => st.remove(), 1300);
+  if (ctx){ const t = ctx.currentTime; bell(1047, t, .08, .8); bell(1568, t + .12, .06, 1); }
+  setTimeout(() => {
+    note.innerHTML = "";
+    const tag = document.createElement("p"); tag.className = "tag"; tag.textContent = `Promise ${i + 1} of ${n}`;
+    const big = document.createElement("p"); big.className = "big"; big.textContent = C.promises[i];
+    note.append(tag, big); note.classList.remove("unfold"); void note.offsetWidth; note.classList.add("unfold");
+    $$("#jarStars i")[i].classList.add("on");
+    if (jarTaken === n){
+      jar.classList.add("empty"); $("#jarSub").textContent = "That's all of them. Hold me to every one.";
+      $("#afterJar").hidden = false; const b = note.getBoundingClientRect(); sparkle(b.left + b.width / 2, b.top + 10);
+      if (!isAuto) setTimeout(() => $("#afterJar").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 500);
+    }
+  }, 450);
+}
+$("#jar").addEventListener("click", () => { askMotion(); popStar(); });
+
+/* ---------- 4b. forgive-o-meter: the weather follows their answer ---------- */
+const MOODS = [
+  ["Still furious 🔥", "Fair. I deserve that."],
+  ["Quite upset 😤", "Okay. I'll keep trying."],
+  ["Thawing a little 😶", "Is that... a tiny smile?"],
+  ["Almost there 🥹", "So close. Please don't stop now."],
+  ["All good 💗", "Really?! Best. Day. Ever."] ];
+let meterTouched = false, meterSent = false, lastMood = -1;
+function moodOf(v){ return Math.min(4, Math.floor(v / 20)); }
+function buildMeter(){
+  const dial = $("#dial"), g = $("#gauge");
+  dial.addEventListener("input", () => { meterTouched = true; setMeter(+dial.value); });
+  let drag = false;
+  const at = e => { const r = g.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * (100 / 116);
+    let a = Math.atan2(cy - e.clientY, e.clientX - cx); if (a < 0) a = e.clientX < cx ? Math.PI : 0;
+    const v = Math.round(100 - a / Math.PI * 100); dial.value = v; meterTouched = true; setMeter(v); };
+  g.addEventListener("pointerdown", e => { e.preventDefault(); drag = true; g.setPointerCapture(e.pointerId); ensureAudio(); at(e); });
+  g.addEventListener("pointermove", e => { if (drag) at(e); });
+  const up = () => drag = false; g.addEventListener("pointerup", up); g.addEventListener("pointercancel", up);
+  $("#meterNote").textContent = isPreview ? "Preview only: on the real link, their answer comes to your email."
+    : `${C.from || "They"} will see your answer.`;
+  $("#afterMeter").addEventListener("click", sendMeter);
+}
+function setMeter(v, quiet){
+  $("#needle").style.transform = `rotate(${(v - 50) * 1.8}deg)`;
+  const k = moodOf(v), pup = $("#meterPup");
+  $("#reading").textContent = MOODS[k][0]; $("#meterLine").textContent = MOODS[k][1];
+  pup.src = k === 4 ? "img/puppy-happy.webp" : "img/puppy-sorry.webp";
+  pup.classList.toggle("shiver", k === 0 && !reduce);
+  rainN = Math.round(140 - v * 1.25);
+  $("#gloom").style.opacity = ((100 - v) / 100 * .32).toFixed(2);
+  if (k !== lastMood && !quiet){
+    if (k === 0 && lastMood > 0) { const gl = $("#gloom"); gl.classList.remove("flash"); void gl.offsetWidth; gl.classList.add("flash"); }
+    if (k === 4){ const r = pup.getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height * .4); }
+    if (ctx) bell(hz(60 + [0, 3, 5, 7, 12][k]), ctx.currentTime, .07, .9);
+  }
+  lastMood = k;
+}
+function sendMeter(){
+  if (meterSent || !meterTouched) return; meterSent = true;
+  const v = +$("#dial").value;
+  reply("meter", `${MOODS[moodOf(v)][0]} (${v} out of 100)`);
+}
+function reply(kind, text){   // only real, paid links send anything
+  if (!id || isPreview || isAuto) return Promise.resolve(true);
+  return fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reply", id, kind, text }) })
+    .then(r => r.json()).then(j => !!(j && j.ok)).catch(() => false);
+}
+
+/* ---------- 5. ask: the puppy won't give up (but never pushes) ---------- */
+const BRIBES = [
+  ["puppy-choc", "Chocolate? The good kind, not the cheap one.", "The puppy offering a heart-shaped box of chocolates"],
+  ["puppy-bouquet", "Flowers? I picked every single one myself.", "The puppy holding up a huge bouquet of roses"],
+  ["puppy-roll", "Belly rubs? Free, unlimited, forever?", "The puppy rolled over, asking for belly rubs"] ];
+let bribes = 0, waits = 0;
+$("#madBtn").addEventListener("click", () => {
+  ensureAudio();
+  const pup = $("#askPup");
+  if (bribes < BRIBES.length){
+    const [f, line, alt] = BRIBES[bribes++];
+    pup.src = "img/" + f + ".webp"; pup.alt = alt;
+    pup.classList.remove("pop-in"); void pup.offsetWidth; pup.classList.add("pop-in");
+    $("#waitLine").textContent = line;
+    if (ctx) [0, .1].forEach((d, i) => ding([988, 1319][i] - bribes * 60, d, .08));
+    if (bribes === BRIBES.length) $("#madBtn .lbl").textContent = "Still mad 😤😤";
+  } else {
+    $("#madBtn").hidden = true; pup.src = "img/puppy-sorry.webp"; pup.alt = "The puppy, sitting quietly and waiting";
+    $("#waitLine").textContent = "Okay. No more tricks. I'll wait right here, as long as it takes.";
+  }
+});
 $("#waitBtn").addEventListener("click", () => {
   waits++;
   $("#waitLine").textContent = waits === 1 ? "Take all the time you need. I'll be right here." : "Still here. No rush.";
-  if (waits >= 2){ $("#waitBtn .lbl").textContent = "Okay, I'm ready"; $("#waitBtn").onclick = sayYes; }
+  if (waits >= 2){ $("#waitBtn").textContent = "Okay, I'm ready"; $("#waitBtn").onclick = sayYes; }
 });
 $("#yesBtn").addEventListener("click", sayYes);
-function sayYes(){ go("end"); }
+function sayYes(){ ensureAudio(); go(seq[seq.indexOf("ask") + 1] || "end"); }
 
-/* ---------- rain on the glass (stops when they say yes) ---------- */
+/* ---------- 5b. make-up menu: their order goes to the buyer's email ---------- */
+function buildMenu(){
+  $("#menuChef").textContent = (C.from ? "Chef: " + C.from + " · " : "") + "Bill: already forgiven";
+  const box = $("#menuItems");
+  C.menu.forEach((m, i) => {
+    const l = document.createElement("label"), c = document.createElement("input"), it = document.createElement("span"), pr = document.createElement("span");
+    c.type = "checkbox"; c.value = m; it.className = "it"; it.textContent = m; pr.className = "pr"; pr.textContent = "on me";
+    c.addEventListener("change", () => { if (c.checked && ctx) ding(1175 + i * 40, 0, .06); $("#orderNote").textContent = ""; });
+    l.append(c, it, pr); box.appendChild(l);
+  });
+}
+let ordered = false;
+$("#orderBtn").addEventListener("click", async () => {
+  if (ordered) return;
+  const picks = $$("#menuItems input:checked").map(c => c.value), more = $("#menuExtra").value.trim(), note = $("#orderNote"), btn = $("#orderBtn");
+  if (!picks.length && !more){ note.textContent = "Pick at least one treat first."; return; }
+  ensureAudio(); btn.disabled = true;
+  const ok = await reply("order", picks.join(" · ") + (more ? (picks.length ? " · " : "") + "Also: " + more : ""));
+  if (!ok){ note.textContent = "Couldn't send it just now. Please try again."; btn.disabled = false; return; }
+  ordered = true; btn.hidden = true; $("#skipMenu").hidden = true; $("#stamp").hidden = false;
+  $$("#menu input").forEach(c => c.disabled = true); $("#menuExtra").disabled = true;
+  note.textContent = isPreview ? "Preview only: on the real link, their order comes straight to your email."
+    : `Order received! ${C.from ? C.from + " has it by email now." : "It's on its way by email."}`;
+  $("#endOrder").textContent = "Order in: " + [...picks, more].filter(Boolean).join(", ") + ".";
+  chimeUp(); const r = $("#menu").getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height * .45);
+  $("#afterMenu").hidden = false;
+  if (!isAuto) setTimeout(() => $("#afterMenu").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 400);
+});
+$("#skipMenu").addEventListener("click", () => go("end"));
+
+/* ---------- rain on the glass (heavier when they're mad, stops when they say yes) ---------- */
+let rainN = 70;
 function startRain(){
   if (reduce) return;
   const cv = $("#rain"), g = cv.getContext("2d"); let W, H, drops = [];
   const size = () => { const r = devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * r; cv.height = H * r; cv.style.width = W + "px"; cv.style.height = H + "px"; g.setTransform(r, 0, 0, r, 0, 0); };
   size(); addEventListener("resize", size);
-  for (let i = 0; i < 70; i++) drops.push({ x: Math.random() * W, y: Math.random() * H, l: 8 + Math.random() * 14, v: 4 + Math.random() * 5 });
+  for (let i = 0; i < 140; i++) drops.push({ x: Math.random() * W, y: Math.random() * H, l: 8 + Math.random() * 14, v: 4 + Math.random() * 5 });
   const tick = () => {
     if (document.body.classList.contains("sunny") && getComputedStyle(cv).opacity === "0") return;
     g.clearRect(0, 0, W, H); g.strokeStyle = "rgba(255,255,255,.35)"; g.lineWidth = 1.2; g.beginPath();
-    drops.forEach(d => { g.moveTo(d.x, d.y); g.lineTo(d.x - d.l * .15, d.y + d.l); d.y += d.v; d.x -= d.v * .15; if (d.y > H){ d.y = -20; d.x = Math.random() * W * 1.1; } });
+    drops.slice(0, rainN).forEach(d => { g.moveTo(d.x, d.y); g.lineTo(d.x - d.l * .15, d.y + d.l); d.y += d.v; d.x -= d.v * .15; if (d.y > H){ d.y = -20; d.x = Math.random() * W * 1.1; } });
     g.stroke(); requestAnimationFrame(tick);
   };
   tick();
@@ -627,9 +911,19 @@ async function runAutoplay(){
       for (let k = 0; k <= 14; k++){ const y = r.top + r.height * (.15 + .7 * (k / 14)), x = r.left + r.width * (k % 2 ? .8 : .2);
         wipeAt({ clientX: x, clientY: y }); wipeAt({ clientX: r.left + r.width * .5, clientY: y }); await sleep(60); }
       reveal(); await sleep(1500); } }
+  if (seq.includes("jar")){ go("jar"); await sleep(900);
+    for (let i = 0; i < Math.min(3, C.promises.length); i++){ popStar(); await sleep(1500); } }
   if (seq.includes("letter")){ go("letter"); await sleep(4200); }
-  if (seq.includes("ask")){ go("ask"); await sleep(1300); $("#waitBtn").click(); await sleep(1300); sayYes(); await sleep(3600); }
-  else { go("end"); await sleep(3000); }
+  go("meter"); await sleep(900);
+  for (let v = 15; v <= 90; v += 3){ $("#dial").value = v; setMeter(v); await sleep(70); }
+  await sleep(1500);
+  if (seq.includes("ask")){ go("ask"); await sleep(1300);
+    for (let i = 0; i < 2; i++){ $("#madBtn").click(); await sleep(1500); }
+    sayYes(); } else go("menu");
+  await sleep(1000);
+  [0, 2].forEach(i => { const c = $$("#menuItems input")[i]; if (c) c.checked = true; });
+  await sleep(900); $("#orderBtn").click(); await sleep(2200);
+  go("end"); await sleep(3200);
   if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
   else location.reload();
 }
