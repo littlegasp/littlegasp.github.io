@@ -75,6 +75,13 @@ textarea{min-height:170px;resize:vertical}
 .songnow b{font-size:.92rem;word-break:break-word}
 .songnow audio{width:100%;height:36px}
 .songnow .rm{align-self:flex-start;border:0;background:none;color:var(--muted);font:600 .85rem var(--body);cursor:pointer;padding:2px 0}
+.themes{display:flex;gap:10px;flex-wrap:wrap}
+.themeopt{flex:1;min-width:140px;display:flex;align-items:center;gap:10px;border:2px solid #EBD3DD;border-radius:14px;padding:12px 14px;background:#fff;font-weight:700;cursor:pointer}
+.themeopt:has(input:checked){border-color:var(--berry);box-shadow:0 0 0 3px rgba(232,69,122,.15)}
+.themeopt input{accent-color:var(--berry)}
+.themeopt .sw{width:22px;height:22px;border-radius:50%;flex:none}
+.themeopt small{font-weight:400;color:var(--muted,#6B5F93);margin-left:auto}
+#themeBox[hidden]{display:none}
 .linkbtn{border:0;background:none;font:700 .92rem var(--body);color:var(--berry-dark);cursor:pointer;text-decoration:underline}
 .ov{position:fixed;inset:0;background:rgba(27,22,64,.62);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
 .ov[hidden]{display:none}
@@ -102,6 +109,14 @@ textarea{min-height:170px;resize:vertical}
     <h1 id="title">Make it yours</h1>
     <p class="sub">Fill this in, watch it come alive in the preview, then unlock your private link.</p>
     <div class="restore" id="restoreBar" hidden><span>We kept your last draft on this device.</span><button class="linkbtn" id="startOver">Start over</button></div>
+
+    <fieldset id="themeBox" hidden>
+      <legend>Who is it for?</legend>
+      <div class="themes" role="radiogroup" aria-label="Who is it for?">
+        <label class="themeopt"><input type="radio" name="theme" value="her" checked> <span class="sw" style="background:linear-gradient(135deg,#F7C6D6,#E8457A)"></span> For her <small>pink party</small></label>
+        <label class="themeopt"><input type="radio" name="theme" value="him"> <span class="sw" style="background:linear-gradient(135deg,#BFD8F2,#2A5BD7)"></span> For him <small>blue party</small></label>
+      </div>
+    </fieldset>
 
     <fieldset>
       <legend>Names</legend>
@@ -213,6 +228,19 @@ const DESIGNS = {
     song: "A romantic Hindi song already plays on this design.",
     questionHint: "e.g. Dinner on the terrace after the moon comes out?", yesHint: "e.g. It's a date. I've got your favourite sweets."
   },
+  "birthday-wish": {
+    name: "Make a Wish",
+    path: "/birthday-wish/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    maxPhotos: 3,                      // three gift boxes
+    themes: true,                      // "For her" (pink) / "For him" (blue)
+    song: "A sung Happy Birthday already plays on this design.",
+    numberLabel: "Age they're turning", numberHint: "e.g. 25",
+    questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
+  },
   "garba-circle": {
     name: "Garba Circle",
     path: "/garba-circle/",
@@ -247,7 +275,7 @@ const pb = $("#pricebox");
 pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (offerOn ? `<span class="offer">${D.offerLabel}</span>` : "");
 
 /* ---------- state ---------- */
-let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null };
+let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null, theme:"her" };
 
 function payload(){
   return {
@@ -256,7 +284,8 @@ function payload(){
     reasons: state.reasons.map(r => r.trim()).filter(Boolean),
     letter: state.letter.split(/\n+/).map(l => l.trim()).filter(Boolean),
     question: state.question.trim(), yesReply: state.yesReply.trim(),
-    song: D.song && state.song ? { src: state.song.src, bpm: state.song.bpm, offset: state.song.offset } : null
+    song: D.song && state.song ? { src: state.song.src, bpm: state.song.bpm, offset: state.song.offset } : null,
+    theme: D.themes ? (state.theme === "him" ? "him" : "her") : ""
   };
 }
 
@@ -268,6 +297,14 @@ async function loadDraft(){ try { const db = await idb(); return await new Promi
 async function clearDraft(){ try { const db = await idb(); db.transaction("drafts","readwrite").objectStore("drafts").delete(designKey); } catch(e){} }
 
 /* ---------- inputs ---------- */
+function renderTheme(){
+  if (!D.themes) return;
+  $("#themeBox").hidden = false;
+  document.querySelectorAll('input[name="theme"]').forEach(r => {
+    r.checked = r.value === (state.theme || "her");
+    r.onchange = () => { state.theme = r.value; changed(); if (desktop()) loadPreview(); };
+  });
+}
 function bindFields(){
   document.querySelectorAll("[data-field]").forEach(el => {
     el.value = state[el.dataset.field] || "";
@@ -564,7 +601,7 @@ $("#startOver").onclick = async () => {
 (async () => {
   const saved = await loadDraft();
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
-  bindFields(); renderNotes(); renderPhotos(); renderSong(); fitLayout();
+  bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); fitLayout();
   if (desktop()) loadPreview();
   const done = await idbGet("done:" + designKey);
   if (done && done.link){ showLink(done); return; }

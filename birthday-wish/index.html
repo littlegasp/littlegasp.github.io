@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>A birthday surprise for you</title>
+<meta name="description" content="Someone made you a little birthday surprise. Open it with your sound on.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Little Gasp">
+<meta property="og:title" content="Make a wish 🎂">
+<meta property="og:description" content="Someone made you a little birthday surprise. Open it with your sound on.">
+<meta property="og:image" content="https://littlegasp.com/birthday-wish/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="image" href="img/bear-cake.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2A1F5C; --muted:#5E5288; --accent:#E8457A; --accent-dark:#B82F5C; --soft:#FDEFF4; --butter:#FFC857; --mint:#8FD6BD;
+  --display:"Caprasimo","Cooper Black",Georgia,serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Nanum Pen Script","Comic Sans MS",cursive;
+  color-scheme:light;
+}
+body[data-theme="him"]{ --ink:#1E2A5C; --muted:#4A5A8C; --accent:#2A5BD7; --accent-dark:#1C3F9E; --soft:#EAF3FA; }
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink);background:var(--soft);overflow:hidden;-webkit-tap-highlight-color:transparent}
+#bg{position:fixed;inset:0;z-index:0;background:var(--soft) url(img/bg-pink.webp) 16% center / cover no-repeat}
+body[data-theme="him"] #bg{background-image:url(img/bg-blue.webp)}
+#bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 30%,rgba(255,255,255,.35))}
+main{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+main[hidden]{display:none}
+.loader{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--hand);font-size:2rem;color:var(--accent)}
+
+.scene{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:58px 16px 26px}
+.scene[hidden]{display:none}
+.art{position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+.words{width:min(100%,440px);display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 18px 20px;border-radius:26px;
+  background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(42,31,92,.12)}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;color:var(--ink)}
+h1{font-size:clamp(2.2rem,9vw,3rem)}
+h2{font-size:clamp(1.6rem,6.6vw,2.1rem)}
+h1:focus,h2:focus{outline:none}
+p{margin:0}
+.pre{font-family:var(--display);font-size:1.25rem;color:var(--ink)}
+.name{color:var(--accent);font-size:clamp(3rem,14vw,4.4rem)}
+.sub{color:var(--muted);max-width:32ch}
+.whisper{font-family:var(--hand);font-size:1.8rem;line-height:1;color:var(--accent)}
+.whisper:empty{display:none}
+.count{font-size:.9rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.btn{appearance:none;border:0;cursor:pointer;font:700 1.05rem/1 var(--body);color:#fff;background:var(--accent);padding:16px 30px;border-radius:999px;
+  box-shadow:0 5px 0 var(--accent-dark);position:relative;overflow:hidden;transition:transform .1s,box-shadow .1s;white-space:nowrap}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--accent-dark)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn[hidden]{display:none}
+.btn .fill{position:absolute;inset:0;width:calc(var(--p,0) * 100%);background:rgba(255,255,255,.4);pointer-events:none}
+.btn .lbl{position:relative}
+.linkish{appearance:none;border:0;background:none;font:600 .92rem var(--body);color:var(--accent-dark);text-decoration:underline;cursor:pointer;padding:4px}
+.linkish[hidden]{display:none}
+:is(.btn,.linkish,.candle,.balloon,.gift,.icon-btn,.cutzone):focus-visible{outline:3px solid var(--butter);outline-offset:4px}
+.pop-in{animation:popin .5s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popin{from{transform:scale(.85);opacity:0}}
+.bob{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+
+/* chrome */
+.dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:20}
+.dots[hidden]{display:none}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--ink);opacity:.2;transition:opacity .3s,width .3s}
+.dots span.on{opacity:.75;width:20px;border-radius:4px}
+.icon-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:21;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(255,255,255,.75);color:var(--ink);font-size:1.1rem;box-shadow:0 4px 14px rgba(42,31,92,.15)}
+.icon-btn[hidden]{display:none}
+canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:30}
+.made{font-size:.82rem;color:var(--muted)}
+.made a{color:var(--accent-dark);font-weight:700}
+
+/* 1. open */
+.bear{display:block;height:auto;max-width:100%;filter:drop-shadow(0 16px 22px rgba(42,31,92,.18))}
+.open-bear{width:min(64vw,36dvh)}
+
+/* 2. wish: cake with six candles */
+.cakebox{position:relative;width:min(80vw,40dvh);aspect-ratio:784/860;touch-action:none;cursor:pointer;user-select:none;-webkit-user-select:none}
+.cakebox img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .8s ease;pointer-events:none}
+.cakebox .after{opacity:0}
+.cakebox.done .before{opacity:0}
+.cakebox.done .after{opacity:1}
+.cakebox.done .flame,.cakebox.done .candle{display:none}
+.flame{position:absolute;bottom:99%;width:7.5%;aspect-ratio:1/1.7;transform:translateX(-50%) scale(.2);transform-origin:50% 100%;opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.2,1.6,.4,1),opacity .2s}
+.flame svg{width:100%;height:100%;overflow:visible;display:block;animation:flick .16s ease-in-out infinite alternate;transform-origin:50% 100%}
+.flame.on{opacity:1;transform:translateX(-50%) scale(1)}
+.flame.out{opacity:0;transform:translateX(-50%) scale(.3);transition:transform .3s,opacity .3s}
+@keyframes flick{from{transform:scale(1,1) rotate(2deg)}to{transform:scale(.9,1.1) rotate(-2deg)}}
+.smoke{position:absolute;bottom:100%;width:6%;aspect-ratio:1;transform:translateX(-50%);pointer-events:none}
+.smoke i{position:absolute;left:30%;bottom:0;width:40%;aspect-ratio:1;border-radius:50%;background:rgba(150,140,170,.55);animation:smoke 1.4s ease-out forwards}
+.smoke i:nth-child(2){animation-delay:.15s}.smoke i:nth-child(3){animation-delay:.3s}
+@keyframes smoke{to{transform:translate(4px,-60px) scale(3);opacity:0}}
+.candle{position:absolute;top:-8%;height:30%;width:10%;transform:translateX(-50%);border:0;background:none;padding:0;cursor:pointer;border-radius:12px}
+.match{position:absolute;width:9%;aspect-ratio:1/1.7;pointer-events:none;transform:translate(-50%,-92%);z-index:3;transition:left .5s ease,top .5s ease,opacity .3s}
+.match svg{width:100%;height:100%;overflow:visible;animation:flick .16s ease-in-out infinite alternate;transform-origin:50% 100%}
+.match.dragging{transition:none}
+.match.idle{animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{margin-left:-14px}}
+.match[hidden]{display:none}
+
+/* 3. balloons */
+.sky{position:relative;width:min(58vw,26dvh);aspect-ratio:634/1250}
+.sky .holder{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto}
+.sky svg.strings{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.sky svg.strings line{stroke:var(--ink);stroke-opacity:.45;stroke-width:1.2;transition:opacity .3s}
+.balloon{position:absolute;width:20%;aspect-ratio:273/437;transform:translate(-50%,-50%);border:0;padding:0;background:none;cursor:pointer;animation:float 3.6s ease-in-out infinite}
+.balloon:nth-child(2n){animation-duration:4.2s;animation-delay:-1.2s}.balloon:nth-child(3n){animation-delay:-2.1s}
+.balloon img{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 10px rgba(42,31,92,.18));pointer-events:none}
+.balloon.popped{animation:pop .32s ease-out forwards;pointer-events:none}
+@keyframes float{50%{margin-top:-7px}}
+@keyframes pop{40%{transform:translate(-50%,-50%) scale(1.25)}100%{transform:translate(-50%,-50%) scale(.1);opacity:0}}
+.card{width:100%;min-height:8.2em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px;border-radius:20px;
+  background:#fff;box-shadow:inset 0 0 0 3px var(--butter)}
+.card .tag{font-weight:700;font-size:.88rem;color:var(--accent);letter-spacing:.03em}
+.card .big{font-family:var(--display);font-size:1.45rem;line-height:1.15;color:var(--ink)}
+.card .hintline{color:var(--muted)}
+
+/* 4. gifts */
+.giftart{display:flex;flex-direction:column;align-items:center;gap:10px}
+.pol{width:min(52vw,24dvh);aspect-ratio:4/5;background:#fff;padding:7% 7% 22%;border-radius:4px;box-shadow:0 14px 30px rgba(42,31,92,.22);transform:rotate(var(--r,-3deg));position:relative}
+.pol .ph{width:100%;height:100%;border-radius:2px;overflow:hidden;background:linear-gradient(135deg,var(--soft),#fff);display:flex;align-items:center;justify-content:center;font-size:2.4rem}
+.pol .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.pol figcaption{position:absolute;left:6%;right:6%;bottom:5%;font-family:var(--hand);font-size:1.45rem;line-height:1;color:#2A1F5C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pol.empty .ph{color:var(--muted)}
+.giftrow{display:flex;align-items:flex-end;justify-content:center;gap:4%;width:min(86vw,46dvh)}
+.gift{border:0;background:none;padding:0;cursor:pointer;flex:0 1 auto;transition:opacity .4s,filter .4s}
+.gift img{display:block;width:100%;height:auto;pointer-events:none;filter:drop-shadow(0 8px 10px rgba(42,31,92,.2))}
+.gift:nth-child(1){width:30%}.gift:nth-child(2){width:27%}.gift:nth-child(3){width:24%}
+.gift.shake{animation:shake .45s ease}
+.gift.opened{opacity:.28;filter:grayscale(.4);pointer-events:none}
+@keyframes shake{20%{transform:rotate(-8deg)}40%{transform:rotate(7deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(3deg) translateY(-6px)}}
+
+/* 5. cake + letter */
+.cutzone{position:relative;width:min(70vw,34dvh);aspect-ratio:800/810;touch-action:none;cursor:crosshair;border:0;background:none;padding:0}
+.cutzone img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
+.cutzone svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.cutzone path{fill:none;stroke:#fff;stroke-width:5;stroke-linecap:round;filter:drop-shadow(0 0 6px rgba(255,200,87,.9))}
+.letter{width:100%;text-align:left;background:#fff;border-radius:14px;padding:22px 22px 24px;border-top:8px solid var(--accent);box-shadow:0 10px 26px rgba(42,31,92,.14);max-height:58dvh;overflow:auto}
+.letter p{font-family:var(--hand);font-size:1.6rem;line-height:1.15;margin:0 0 .55em;color:#2A1F5C}
+.letter p.sign{text-align:right;margin-top:.8em}
+.reveal p{opacity:0;transform:translateY(6px);animation:ink .6s ease forwards;animation-delay:calc(var(--i) * .55s + .2s)}
+@keyframes ink{to{opacity:1;transform:none}}
+.letter[hidden],.stage2[hidden],.stage1[hidden]{display:none}
+.stage1,.stage2{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+
+/* 6. ask */
+.signbear{position:relative;width:min(58vw,32dvh);aspect-ratio:624/935}
+.signbear img{width:100%;height:100%;display:block}
+.signbear.plead{animation:plead .6s ease}
+@keyframes plead{25%{transform:rotate(-4deg)}50%{transform:rotate(3deg) scale(1.03)}75%{transform:rotate(-2deg)}}
+.signtext{position:absolute;left:31%;width:61%;top:3.4%;height:23%;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-family:var(--hand);font-size:calc(min(58vw,32dvh) * .13);line-height:.95;color:var(--accent-dark);transform:rotate(-1.5deg);padding:2%}
+.ask-row{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap;min-height:64px}
+#noBtn{transition:transform .25s,font-size .25s}
+
+/* 7. end */
+.end-bear{width:min(56vw,30dvh)}
+
+/* ===== Laptops: full screen, picture | words (owner decision 8 Oct 2026) ===== */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  #bg{background-position:center}
+  #bg::after{display:none}
+  .scene{padding:56px 0 40px}
+  .scene.two{display:grid;grid-template-columns:34vw 34vw;column-gap:4vw;justify-content:center;align-items:center;justify-items:center}
+  .scene.two[hidden]{display:none}
+  .scene.two > .art{grid-column:1}
+  .scene.two > .words{grid-column:2;width:min(100%,460px);padding:26px 26px 28px}
+  h1{font-size:clamp(2.6rem,3.4vw,3.8rem)} h2{font-size:clamp(2rem,2.6vw,2.8rem)}
+  .name{font-size:clamp(3.4rem,5.4vw,6rem)}
+  .open-bear{width:min(30vw,62dvh)}
+  .cakebox{width:min(30vw,66dvh)}
+  .sky{width:min(22vw,42dvh)}
+  .pol{width:min(19vw,42dvh)}
+  .giftrow{width:min(32vw,60dvh)}
+  .cutzone{width:min(30vw,62dvh)}
+  .letter{max-height:62dvh}
+  .signbear{width:min(24vw,64dvh)}
+  .signtext{font-size:calc(min(24vw,64dvh) * .13)}
+  .end-bear{width:min(22vw,60dvh)}
+  .card .big{font-size:1.7rem}
+}
+@media (max-height:640px) and (max-width:759px){ .scene{gap:10px;padding-top:50px} .words{padding:14px} }
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important} .reveal p{opacity:1} }
+</style>
+</head>
+<body data-theme="her">
+<div id="bg" aria-hidden="true"></div>
+<div id="loader" class="loader" role="status"><p id="loaderText">Opening your surprise…</p></div>
+<nav class="dots" id="dots" aria-label="Progress" hidden></nav>
+<button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<main hidden>
+  <!-- 1. Open -->
+  <section class="scene two" data-scene="open">
+    <div class="art"><img class="bear open-bear bob" src="img/bear-cake.webp" alt="A teddy bear holding a birthday cake" width="780" height="897"></div>
+    <div class="words">
+      <p class="pre">Happy Birthday</p>
+      <h1 tabindex="-1" class="name" data-to></h1>
+      <p class="whisper" id="ageLine"></p>
+      <p class="sub">Someone baked you something. Turn your sound on.</p>
+      <button class="btn" data-next><span class="lbl">Light the candles</span></button>
+    </div>
+  </section>
+
+  <!-- 2. Light the candles + make a wish -->
+  <section class="scene two" data-scene="wish" hidden>
+    <div class="art">
+      <div class="cakebox" id="cakebox">
+        <img class="before" src="img/cake.webp" alt="A birthday cake with six candles" width="784" height="860">
+        <img class="after" src="img/bear-blow.webp" alt="The bear blowing out the candles" width="800" height="878">
+        <div class="match idle" id="match" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1" id="wishTitle">Light the candles</h2>
+      <p class="sub" id="wishSub">Drag the flame across the candles, or tap each one.</p>
+      <p class="count" id="candleCount">0 of 6 lit</p>
+      <button class="btn" id="holdBtn" hidden><span class="fill"></span><span class="lbl">Hold to blow them out</span></button>
+      <button class="linkish" id="micBtn" hidden>🎤 Or blow into your mic</button>
+      <button class="btn" id="afterWish" data-next hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 3. Pop the balloons (reasons) -->
+  <section class="scene two" data-scene="balloons" hidden>
+    <div class="art">
+      <div class="sky" id="sky">
+        <svg class="strings" id="strings" viewBox="0 0 100 197" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <img class="holder bear" src="img/bear-strings.webp" alt="" width="634" height="856">
+      </div>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1">A balloon for every reason</h2>
+      <p class="sub">Tap a balloon to pop it.</p>
+      <div class="card" aria-live="polite" id="reasonCard"><p class="hintline">Pop one to see what's inside.</p></div>
+      <p class="count" id="popCount"></p>
+      <button class="btn" data-next hidden id="afterPop"><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 4. Unwrap the gifts (photos) -->
+  <section class="scene two" data-scene="gifts" hidden>
+    <div class="art giftart">
+      <figure class="pol empty" id="pol" aria-live="polite"><div class="ph">🎁</div><figcaption></figcaption></figure>
+      <div class="giftrow" id="giftrow"></div>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1">A gift for every memory</h2>
+      <p class="sub">Tap a gift to unwrap it.</p>
+      <p class="count" id="giftCount"></p>
+      <button class="btn" data-next hidden id="afterGifts"><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 5. Cut the cake, find the letter -->
+  <section class="scene two" data-scene="cake" hidden>
+    <div class="art">
+      <button class="cutzone" id="cutzone" aria-label="Cut the cake">
+        <img src="img/bear-cut.webp" alt="" width="800" height="810">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path id="knife" d=""></path></svg>
+      </button>
+    </div>
+    <div class="words">
+      <div class="stage1" id="cutStage">
+        <h2 tabindex="-1">Something's baked inside…</h2>
+        <p class="sub">Swipe across the cake to cut your slice.</p>
+        <button class="linkish" id="cutForMe">Cut it for me</button>
+      </div>
+      <div class="stage2" id="letterStage" hidden>
+        <article class="letter" id="letter"></article>
+        <button class="btn" data-next><span class="lbl"></span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. The question -->
+  <section class="scene two" data-scene="ask" hidden>
+    <div class="art">
+      <div class="signbear" id="signbear"><img src="img/bear-sign.webp" alt="The bear holding up a sign" width="624" height="935"><p class="signtext" id="signText"></p></div>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1" id="question"></h2>
+      <div class="ask-row">
+        <button class="btn" id="yesBtn"><span class="lbl">Yes!</span></button>
+        <button class="btn ghost" id="noBtn"><span class="lbl">Ask me again</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. The end -->
+  <section class="scene two" data-scene="end" hidden>
+    <div class="art"><img class="bear end-bear bob" src="img/bear-gift.webp" alt="The bear holding a gift" width="577" height="915"></div>
+    <div class="words">
+      <p class="pre" id="endPre">Happy birthday</p>
+      <h1 tabindex="-1" class="name" data-to></h1>
+      <p class="sub" id="endLine"></p>
+      <p class="sub" id="endFrom"></p>
+      <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
+      <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============ SETUP: same Apps Script URL as the other designs ============ */
+const API_URL = "https://script.google.com/macros/s/AKfycbxf3nRN3zgwfa7hP3PfyRqLTO9xQ4ukKOo44DbxSdb4eKeXfnQ_MjgdlqVZSLztdr9S/exec";
+/* Default song (rights: Pixabay Content Licence). A buyer's own song plays instead when they add one. */
+const SONG = { src: "audio/happy-birthday-sung.mp3", volume: .8, credit: "Happy Birthday by saavane, Pixabay Content Licence" };
+/* ========================================================================= */
+
+const DEMO = {
+  to: "Meera", from: "Aarav", number: "25", theme: "her",
+  photos: [
+    { src: "img/demo-1.svg", caption: "The day we got caught in the rain" },
+    { src: "img/demo-2.svg", caption: "Our first trip together" },
+    { src: "img/demo-3.svg", caption: "That ridiculous cafe selfie" }
+  ],
+  reasons: ["The way you hum while you cook","You remember everyone's chai order","Your 2 a.m. theories about everything","How excited you get about tiny things","You make my family feel like yours","You never let me give up on anything"],
+  letter: ["Meera,","I tried writing this three times and kept getting distracted remembering things, so here's the short version.","You make ordinary days feel like the good kind of busy.","This year I hope you get every wish, including the one you just made on that cake."],
+  question: "Birthday dinner, just us, this Saturday?",
+  yesReply: "I'll pick you up at 8."
+};
+const DEMO_HIM = Object.assign({}, DEMO, { to: "Rohan", from: "Priya", theme: "him",
+  reasons: ["The way you laugh at your own jokes","You always save me the last bite","Your terrible but brave dance moves","How calm you stay when I panic","You make every road trip fun","You never let me give up on anything"],
+  letter: ["Rohan,","I tried writing this three times and kept getting distracted remembering things, so here's the short version.","You make ordinary days feel like the good kind of busy.","This year I hope you get every wish, including the one you just made on that cake."],
+  question: "Movie night and your favourite pizza, my treat?", yesReply: "Pick the movie. I've already ordered." });
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const qs = new URLSearchParams(location.search);
+const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autoplay");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const LABELS = { wish:"Light the candles", balloons:"Pop the balloons", gifts:"Unwrap your gifts", cake:"Cut the cake", ask:"One last question", end:"Finish" };
+const SIGN = { her: ["Pretty please?", "Pleeease?", "I baked a cake!", "One more chance?"], him: ["Say yes, birthday boy?", "Come on…", "I baked a cake!", "Last chance?"] };
+const WICKS = [20.98, 31.62, 44.2, 55.55, 66.83, 78.76];   // candle x positions in cake.webp (%)
+const BALLOONS = [[28,0],[52,-3],[76,0],[40,31],[64,31],[88,29]];   // [centre x %, top y] in sky units (box is 100 wide, 197 tall)
+const HAND = [89.9, 88.6];                                   // where the bear holds the strings, same units
+let C, seq = [], current = 0, theme = "her";
+
+/* ---------- load ---------- */
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "tsc-data") res(e.data.data); });
+    parent.postMessage({ type: "tsc-ready" }, location.origin);
+  });
+}
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(232,69,122,0.32)'>PREVIEW · Little Gasp</text></svg>";
+  const wm = document.createElement("div"); wm.setAttribute("aria-hidden", "true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(27,22,64,.88);color:#fff;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px;letter-spacing:.04em";
+  document.body.append(wm, band);
+}
+async function start(){
+  try {
+    let d = qs.get("theme") === "him" ? DEMO_HIM : DEMO;
+    if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
+    else if (id && !isAuto){
+      const res = await fetch(API_URL + "?id=" + encodeURIComponent(id)); d = await res.json();
+      if (!d || d.error) throw new Error(d && d.error);
+    }
+    build(d);
+    if (isAuto) runAutoplay();
+  } catch (e) {
+    $("#loaderText").textContent = "This surprise link doesn't look right. Please check it, or message @littlegasp.co on Instagram.";
+  }
+}
+setTimeout(start, 0);
+
+function build(d){
+  const t = v => String(v || "").trim();
+  C = { to: t(d.to) || "you", from: t(d.from), age: t(d.number),
+    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 3),
+    reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
+    letter: (d.letter || []).map(t).filter(Boolean),
+    question: t(d.question), yesReply: t(d.yesReply) };
+  if (id) C.photos = C.photos.filter(p => p.src);
+  theme = d.theme === "him" ? "him" : "her";
+  document.body.dataset.theme = theme;
+  document.title = "Happy birthday, " + C.to;
+  $$("[data-to]").forEach(e => e.textContent = C.to);
+  if (/^\d{1,3}$/.test(C.age)) $("#ageLine").textContent = C.age + " looks good on you";
+
+  seq = ["open", "wish"];
+  if (C.reasons.length) seq.push("balloons");
+  if (C.photos.length) seq.push("gifts");
+  if (C.letter.length) seq.push("cake");
+  if (C.question) seq.push("ask");
+  seq.push("end");
+  $$("[data-scene]").forEach(sc => {
+    const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl");
+    if (b && i > -1 && seq[i + 1]) b.textContent = LABELS[seq[i + 1]];
+  });
+  const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
+
+  buildCandles(); buildBalloons(); buildGifts(); buildLetter();
+  $("#question").textContent = C.question;
+  $("#signText").textContent = SIGN[theme][0];
+  $("#endPre").textContent = C.question ? "You said yes!" : "Happy birthday";
+  $("#endLine").textContent = C.question ? (C.yesReply || "Best birthday ever.") : "Hope this year is your best one yet.";
+  $("#endFrom").textContent = C.from ? "With love, " + C.from : "";
+
+  /* song: the buyer's own if they added one, else ours; synth chime if neither loads */
+  if (!isAuto){
+    const own = d.song && d.song.src;
+    song = new Audio(own || SONG.src); song.loop = true; song.preload = "auto"; song.volume = SONG.volume;
+    song.addEventListener("error", () => {
+      if (own && song && !song.src.endsWith(SONG.src)){ song.src = SONG.src; if (songOn) song.play().catch(() => {}); return; }
+      song = null;
+    });
+    document.addEventListener("visibilitychange", () => { if (song && songOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {})); });
+  }
+  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false;
+  go("open");
+}
+
+/* ---------- scenes ---------- */
+function go(name){
+  current = seq.indexOf(name);
+  $$("[data-scene]").forEach(s => s.hidden = s.dataset.scene !== name);
+  $$("#dots span").forEach((s, i) => s.classList.toggle("on", i === current));
+  document.querySelector("main").scrollTo(0, 0);
+  const sc = document.querySelector(`[data-scene="${name}"]`), h = sc.querySelector("h1,h2");
+  if (h && !isPreview) h.focus({ preventScroll: true });
+  if (name === "wish") placeMatch();
+  if (name === "end"){ burst(160); chimeUp(); }
+}
+$$("[data-next]").forEach(b => b.addEventListener("click", () => { ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n) go(n); }));
+$("#replay").addEventListener("click", () => location.reload());
+
+/* ---------- sound ---------- */
+let ctx, master, muted = false, song = null, songOn = false, unlocked = false;
+function ensureAudio(){
+  if (isAuto) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!ctx){ ctx = new AC(); master = ctx.createGain(); master.gain.value = .3; master.connect(ctx.destination); }
+  if (ctx.state === "suspended") ctx.resume();
+}
+function unlockSong(){   // phones only allow audio started inside a tap: start it silently once, play it later
+  if (unlocked || !song) return; unlocked = true;
+  song.muted = true; song.play().then(() => { if (!songOn){ song.pause(); song.currentTime = 0; } song.muted = muted; }).catch(() => {});
+}
+function startSong(){
+  if (!song) return; songOn = true; song.muted = muted; song.currentTime = 0;
+  song.play().catch(() => {}); $("#muteBtn").hidden = false;
+}
+function noise(dur, freq, q, vol, type = "bandpass"){
+  if (!ctx) return; const len = ctx.sampleRate * dur, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+  const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+  f.type = type; f.frequency.value = freq; f.Q.value = q; g.gain.value = vol;
+  s.buffer = buf; s.connect(f); f.connect(g); g.connect(master); s.start();
+}
+function ding(freq, t = 0, vol = .25){
+  if (!ctx) return; const o = ctx.createOscillator(), g = ctx.createGain(), at = ctx.currentTime + t;
+  o.type = "triangle"; o.frequency.value = freq; g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(vol, at + .01);
+  g.gain.exponentialRampToValueAtTime(.001, at + .7); o.connect(g); g.connect(master); o.start(at); o.stop(at + .75);
+}
+const strike = () => noise(.18, 2600, .8, .5, "highpass");
+const popSound = () => { noise(.12, 900, .7, .9); ding(140, 0, .3); };
+const chimeUp = () => [784, 988, 1175, 1568].forEach((f, i) => ding(f, i * .09, .18));
+$("#muteBtn").addEventListener("click", e => {
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .3; if (song) song.muted = muted;
+  e.currentTarget.setAttribute("aria-pressed", muted); e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+  e.currentTarget.textContent = muted ? "✕" : "♪";
+});
+
+/* ---------- 2. candles: drag the flame (or tap a candle), then blow ---------- */
+const FLAME = '<svg viewBox="0 0 20 34" aria-hidden="true"><ellipse cx="10" cy="20" rx="10" ry="14" fill="#FFC857" opacity=".35"/><path d="M10 2C16 12 17 20 10 33C3 20 4 12 10 2Z" fill="#FF9F1C"/><path d="M10 13C13 18 13.5 23 10 30C6.5 23 7 18 10 13Z" fill="#FFF3C4"/></svg>';
+const cakebox = $("#cakebox"), match = $("#match");
+let lit = 0, blown = false, dragging = false;
+const flames = [];
+function buildCandles(){
+  match.innerHTML = FLAME;
+  WICKS.forEach((x, i) => {
+    const f = document.createElement("div"); f.className = "flame"; f.style.left = x + "%"; f.innerHTML = FLAME; cakebox.appendChild(f); flames.push(f);
+    const b = document.createElement("button"); b.className = "candle"; b.style.left = x + "%"; b.setAttribute("aria-label", "Light candle " + (i + 1));
+    b.addEventListener("click", e => { e.stopPropagation(); light(i); }); cakebox.appendChild(b);
+  });
+}
+function placeMatch(){ match.style.left = "96%"; match.style.top = "24%"; }
+function light(i){
+  if (blown || flames[i].classList.contains("on")) return;
+  ensureAudio(); unlockSong(); strike(); ding(880 + i * 90, .05, .12);
+  flames[i].classList.add("on"); lit++;
+  $("#candleCount").textContent = `${lit} of 6 lit`;
+  if (lit === 6){
+    match.hidden = true;
+    $("#wishTitle").textContent = "Make a wish, " + C.to + ".";
+    $("#wishSub").textContent = "Close your eyes, wish, then blow them out.";
+    $("#candleCount").textContent = "";
+    $("#holdBtn").hidden = false;
+    if (!isAuto && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) $("#micBtn").hidden = false;
+    if (!isPreview) $("#holdBtn").focus({ preventScroll: true });
+  }
+}
+function toBox(e){ const r = cakebox.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100, r]; }
+cakebox.addEventListener("pointerdown", e => {
+  if (lit === 6 || e.target.closest(".candle")) return;
+  dragging = true; match.classList.remove("idle"); match.classList.add("dragging"); cakebox.setPointerCapture(e.pointerId); moveMatch(e);
+});
+cakebox.addEventListener("pointermove", e => { if (dragging) moveMatch(e); });
+["pointerup","pointercancel"].forEach(ev => cakebox.addEventListener(ev, () => { if (!dragging) return; dragging = false; match.classList.remove("dragging"); if (lit < 6){ placeMatch(); match.classList.add("idle"); } }));
+function moveMatch(e){
+  const [x, y] = toBox(e); match.style.left = x + "%"; match.style.top = y + "%";
+  WICKS.forEach((wx, i) => { if (Math.abs(wx - x) < 5 && y > -12 && y < 22) light(i); });
+}
+/* blow: hold the button, or blow into the mic */
+const holdBtn = $("#holdBtn"); let holdT0 = 0, holdRaf;
+function holdLoop(now){ const p = Math.min(1, (now - holdT0) / 900); holdBtn.style.setProperty("--p", p); if (p >= 1) blow(); else holdRaf = requestAnimationFrame(holdLoop); }
+holdBtn.addEventListener("pointerdown", e => { if (blown) return; e.preventDefault(); holdT0 = performance.now(); holdRaf = requestAnimationFrame(holdLoop); });
+["pointerup","pointerleave","pointercancel"].forEach(ev => holdBtn.addEventListener(ev, () => { if (blown) return; cancelAnimationFrame(holdRaf); holdBtn.style.setProperty("--p", 0); }));
+holdBtn.addEventListener("contextmenu", e => e.preventDefault());
+holdBtn.addEventListener("click", e => { if (e.detail === 0) blow(); });   // keyboard
+$("#micBtn").addEventListener("click", async () => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true }); ensureAudio();
+    const src = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser(); an.fftSize = 512; src.connect(an);
+    const buf = new Float32Array(an.fftSize); let loud = 0;
+    $("#micBtn").textContent = "Listening… blow now 🌬️";
+    const tick = () => {
+      if (blown){ stream.getTracks().forEach(t => t.stop()); return; }
+      an.getFloatTimeDomainData(buf); let s = 0; for (const v of buf) s += v * v;
+      loud = Math.sqrt(s / buf.length) > .12 ? loud + 1 : Math.max(0, loud - 1);
+      if (loud > 8){ stream.getTracks().forEach(t => t.stop()); blow(); } else requestAnimationFrame(tick);
+    };
+    tick();
+  } catch (e) { $("#micBtn").textContent = "Mic not available, hold the button instead"; }
+});
+async function blow(){
+  if (blown) return; blown = true; cancelAnimationFrame(holdRaf);
+  noise(.7, 700, .5, .7);
+  flames.forEach(f => { f.classList.add("out"); const s = document.createElement("div"); s.className = "smoke"; s.style.left = f.style.left; s.innerHTML = "<i></i><i></i><i></i>"; cakebox.appendChild(s); });
+  holdBtn.hidden = true; $("#micBtn").hidden = true;
+  await sleep(reduce ? 50 : 650);
+  cakebox.classList.add("done");
+  burst(170); startSong();
+  $("#wishTitle").textContent = "Happy birthday, " + C.to + "!";
+  $("#wishSub").textContent = C.from ? `From ${C.from}, with a lot of love.` : "With a lot of love.";
+  $("#afterWish").hidden = false;
+  if (!isPreview) $("#afterWish").focus({ preventScroll: true });
+}
+
+/* ---------- 3. balloons: each pop shows a reason ---------- */
+let popped = 0;
+function buildBalloons(){
+  const sky = $("#sky"), svg = $("#strings"), n = C.reasons.length;
+  const spots = BALLOONS.slice(0, n);
+  spots.forEach(([x, y], i) => {
+    const b = document.createElement("button"); b.className = "balloon";
+    b.style.left = x + "%"; b.style.top = (y + 16) / 1.97 + "%";
+    b.setAttribute("aria-label", "Pop balloon " + (i + 1));
+    b.innerHTML = `<img src="img/balloon-${(i % 6) + 1}.webp" alt="">`;
+    const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    l.setAttribute("x1", x); l.setAttribute("y1", y + 31.4); l.setAttribute("x2", HAND[0]); l.setAttribute("y2", HAND[1]);
+    svg.appendChild(l);
+    b.addEventListener("click", () => popBalloon(i, b, l));
+    sky.appendChild(b);
+  });
+  $("#popCount").textContent = `0 of ${n} popped`;
+}
+function popBalloon(i, b, l){
+  if (b.classList.contains("popped")) return;
+  ensureAudio(); popSound();
+  b.classList.add("popped"); l.style.opacity = 0; popped++;
+  const r = b.getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height / 2, ["#E8457A","#FFC857","#8FD6BD","#B48CE0","#FF7A59","#5BB8E8"][i % 6]);
+  const card = $("#reasonCard"); card.innerHTML = "";
+  const tag = document.createElement("p"); tag.className = "tag"; tag.textContent = `Reason ${i + 1}`;
+  const big = document.createElement("p"); big.className = "big"; big.textContent = C.reasons[i];
+  card.append(tag, big); card.classList.remove("pop-in"); void card.offsetWidth; card.classList.add("pop-in");
+  const n = C.reasons.length; $("#popCount").textContent = `${popped} of ${n} popped`;
+  if (popped === n){ $("#afterPop").hidden = false; ding(1320, .2, .15); }
+}
+
+/* ---------- 4. gifts: each one holds a photo ---------- */
+let opened = 0;
+function buildGifts(){
+  const row = $("#giftrow");
+  C.photos.forEach((p, i) => {
+    const g = document.createElement("button"); g.className = "gift"; g.setAttribute("aria-label", "Unwrap gift " + (i + 1));
+    g.innerHTML = `<img src="img/gift-${i + 1}.webp" alt="">`;
+    g.addEventListener("click", () => openGift(i, g)); row.appendChild(g);
+  });
+  $("#giftCount").textContent = `0 of ${C.photos.length} unwrapped`;
+}
+async function openGift(i, g){
+  if (g.classList.contains("opened") || g.classList.contains("shake")) return;
+  ensureAudio(); g.classList.add("shake"); noise(.25, 1800, 1.2, .35);
+  await sleep(reduce ? 50 : 450);
+  g.classList.remove("shake"); g.classList.add("opened"); opened++;
+  const r = g.getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height / 3, "#FFC857");
+  ding(1047, 0, .2); ding(1319, .08, .16);
+  const p = C.photos[i], pol = $("#pol"), ph = pol.querySelector(".ph");
+  pol.classList.remove("empty"); ph.innerHTML = "";
+  if (p.src){ const im = document.createElement("img"); im.src = p.src; im.alt = p.caption || "Photo"; im.onerror = () => { ph.textContent = "📷"; }; ph.appendChild(im); }
+  else ph.textContent = isAuto || id ? "" : "Your photo here";
+  pol.querySelector("figcaption").textContent = p.caption || "";
+  pol.style.setProperty("--r", [-3, 3, -2][i % 3] + "deg");
+  pol.classList.remove("pop-in"); void pol.offsetWidth; pol.classList.add("pop-in");
+  $("#giftCount").textContent = `${opened} of ${C.photos.length} unwrapped`;
+  if (opened === C.photos.length) $("#afterGifts").hidden = false;
+}
+
+/* ---------- 5. cut the cake: swipe across it to find the letter ---------- */
+const cutzone = $("#cutzone"); let cutting = false, cut = false, pts = [];
+function buildLetter(){
+  const L = $("#letter");
+  C.letter.forEach((line, i) => { const p = document.createElement("p"); p.textContent = line; p.style.setProperty("--i", i); L.appendChild(p); });
+  if (C.from){ const s = document.createElement("p"); s.className = "sign"; s.textContent = "Love, " + C.from; s.style.setProperty("--i", C.letter.length); L.appendChild(s); }
+}
+function zp(e){ const r = cutzone.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 100, (e.clientY - r.top) / r.height * 100]; }
+cutzone.addEventListener("pointerdown", e => { if (cut) return; cutting = true; pts = [zp(e)]; cutzone.setPointerCapture(e.pointerId); });
+cutzone.addEventListener("pointermove", e => {
+  if (!cutting) return; pts.push(zp(e)); if (pts.length > 40) pts.shift();
+  $("#knife").setAttribute("d", "M" + pts.map(p => p.join(" ")).join(" L"));
+  const xs = pts.map(p => p[0]); if (Math.max(...xs) - Math.min(...xs) > 32) cutCake();
+});
+["pointerup","pointercancel"].forEach(ev => cutzone.addEventListener(ev, () => { cutting = false; if (!cut) $("#knife").setAttribute("d", ""); }));
+cutzone.addEventListener("click", e => { if (e.detail === 0) cutCake(); });   // keyboard
+$("#cutForMe").addEventListener("click", () => cutCake());
+async function cutCake(){
+  if (cut) return; cut = true; cutting = false; ensureAudio(); noise(.3, 3000, 1, .35);
+  const r = cutzone.getBoundingClientRect(); sparkle(r.left + r.width * .6, r.top + r.height * .55, "#FFC857");
+  await sleep(reduce ? 50 : 350); $("#knife").setAttribute("d", "");
+  $("#cutStage").hidden = true; $("#letterStage").hidden = false; $("#letter").classList.add("reveal");
+  chimeUp();
+}
+
+/* ---------- 6. the question ---------- */
+let asks = 0;
+$("#noBtn").addEventListener("click", () => {
+  asks++; ensureAudio(); ding(330, 0, .15);
+  const sb = $("#signbear"); sb.classList.remove("plead"); void sb.offsetWidth; sb.classList.add("plead");
+  $("#signText").textContent = SIGN[theme][Math.min(asks, 3)];
+  const no = $("#noBtn"); no.style.transform = `scale(${Math.max(.6, 1 - asks * .13)})`;
+  if (asks >= 3){ no.querySelector(".lbl").textContent = "Okay, yes!"; no.onclick = sayYes; }
+});
+$("#yesBtn").addEventListener("click", sayYes);
+function sayYes(){ ensureAudio(); go("end"); }
+
+/* ---------- confetti + sparkles ---------- */
+const cv = $("#confetti"), cx = cv.getContext("2d"); let parts = [], running = false;
+function fit(){ cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; cx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0); }
+fit(); addEventListener("resize", fit);
+const COLS = () => theme === "him" ? ["#2A5BD7","#5BB8E8","#FFC857","#8FD6BD","#1E2A5C","#FFFFFF"] : ["#E8457A","#FFC857","#8FD6BD","#B48CE0","#FF7A59","#FFFFFF"];
+function burst(n = 150){
+  if (reduce) return; const cols = COLS();
+  for (let i = 0; i < n; i++) parts.push({ x: innerWidth * Math.random(), y: -20 - Math.random() * innerHeight * .4, vx: (Math.random() - .5) * 2, vy: 2 + Math.random() * 3, s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: cols[i % cols.length], g: .04, life: 400 });
+  if (!running){ running = true; requestAnimationFrame(tick); }
+}
+function sparkle(x, y, c){
+  if (reduce) return;
+  for (let i = 0; i < 22; i++){ const a = Math.random() * Math.PI * 2, v = 2 + Math.random() * 4;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, s: 3 + Math.random() * 4, r: 0, vr: .2, c: i % 3 ? c : "#FFFFFF", g: .12, life: 45 + Math.random() * 20 }); }
+  if (!running){ running = true; requestAnimationFrame(tick); }
+}
+function tick(){
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  parts = parts.filter(p => p.y < innerHeight + 30 && p.life > 0);
+  for (const p of parts){ p.x += p.vx; p.y += p.vy; p.vy += p.g; p.r += p.vr; p.life--;
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.globalAlpha = Math.min(1, p.life / 30); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .66); cx.restore(); }
+  if (parts.length) requestAnimationFrame(tick); else { running = false; cx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+/* ---------- homepage showcase (?autoplay): silent run-through, then hand over ---------- */
+async function runAutoplay(){
+  document.body.style.pointerEvents = "none";
+  await sleep(1600); go("wish"); await sleep(900);
+  for (let i = 0; i < 6; i++){ match.classList.remove("idle"); match.style.left = WICKS[i] + "%"; match.style.top = "2%"; await sleep(380); light(i); }
+  await sleep(900); blow(); await sleep(2600);
+  if (seq.includes("balloons")){ go("balloons"); await sleep(900); for (const b of $$(".balloon").slice(0, 3)) { b.click(); await sleep(1100); } }
+  if (seq.includes("gifts")){ go("gifts"); await sleep(900); for (const g of $$(".gift").slice(0, 2)) { g.click(); await sleep(1500); } }
+  if (seq.includes("cake")){ go("cake"); await sleep(1200); cutCake(); await sleep(3800); }
+  if (seq.includes("ask")){ go("ask"); await sleep(1300); $("#noBtn").click(); await sleep(1300); sayYes(); await sleep(3600); }
+  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin); else location.reload();
+}
+</script>
+</body>
+</html>
