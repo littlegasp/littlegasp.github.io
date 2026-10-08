@@ -35,6 +35,7 @@
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
+html,body,button,a{touch-action:manipulation}   /* no double-tap zoom on taps; pinch zoom and scrolling still work */
 html,body{height:100%;margin:0}
 body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--cream);background:var(--night);overflow:hidden;-webkit-tap-highlight-color:transparent}
 #bg{position:fixed;inset:0;z-index:0;background:var(--night) url(img/bg.webp) 50% bottom / cover no-repeat}

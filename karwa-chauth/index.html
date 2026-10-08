@@ -36,6 +36,7 @@
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *,*::before,*::after{box-sizing:inherit}
+html,body,button,a{touch-action:manipulation}   /* no double-tap zoom on taps; pinch zoom and scrolling still work */
 /* ===== Phone-shaped stage: full screen on phones, centred 9:16 column on laptops ===== */
 html{--vh:1vh;--vw:1vw}
 @supports (height:1dvh){ html{--vh:1dvh} }

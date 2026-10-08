@@ -34,6 +34,7 @@
   color-scheme:dark;
 }
 *,*::before,*::after{box-sizing:border-box}
+html,body,button,a{touch-action:manipulation}   /* no double-tap zoom on taps; pinch zoom and scrolling still work */
 html,body{height:100%}
 body{margin:0;overflow:hidden;font-family:var(--body);font-size:17px;line-height:1.5;color:var(--gold-soft);background:var(--night);-webkit-tap-highlight-color:transparent}
 #stage{position:relative;height:100%;overflow:hidden;

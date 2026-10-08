@@ -34,6 +34,7 @@
 }
 body[data-theme="him"]{ --ink:#1E2A5C; --muted:#4A5A8C; --accent:#2A5BD7; --accent-dark:#1C3F9E; --soft:#EAF3FA; }
 *,*::before,*::after{box-sizing:border-box}
+html,body,button,a{touch-action:manipulation}   /* no double-tap zoom on taps; pinch zoom and scrolling still work */
 html,body{height:100%;margin:0}
 body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink);background:var(--soft);overflow:hidden;-webkit-tap-highlight-color:transparent}
 #bg{position:fixed;inset:0;z-index:0;background:var(--soft) url(img/bg-pink.webp) 16% center / cover no-repeat}

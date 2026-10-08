@@ -38,6 +38,7 @@
 }
 :root[data-theme="dark"]{ --bg:#231A3F; --ink:#FDEBF2; --muted:#C9BEEA; --card:#30275A; --plate:#3B3270; }
 *,*::before,*::after{box-sizing:inherit}
+html,body,button,a{touch-action:manipulation}   /* no double-tap zoom on taps; pinch zoom and scrolling still work */
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 body{
   margin:0;height:100%;font-family:var(--body);font-size:17px;line-height:1.5;
