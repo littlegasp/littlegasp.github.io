@@ -135,7 +135,7 @@ textarea{min-height:170px;resize:vertical}
     </fieldset>
 
     <fieldset>
-      <legend>Things you love about them</legend>
+      <legend id="reasonsLegend">Things you love about them</legend>
       <p class="hint" style="margin:0 0 8px">Short and sweet works best. Fill as many as you like, up to <span id="reasonMax">6</span>.</p>
       <div class="notes" id="notes"></div>
     </fieldset>
@@ -241,6 +241,32 @@ const DESIGNS = {
     numberLabel: "Age they're turning", numberHint: "e.g. 25",
     questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
   },
+  "diwali": {
+    name: "Diwali Night",
+    path: "/diwali/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    maxPhotos: 5,                      // five sky lanterns
+    song: "A festive Diwali tune already plays on this design.",
+    numberLabel: "Diwalis together", numberHint: "e.g. 5",
+    questionHint: "e.g. Diwali dinner with my family this year?", yesHint: "e.g. They already love you. Mom's making your favourite."
+  },
+  "apology": {
+    name: "Mend the Heart",
+    path: "/apology/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    song: "A soft music-box tune already plays on this design.",
+    numberLabel: "Years together", numberHint: "e.g. 4",
+    reasonsTitle: "What you're sorry for, and what you'll do better",
+    reasonsExamples: ["I'm sorry I didn't listen","I'm sorry I made you feel small","You deserved better from me","I'll call when I'm running late","I'll stop saying 'calm down'","I'll show up, every time"],
+    letterHint: "Ananya,\n\nI've been replaying it all day, and you were right...",
+    questionHint: "e.g. Coffee tomorrow, my treat, and I'll listen this time?", yesHint: "e.g. Thank you. I'll be there at 6, with your favourite."
+  },
   "garba-circle": {
     name: "Garba Circle",
     path: "/garba-circle/",
@@ -270,6 +296,8 @@ $("#numberLabel").textContent = D.numberLabel || "Special number";
 if (D.numberHint) $("#f-number").placeholder = D.numberHint;
 if (D.questionHint) $("#f-question").placeholder = D.questionHint;
 if (D.yesHint) $("#f-yes").placeholder = D.yesHint;
+if (D.reasonsTitle) $("#reasonsLegend").textContent = D.reasonsTitle;
+if (D.letterHint) $("#f-letter").placeholder = D.letterHint;
 const offerOn = D.offerLabel && (!D.offerEnds || Date.now() <= new Date(D.offerEnds + "T23:59:59+05:30").getTime());
 const pb = $("#pricebox");
 pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (offerOn ? `<span class="offer">${D.offerLabel}</span>` : "");
@@ -319,7 +347,7 @@ function renderNotes(){
   state.reasons.forEach((r, i) => {
     const inp = document.createElement("input");
     inp.type = "text"; inp.maxLength = 70; inp.value = r;
-    inp.placeholder = ["The way you laugh at my jokes","You remember everything","Your 2 a.m. chats","How you light up a room","You make me braver","Just… you"][i];
+    inp.placeholder = (D.reasonsExamples || ["The way you laugh at my jokes","You remember everything","Your 2 a.m. chats","How you light up a room","You make me braver","Just… you"])[i] || "";
     inp.setAttribute("aria-label", "Thing " + (i+1));
     inp.oninput = () => { state.reasons[i] = inp.value; changed(); };
     box.appendChild(inp);
@@ -491,7 +519,7 @@ function check(){
   const need = (id, ok, msg) => { const el = $(id); if (!ok){ el.setAttribute("aria-invalid","true"); errs.push([el, msg]); } };
   need("#f-to", state.to.trim(), "Add their name");
   need("#f-from", state.from.trim(), "Add your name");
-  need("#f-letter", state.letter.trim() || state.reasons.some(r => r.trim()), "Write a letter or at least one thing you love");
+  need("#f-letter", state.letter.trim() || state.reasons.some(r => r.trim()), D.reasonsTitle ? "Write a letter or fill in at least one line above" : "Write a letter or at least one thing you love");
   need("#f-email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email.trim()), "Add a valid email so we can send your link");
   return errs;
 }

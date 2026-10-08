@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Someone wants to say sorry</title>
+<meta name="description" content="Someone made you a little something to say sorry. Open it with your sound on.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Little Gasp">
+<meta property="og:title" content="I owe you a sorry 💗">
+<meta property="og:description" content="Someone made you a little something to say sorry. Open it with your sound on.">
+<meta property="og:image" content="https://littlegasp.com/apology/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="image" href="img/puppy-sorry.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#3B2A5C; --muted:#6B5C88; --accent:#D9577F; --accent-dark:#A93A60; --soft:#F6ECF4; --gold:#E2B04A; --gold-hi:#FFE3A1;
+  --display:"Caprasimo","Cooper Black",Georgia,serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Nanum Pen Script","Comic Sans MS",cursive;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink);background:var(--soft);overflow:hidden;-webkit-tap-highlight-color:transparent}
+#bg{position:fixed;inset:0;z-index:0;background:#C9B3CF url(img/bg.webp) 22% center / cover no-repeat}
+#bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,0) 35%,rgba(255,240,246,.35))}
+body.sunny #bg::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 30% 30%,rgba(255,226,170,.45),transparent 70%);animation:fadein 2s ease both}
+@keyframes fadein{from{opacity:0}}
+#rain{position:fixed;inset:0;z-index:1;pointer-events:none;transition:opacity 2s}
+body.sunny #rain{opacity:0}
+main{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+main[hidden]{display:none}
+.loader{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--hand);font-size:2rem;color:var(--accent)}
+
+.scene{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:58px 16px 26px}
+.scene[hidden]{display:none}
+.art{position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+.words{width:min(100%,440px);display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 18px 20px;border-radius:26px;
+  background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(59,42,92,.14)}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;color:var(--ink)}
+h1{font-size:clamp(2.2rem,9vw,3rem)}
+h2{font-size:clamp(1.6rem,6.6vw,2.1rem)}
+h1:focus,h2:focus{outline:none}
+p{margin:0}
+.name{color:var(--accent);font-size:clamp(2.8rem,13vw,4.2rem)}
+.sub{color:var(--muted);max-width:32ch}
+.whisper{font-family:var(--hand);font-size:1.7rem;line-height:1.05;color:var(--accent)}
+.whisper:empty{display:none}
+.count{font-size:.9rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.btn{appearance:none;border:0;cursor:pointer;font:700 1.05rem/1 var(--body);color:#fff;background:var(--accent);padding:16px 30px;border-radius:999px;
+  box-shadow:0 5px 0 var(--accent-dark);position:relative;transition:transform .1s,box-shadow .1s;white-space:nowrap}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--accent-dark)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn[hidden]{display:none}
+.linkish{appearance:none;border:0;background:none;font:600 .92rem var(--body);color:var(--accent-dark);text-decoration:underline;cursor:pointer;padding:4px}
+.linkish[hidden]{display:none}
+.shard:focus-visible{outline:none}
+.piece:has(.shard:focus-visible){filter:drop-shadow(0 0 3px #E2B04A) drop-shadow(0 0 3px #E2B04A)}
+:is(.btn,.linkish,.icon-btn,.fog):focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+.pop-in{animation:popin .5s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popin{from{transform:scale(.85);opacity:0}}
+.bob{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:20}
+.dots[hidden]{display:none}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--ink);opacity:.25;transition:opacity .3s,width .3s}
+.dots span.on{opacity:.75;width:20px;border-radius:4px}
+.icon-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:21;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(255,255,255,.8);color:var(--ink);font-size:1.1rem;box-shadow:0 4px 14px rgba(59,42,92,.15)}
+.icon-btn[hidden]{display:none}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+.made{font-size:.82rem;color:var(--muted)}
+.made a{color:var(--accent-dark);font-weight:700}
+
+/* 1. open */
+.pup{width:min(70vw,36dvh);height:auto;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(59,42,92,.25))}
+
+/* 2. the broken heart: one painted heart, cut into shards that fit back exactly */
+.heartbox{position:relative;width:min(72vw,36dvh);aspect-ratio:1;flex:none;touch-action:none}
+.heartbox .ghost{position:absolute;inset:0;background:url(img/heart.webp) center / 100% 100% no-repeat;opacity:.13;filter:grayscale(1) brightness(1.4)}
+.piece{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(59,42,92,.28));transition:filter .3s;will-change:transform}
+.piece.home{filter:none}
+.piece.flying{transition:transform .45s cubic-bezier(.2,1.2,.4,1),filter .3s}
+.shard{position:absolute;inset:0;background:url(img/heart.webp) center / 100% 100% no-repeat;pointer-events:auto;cursor:grab;border:0;padding:0;appearance:none;touch-action:none}
+.piece.home .shard{cursor:default;pointer-events:none}
+.piece.lift{z-index:5;filter:drop-shadow(0 14px 16px rgba(59,42,92,.35))}
+.seams{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;
+  -webkit-mask:url(img/heart.webp) center / 100% 100% no-repeat;mask:url(img/heart.webp) center / 100% 100% no-repeat}
+.seams polyline{fill:none;stroke:url(#gold);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:200;stroke-dashoffset:200;filter:drop-shadow(0 0 1.2px #FFE3A1)}
+.seams polyline.cut{stroke:#A86A7C;stroke-opacity:.45;stroke-width:.5;stroke-dashoffset:0;filter:none}
+.mended .seams polyline.gold{animation:seam 2.2s ease forwards;animation-delay:calc(var(--i) * .18s)}
+@keyframes seam{to{stroke-dashoffset:0}}
+.mended{animation:mendglow 2.4s ease 1.2s both}
+@keyframes mendglow{40%{filter:drop-shadow(0 0 26px rgba(255,214,128,.95))}100%{filter:drop-shadow(0 0 12px rgba(255,214,128,.55))}}
+.note{min-height:4.6em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;padding:12px 14px;border-radius:18px;background:#fff;box-shadow:inset 0 0 0 2px #F1D9E4}
+.note .tag{font:700 .78rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.note .big{font:400 clamp(1.15rem,4.6vw,1.45rem)/1.2 var(--display);color:var(--ink)}
+.note .hint{color:var(--muted);font-size:.95rem}
+
+/* 3. the window: wipe the fog off each memory */
+.pane{position:relative;width:min(70vw,34dvh,330px);aspect-ratio:4/5;flex:none;border-radius:16px;overflow:hidden;background:#fff;
+  box-shadow:0 0 0 10px #fff,0 0 0 12px #E9D7E3,0 18px 34px rgba(59,42,92,.28)}
+.pane img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fog{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;transition:opacity .9s}
+.fog.gone{opacity:0;pointer-events:none}
+.cap{font:400 clamp(1.5rem,6vw,1.9rem)/1.1 var(--hand);color:var(--accent);min-height:1.1em}
+
+/* 4. letter */
+.paper{width:min(100%,420px);text-align:left;padding:26px 24px 22px;background:#FFFDF8;border-radius:6px;position:relative;
+  background-image:repeating-linear-gradient(transparent 0 33px,#EADFEA 33px 34px);background-position:0 18px;
+  box-shadow:0 14px 32px rgba(59,42,92,.18)}
+.paper::before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:var(--accent);border-radius:6px 6px 0 0;opacity:.7}
+.paper p{font:400 1.75rem/34px var(--hand);color:#3E2F57;margin:0;opacity:0;transform:translateY(6px)}
+.paper.reveal p{animation:in .7s ease forwards;animation-delay:calc(var(--i) * .5s + .2s)}
+.paper p.sign{text-align:right;color:var(--accent-dark)}
+@keyframes in{to{opacity:1;transform:none}}
+
+/* 5. ask + end */
+.kicker{font:400 clamp(2.2rem,9vw,3rem)/1 var(--display);color:var(--accent)}
+.q{font:600 clamp(1.1rem,4.6vw,1.35rem)/1.35 var(--body);color:var(--ink);max-width:28ch}
+.ask-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.wait{font-family:var(--hand);font-size:1.6rem;color:var(--accent);line-height:1.1}
+.wait:empty{display:none}
+.jump{animation:jump 1.6s ease-in-out infinite}
+@keyframes jump{30%{transform:translateY(-14px) rotate(-3deg)}60%{transform:translateY(0) rotate(2deg)}}
+
+/* laptops: full-screen, art | words */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  #bg{background-position:center}
+  .scene.two{display:grid;grid-template-columns:34vw 34vw;column-gap:4vw;justify-content:center;align-items:center;align-content:center;padding:70px 4vw 40px}
+  .scene.two[hidden]{display:none}
+  .scene.two>.art{grid-column:1}
+  .scene.two>.words{grid-column:2;width:100%;max-width:470px;justify-self:center}
+  .pup{width:min(30vw,62dvh)}
+  .heartbox{width:min(28vw,56dvh)}
+  .pane{width:min(24vw,56dvh,400px)}
+  h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
+  .name{font-size:clamp(3.2rem,5vw,5rem)}
+  h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
+  .paper{max-width:470px}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<nav class="dots" id="dots" aria-label="Progress" hidden></nav>
+<button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="loader" id="loader"><p id="loaderText">Opening…</p></div>
+
+<main hidden>
+  <!-- 1. Open -->
+  <section class="scene two" data-scene="open">
+    <div class="art"><img class="pup bob" src="img/puppy-sorry.webp" alt="A puppy holding flowers, looking sorry" width="1200" height="1200"></div>
+    <div class="words">
+      <h1 tabindex="-1" class="name" data-to></h1>
+      <p class="whisper" id="openLine"></p>
+      <p class="sub">I owe you a sorry. A proper one. Turn your sound on and give me a minute?</p>
+      <button class="btn" data-next id="openBtn"><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 2. Mend the heart (reasons) -->
+  <section class="scene two" data-scene="heart" hidden>
+    <div class="art">
+      <div class="heartbox" id="heartbox">
+        <div class="ghost"></div>
+        <svg class="seams" id="seams" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE7A8"/><stop offset=".5" stop-color="#E2B04A"/><stop offset="1" stop-color="#B9822B"/></linearGradient></defs>
+        </svg>
+      </div>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1" id="heartTitle">I broke something</h2>
+      <p class="sub" id="heartSub">Help me put it back together. Drag each piece into place, or tap it.</p>
+      <div class="note" id="note" aria-live="polite"><p class="hint">Every piece has something I need to say.</p></div>
+      <p class="count" id="pieceCount"></p>
+      <button class="btn" data-next id="afterHeart" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 3. Wipe the window (photos) -->
+  <section class="scene two" data-scene="window" hidden>
+    <div class="art"><div class="pane" id="pane"><img class="ph" id="paneImg" alt=""><canvas class="fog" id="fog" tabindex="0" aria-label="Wipe the fog off the window"></canvas></div></div>
+    <div class="words">
+      <h2 tabindex="-1">Remember these?</h2>
+      <p class="sub" id="paneSub">Wipe the fog off the window with your finger.</p>
+      <p class="cap" id="paneCap" aria-live="polite"></p>
+      <p class="count" id="paneCount"></p>
+      <button class="btn ghost" id="nextPhoto" hidden><span class="lbl">Next memory</span></button>
+      <button class="btn" data-next id="afterWindow" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 4. Letter -->
+  <section class="scene" data-scene="letter" hidden>
+    <h2 tabindex="-1">What I really want to say</h2>
+    <article class="paper" id="letter"></article>
+    <button class="btn" data-next><span class="lbl"></span></button>
+  </section>
+
+  <!-- 5. Question -->
+  <section class="scene two" data-scene="ask" hidden>
+    <div class="art"><img class="pup" src="img/puppy-sorry.webp" alt="The puppy waiting hopefully" width="1200" height="1200"></div>
+    <div class="words">
+      <p class="kicker">Forgive me?</p>
+      <h2 tabindex="-1" class="q" id="question"></h2>
+      <div class="ask-btns">
+        <button class="btn" id="yesBtn"><span class="lbl">Yes</span></button>
+        <button class="btn ghost" id="waitBtn"><span class="lbl">I need a minute</span></button>
+      </div>
+      <p class="wait" id="waitLine"></p>
+    </div>
+  </section>
+
+  <!-- 6. Finale -->
+  <section class="scene two" data-scene="end" hidden>
+    <div class="art"><img class="pup jump" src="img/puppy-happy.webp" alt="The puppy jumping with joy" width="1200" height="1200"></div>
+    <div class="words">
+      <p class="whisper" id="endPre"></p>
+      <h1 tabindex="-1" class="name" id="endTitle"></h1>
+      <p class="sub" id="endLine"></p>
+      <p class="sub" id="endFrom"></p>
+      <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
+      <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============ SETUP: same Apps Script URL as the other designs ============ */
+const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";
+/* Default music: our own music-box tune, synthesised in the browser (no file, no licence needed).
+   A buyer's own song (d.song) plays instead when they add one. */
+const SONG = { src: "", credit: "Original music-box tune by Little Gasp" };
+/* ========================================================================= */
+
+const DEMO = {
+  to: "Ananya", from: "Kabir", number: "4",
+  photos: [
+    { src: "img/demo-1.svg", caption: "Our first monsoon walk" },
+    { src: "img/demo-2.svg", caption: "The day you forgave my cooking" },
+    { src: "img/demo-3.svg", caption: "Us, before I was an idiot" }
+  ],
+  reasons: ["I'm sorry I didn't listen","I'm sorry I made you feel small","You deserved better from me","I'll call when I'm running late","I'll stop saying 'calm down'","I'll show up, every time"],
+  letter: ["Ananya,","I've been replaying it all day, and you were right.","I don't want to win arguments with you. I want to be on your side, even when I'm the problem.","No excuses this time. Just me, saying sorry, and meaning it."],
+  question: "Coffee tomorrow, my treat, and I'll listen this time?",
+  yesReply: "Thank you. I'll be there at 6, with your favourite."
+};
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const qs = new URLSearchParams(location.search);
+const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autoplay");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const LABELS = { heart:"Hear me out", window:"Remember these?", letter:"Read my letter", ask:"One question", end:"Finish" };
+let C, seq = [], current = 0;
+
+/* ---------- load ---------- */
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "tsc-data") res(e.data.data); });
+    parent.postMessage({ type: "tsc-ready" }, location.origin);
+  });
+}
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(217,87,127,0.32)'>PREVIEW · Little Gasp</text></svg>";
+  const wm = document.createElement("div"); wm.setAttribute("aria-hidden", "true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(59,42,92,.88);color:#fff;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px;letter-spacing:.04em";
+  document.body.append(wm, band);
+}
+async function start(){
+  try {
+    let d = DEMO;
+    if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
+    else if (id && !isAuto){
+      const res = await fetch(API_URL + "?id=" + encodeURIComponent(id)); d = await res.json();
+      if (!d || d.error) throw new Error(d && d.error);
+    }
+    build(d);
+    if (isAuto) runAutoplay();
+  } catch (e) {
+    $("#loaderText").textContent = "This link doesn't look right. Please check it, or message @littlegasp.co on Instagram.";
+  }
+}
+setTimeout(start, 0);
+
+function build(d){
+  const t = v => String(v || "").trim();
+  C = { to: t(d.to) || "you", from: t(d.from), number: t(d.number),
+    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 5),
+    reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
+    letter: (d.letter || []).map(t).filter(Boolean),
+    question: t(d.question), yesReply: t(d.yesReply) };
+  if (id) C.photos = C.photos.filter(p => p.src);
+  document.title = C.to + ", I'm sorry";
+  $$("[data-to]").forEach(e => e.textContent = C.to + ",");
+  const n = /^\d{1,3}$/.test(C.number) ? +C.number : 0;
+  $("#openLine").textContent = n ? `${n} year${n === 1 ? "" : "s"} of you, and I still got this wrong.` : "";
+
+  seq = ["open", "heart"];
+  if (C.photos.length) seq.push("window");
+  if (C.letter.length) seq.push("letter");
+  if (C.question) seq.push("ask");
+  seq.push("end");
+  $$("[data-scene]").forEach(sc => {
+    const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl");
+    if (b && i > -1 && seq[i + 1]) b.textContent = LABELS[seq[i + 1]];
+  });
+  const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
+
+  buildHeart(); buildLetter();
+  $("#question").textContent = C.question;
+  $("#endPre").textContent = C.question ? "You said yes." : "";
+  $("#endTitle").textContent = "Thank you, " + C.to;
+  $("#endLine").textContent = C.question ? (C.yesReply || "I won't waste it.") : "For reading this, and for being you.";
+  $("#endFrom").textContent = C.from ? "With love, " + C.from : "";
+
+  if (!isAuto){
+    const own = d.song && d.song.src;
+    if (own){
+      song = new Audio(own); song.loop = true; song.preload = "auto";
+      song.addEventListener("error", () => { song = null; if (musicOn) Music.start(); });   // their song won't load: play our tune
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (ctx) document.hidden ? ctx.suspend() : ctx.resume();
+      if (song && musicOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {}));
+    });
+  }
+  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false;
+  startRain();
+  go("open");
+}
+
+/* ---------- scenes ---------- */
+function go(name){
+  current = seq.indexOf(name);
+  $$("[data-scene]").forEach(s => s.hidden = s.dataset.scene !== name);
+  $$("#dots span").forEach((s, i) => s.classList.toggle("on", i === current));
+  document.querySelector("main").scrollTo(0, 0);
+  const sc = document.querySelector(`[data-scene="${name}"]`), h = sc.querySelector("h1,h2");
+  if (h && !isPreview) h.focus({ preventScroll: true });
+  if (name === "heart"){ startMusic(); scatter(); }
+  if (name === "window") showPhoto(0);
+  if (name === "letter") $("#letter").classList.add("reveal");
+  if (name === "end"){ document.body.classList.add("sunny"); hearts(90); chimeUp(); }
+}
+$$("[data-next]").forEach(b => b.addEventListener("click", () => { ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n) go(n); }));
+$("#replay").addEventListener("click", () => location.reload());
+
+/* ---------- sound: a soft music-box tune (our own), or the buyer's song ---------- */
+let ctx, master, muted = false, song = null, musicOn = false, unlocked = false;
+function ensureAudio(){
+  if (isAuto) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!ctx){ ctx = new AC(); master = ctx.createGain(); master.gain.value = muted ? 0 : .5; master.connect(ctx.destination); }
+  if (ctx.state === "suspended") ctx.resume();
+}
+function unlockSong(){   // phones only allow audio started inside a tap: start it silently once, play it later
+  if (unlocked || !song) return; unlocked = true;
+  song.muted = true; song.play().then(() => { if (!musicOn){ song.pause(); song.currentTime = 0; } song.muted = muted; }).catch(() => {});
+}
+function startMusic(){
+  if (isAuto || musicOn) return; musicOn = true; ensureAudio();
+  if (song){ song.muted = muted; song.currentTime = 0; song.play().catch(() => { song = null; Music.start(); }); }
+  else Music.start();
+  $("#muteBtn").hidden = false;
+}
+function bell(f, t, vol = .16, len = 1.8){
+  if (!ctx) return;
+  [[1, vol], [2.01, vol * .28], [3.98, vol * .08]].forEach(([m, v]) => { const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sine"; o.frequency.value = f * m; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .008);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len / m); o.connect(g); g.connect(master); o.start(t); o.stop(t + len / m + .05); });
+}
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+/* our own tune in F major, 3/4 at 84 bpm: [midi note, beat in bar, length in beats] per bar */
+const TUNE = [
+  [[72,0],[69,1],[67,2]], [[65,0],[67,1.5],[69,2]], [[70,0],[69,1],[67,2]], [[69,0],[65,2]],
+  [[72,0],[74,1],[76,2]], [[77,0],[76,1],[74,2]], [[72,0],[70,1],[69,1.5],[67,2]], [[65,0]] ];
+const BASS = [41, 41, 46, 41, 45, 46, 48, 41];
+const Music = { on:false, bar:0, next:0, timer:null,
+  start(){ if (!ctx || this.on) return; this.on = true; this.bar = 0; this.next = ctx.currentTime + .15; this.tick(); this.timer = setInterval(() => this.tick(), 120); },
+  tick(){ const beat = 60 / 84; while (this.next < ctx.currentTime + .6){ this.play(this.next, this.bar, beat); this.next += 3 * beat; this.bar++; } },
+  play(t, i, beat){
+    const k = i % TUNE.length;
+    bell(hz(BASS[k]), t, .07, 2.6); bell(hz(BASS[k] + 7), t + beat, .035, 1.6); bell(hz(BASS[k] + 12), t + 2 * beat, .03, 1.4);
+    if (i < 1) return;
+    TUNE[k].forEach(([m, at]) => bell(hz(m + (i % 16 >= 8 ? 12 : 0)), t + at * beat, .11, 2));
+  }
+};
+function ding(f, d = 0, v = .14){ if (ctx) bell(f, ctx.currentTime + d, v, 1.4); }
+const chimeUp = () => [784, 988, 1175, 1568].forEach((f, i) => ding(f, i * .1, .12));
+$("#muteBtn").addEventListener("click", e => {
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .5; if (song) song.muted = muted;
+  e.currentTarget.setAttribute("aria-pressed", muted); e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+  e.currentTarget.textContent = muted ? "✕" : "♪";
+});
+
+/* ---------- 2. the heart: n shards cut along jagged cracks from one point ---------- */
+const CX = 50, CY = 50, FAR = 95;
+let pieces = [], placed = 0, rays = [];
+function rnd(seed){ let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function buildHeart(){
+  const n = Math.max(4, C.reasons.length || 4), R = rnd(7 + n), box = $("#heartbox"), svg = $("#seams");
+  rays = [];
+  for (let k = 0; k < n; k++){
+    const a = (-90 + 18 + k * 360 / n + (R() - .5) * 14) * Math.PI / 180, pts = [[CX, CY]];
+    [9, 18, 28, 38, 50, FAR].forEach((r, j) => { const w = j === 5 ? 0 : (R() - .5) * 7, b = a + w / r;
+      pts.push([CX + Math.cos(b) * r, CY + Math.sin(b) * r]); });
+    rays.push({ a, pts });
+  }
+  for (let k = 0; k < n; k++){
+    const r1 = rays[k], r2 = rays[(k + 1) % n];
+    let a1 = r1.a, a2 = r2.a; if (a2 <= a1) a2 += Math.PI * 2;
+    const arc = []; for (let s = 1; s < 6; s++){ const b = a1 + (a2 - a1) * s / 6; arc.push([CX + Math.cos(b) * FAR, CY + Math.sin(b) * FAR]); }
+    const poly = [...r1.pts, ...arc, ...[...r2.pts].reverse()];
+    const wrap = document.createElement("div"); wrap.className = "piece";
+    const sh = document.createElement("button"); sh.className = "shard"; sh.type = "button";
+    sh.setAttribute("aria-label", `Piece ${k + 1} of the heart`);
+    sh.style.clipPath = "polygon(" + poly.map(([x, y]) => `${x.toFixed(2)}% ${y.toFixed(2)}%`).join(",") + ")";
+    wrap.appendChild(sh); box.insertBefore(wrap, svg);
+    const mid = (a1 + a2) / 2;
+    const p = { k, wrap, sh, mid, x: 0, y: 0, rot: 0, home: false };
+    pieces.push(p); dragify(p);
+  }
+  rays.forEach((r, i) => {
+    const pts = r.pts.slice(0, 6).map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+    const cut = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); cut.setAttribute("points", pts); cut.setAttribute("class", "cut");
+    const gold = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); gold.setAttribute("points", pts); gold.setAttribute("class", "gold");
+    gold.style.setProperty("--i", i); svg.append(cut, gold);
+  });
+  $("#pieceCount").textContent = `0 of ${n} pieces back`;
+}
+function setT(p){ p.wrap.style.transform = `translate(${p.x}px,${p.y}px) rotate(${p.rot}deg)`; }
+function scatter(){
+  if (placed) return;
+  const W = $("#heartbox").getBoundingClientRect().width, R = rnd(31);
+  pieces.forEach(p => { const d = W * (.2 + R() * .12);
+    p.x = Math.cos(p.mid) * d; p.y = Math.sin(p.mid) * d * .8 + (R() - .5) * W * .08; p.rot = (R() - .5) * 50; setT(p); });
+}
+function dragify(p){
+  let sx, sy, ox, oy, moved = false, drag = false;
+  p.sh.addEventListener("pointerdown", e => {
+    if (p.home) return; e.preventDefault(); ensureAudio(); startMusic();
+    drag = true; moved = false; sx = e.clientX; sy = e.clientY; ox = p.x; oy = p.y;
+    p.sh.setPointerCapture(e.pointerId); p.wrap.classList.add("lift"); p.wrap.classList.remove("flying");
+    p.rot *= .4; setT(p);
+  });
+  p.sh.addEventListener("pointermove", e => {
+    if (!drag) return; const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (Math.hypot(dx, dy) > 6) moved = true;
+    p.x = ox + dx; p.y = oy + dy; setT(p);
+  });
+  const up = () => {
+    if (!drag) return; drag = false; p.wrap.classList.remove("lift");
+    const W = $("#heartbox").getBoundingClientRect().width;
+    if (!moved || Math.hypot(p.x, p.y) < W * .16) sendHome(p);
+  };
+  p.sh.addEventListener("pointerup", up); p.sh.addEventListener("pointercancel", up);
+  p.sh.addEventListener("click", e => { if (e.detail === 0) sendHome(p); });   // keyboard
+}
+function sendHome(p){
+  if (p.home) return; p.home = true; p.sh.tabIndex = -1; if (document.activeElement === p.sh) p.sh.blur();
+  p.wrap.classList.add("flying"); p.x = 0; p.y = 0; p.rot = 0; setT(p);
+  setTimeout(() => { p.wrap.classList.add("home"); clink(); }, 420);
+  const n = pieces.length, i = placed++;
+  const note = $("#note"); note.innerHTML = "";
+  const tag = document.createElement("p"); tag.className = "tag"; tag.textContent = `Piece ${i + 1} of ${n}`;
+  const big = document.createElement("p"); big.className = "big";
+  big.textContent = C.reasons[i] || ["I'm sorry.", "I mean it.", "I'm listening now.", "We're worth fixing."][i % 4];
+  note.append(tag, big); note.classList.remove("pop-in"); void note.offsetWidth; note.classList.add("pop-in");
+  $("#pieceCount").textContent = `${placed} of ${n} pieces back`;
+  if (placed === n) setTimeout(mended, 700);
+}
+function clink(){ if (!ctx) return; const t = ctx.currentTime; bell(1760, t, .06, .5); bell(2349, t + .03, .04, .4); }
+function mended(){
+  $("#heartbox").classList.add("mended");
+  $("#heartTitle").textContent = "Mended, with gold";
+  $("#heartSub").textContent = "In kintsugi, broken pottery is mended with gold, so the cracks become the most beautiful part. That's what I want for us.";
+  if (ctx) [0, .25, .5, .9].forEach((d, k) => ding([880, 1109, 1319, 1760][k], d, .1));
+  setTimeout(() => { const r = $("#heartbox").getBoundingClientRect(); sparkle(r.left + r.width / 2, r.top + r.height / 2); }, 1300);
+  $("#afterHeart").hidden = false;
+  if (!isAuto) setTimeout(() => $("#afterHeart").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 900);
+}
+
+/* ---------- 3. the foggy window: wipe to reveal each photo ---------- */
+let photoIx = 0, wiping = false, cleared = false;
+function showPhoto(i){
+  photoIx = i; cleared = false;
+  const p = C.photos[i], img = $("#paneImg");
+  img.src = p.src || ""; img.alt = p.caption || "A photo";
+  $("#paneCap").textContent = ""; $("#nextPhoto").hidden = true; $("#afterWindow").hidden = true;
+  $("#paneCount").textContent = C.photos.length > 1 ? `${i + 1} of ${C.photos.length}` : "";
+  const cv = $("#fog"); cv.classList.remove("gone");
+  requestAnimationFrame(() => {
+    const r = cv.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+    cv.width = Math.max(1, r.width * dpr); cv.height = Math.max(1, r.height * dpr);
+    const g = cv.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0);
+    const grd = g.createLinearGradient(0, 0, 0, cv.height); grd.addColorStop(0, "rgba(236,226,240,.97)"); grd.addColorStop(1, "rgba(221,208,228,.97)");
+    g.fillStyle = grd; g.fillRect(0, 0, cv.width, cv.height);
+    const R = rnd(11 + i);
+    for (let k = 0; k < 70; k++){ const x = R() * cv.width, y = R() * cv.height, s = (2 + R() * 6) * dpr;
+      g.fillStyle = "rgba(255,255,255,.55)"; g.beginPath(); g.ellipse(x, y, s * .7, s, 0, 0, 7); g.fill(); }
+    g.fillStyle = "rgba(120,96,140,.55)"; g.font = `${22 * dpr}px "Nanum Pen Script", cursive`; g.textAlign = "center";
+    g.fillText("wipe me", cv.width / 2, cv.height / 2);
+  });
+}
+function wipeAt(e){
+  const cv = $("#fog"), r = cv.getBoundingClientRect(), g = cv.getContext("2d"), s = cv.width / r.width;
+  const x = (e.clientX - r.left) * s, y = (e.clientY - r.top) * s, rad = Math.max(26, r.width * .11) * s;
+  g.globalCompositeOperation = "destination-out";
+  const grd = g.createRadialGradient(x, y, rad * .3, x, y, rad); grd.addColorStop(0, "rgba(0,0,0,1)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = grd; g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); g.globalCompositeOperation = "source-over";
+}
+function clearedShare(){
+  const cv = $("#fog"), g = cv.getContext("2d"), d = g.getImageData(0, 0, cv.width, cv.height).data;
+  let clear = 0, tot = 0; for (let i = 3; i < d.length; i += 4 * 97){ tot++; if (d[i] < 90) clear++; }
+  return tot ? clear / tot : 1;
+}
+function reveal(){
+  if (cleared) return; cleared = true; $("#fog").classList.add("gone");
+  const p = C.photos[photoIx]; $("#paneCap").textContent = p.caption || ""; ding(1319, 0, .08);
+  if (photoIx < C.photos.length - 1) $("#nextPhoto").hidden = false;
+  else { $("#afterWindow").hidden = false; if (!isAuto) setTimeout(() => $("#afterWindow").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 300); }
+}
+(() => {
+  const cv = $("#fog"); let n = 0;
+  cv.addEventListener("pointerdown", e => { e.preventDefault(); wiping = true; cv.setPointerCapture(e.pointerId); wipeAt(e); });
+  cv.addEventListener("pointermove", e => { if (!wiping || cleared) return; wipeAt(e); if (++n % 6 === 0 && clearedShare() > .5) reveal(); });
+  const end = () => { if (!wiping) return; wiping = false; if (!cleared && clearedShare() > .4) reveal(); };
+  cv.addEventListener("pointerup", end); cv.addEventListener("pointercancel", end);
+  cv.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); reveal(); } });
+})();
+$("#nextPhoto").addEventListener("click", () => showPhoto(photoIx + 1));
+
+/* ---------- 4. letter ---------- */
+function buildLetter(){
+  const L = $("#letter");
+  C.letter.forEach((t, i) => { const p = document.createElement("p"); p.textContent = t; p.style.setProperty("--i", i); L.appendChild(p); });
+  if (C.from){ const s = document.createElement("p"); s.className = "sign"; s.textContent = "Yours, " + C.from; s.style.setProperty("--i", C.letter.length); L.appendChild(s); }
+}
+
+/* ---------- 5. ask: no pressure, a minute is allowed ---------- */
+let waits = 0;
+$("#waitBtn").addEventListener("click", () => {
+  waits++;
+  $("#waitLine").textContent = waits === 1 ? "Take all the time you need. I'll be right here." : "Still here. No rush.";
+  if (waits >= 2){ $("#waitBtn .lbl").textContent = "Okay, I'm ready"; $("#waitBtn").onclick = sayYes; }
+});
+$("#yesBtn").addEventListener("click", sayYes);
+function sayYes(){ go("end"); }
+
+/* ---------- rain on the glass (stops when they say yes) ---------- */
+function startRain(){
+  if (reduce) return;
+  const cv = $("#rain"), g = cv.getContext("2d"); let W, H, drops = [];
+  const size = () => { const r = devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W * r; cv.height = H * r; cv.style.width = W + "px"; cv.style.height = H + "px"; g.setTransform(r, 0, 0, r, 0, 0); };
+  size(); addEventListener("resize", size);
+  for (let i = 0; i < 70; i++) drops.push({ x: Math.random() * W, y: Math.random() * H, l: 8 + Math.random() * 14, v: 4 + Math.random() * 5 });
+  const tick = () => {
+    if (document.body.classList.contains("sunny") && getComputedStyle(cv).opacity === "0") return;
+    g.clearRect(0, 0, W, H); g.strokeStyle = "rgba(255,255,255,.35)"; g.lineWidth = 1.2; g.beginPath();
+    drops.forEach(d => { g.moveTo(d.x, d.y); g.lineTo(d.x - d.l * .15, d.y + d.l); d.y += d.v; d.x -= d.v * .15; if (d.y > H){ d.y = -20; d.x = Math.random() * W * 1.1; } });
+    g.stroke(); requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+/* ---------- hearts + gold sparkles ---------- */
+const fx = $("#fx"), fg = fx.getContext("2d");
+let parts = [], running = false;
+function sizeFx(){ const r = devicePixelRatio || 1; fx.width = innerWidth * r; fx.height = innerHeight * r; fg.setTransform(r, 0, 0, r, 0, 0); }
+sizeFx(); addEventListener("resize", sizeFx);
+function hearts(n){
+  if (reduce) return;
+  for (let i = 0; i < n; i++) parts.push({ x: Math.random() * innerWidth, y: innerHeight + 20 + Math.random() * innerHeight * .4, vx: (Math.random() - .5) * .8, vy: -(1.4 + Math.random() * 2.2),
+    s: 7 + Math.random() * 9, c: ["#E8457A","#F49AB6","#FFC857","#D9577F","#FFFFFF"][i % 5], w: Math.random() * 6, heart: true, life: 400 });
+  run();
+}
+function sparkle(x, y){
+  if (reduce) return;
+  for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#E2B04A","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
+  run();
+}
+function run(){ if (!running){ running = true; requestAnimationFrame(loop); } }
+function heartPath(s){ fg.beginPath(); fg.moveTo(0, s * .3); fg.bezierCurveTo(-s, -s * .4, -s * .5, -s * 1.1, 0, -s * .45); fg.bezierCurveTo(s * .5, -s * 1.1, s, -s * .4, 0, s * .3); fg.fill(); }
+function loop(){
+  fg.clearRect(0, 0, innerWidth, innerHeight);
+  parts.forEach(p => { p.w += .04; p.x += p.vx + (p.heart ? Math.sin(p.w) * .5 : 0); p.y += p.vy; if (p.g) p.vy += p.g; p.life--;
+    fg.save(); fg.translate(p.x, p.y); fg.fillStyle = p.c; fg.globalAlpha = Math.min(1, p.life / 40);
+    if (p.heart) heartPath(p.s); else { fg.beginPath(); fg.arc(0, 0, p.s, 0, 7); fg.fill(); } fg.restore(); });
+  parts = parts.filter(p => p.life > 0 && p.y > -40 && p.y < innerHeight + 200);
+  if (parts.length) requestAnimationFrame(loop); else { running = false; fg.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+/* ---------- homepage showcase (?autoplay): silent, plays itself ---------- */
+async function runAutoplay(){
+  document.body.style.pointerEvents = "none";
+  await sleep(1500); go("heart"); await sleep(1100);
+  for (const p of pieces){ sendHome(p); await sleep(850); }
+  await sleep(3200);
+  if (seq.includes("window")){ go("window"); await sleep(900);
+    for (let i = 0; i < Math.min(2, C.photos.length); i++){ if (i) { showPhoto(i); await sleep(500); }
+      const cv = $("#fog"), r = cv.getBoundingClientRect();
+      for (let k = 0; k <= 14; k++){ const y = r.top + r.height * (.15 + .7 * (k / 14)), x = r.left + r.width * (k % 2 ? .8 : .2);
+        wipeAt({ clientX: x, clientY: y }); wipeAt({ clientX: r.left + r.width * .5, clientY: y }); await sleep(60); }
+      reveal(); await sleep(1500); } }
+  if (seq.includes("letter")){ go("letter"); await sleep(4200); }
+  if (seq.includes("ask")){ go("ask"); await sleep(1300); $("#waitBtn").click(); await sleep(1300); sayYes(); await sleep(3600); }
+  else { go("end"); await sleep(3000); }
+  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
+  else location.reload();
+}
+</script>
+</body>
+</html>

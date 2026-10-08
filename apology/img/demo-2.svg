@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="600" height="750">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFB8C9"/><stop offset=".6" stop-color="#FFE0A3"/></linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5FC2C0"/><stop offset="1" stop-color="#2F7F96"/></linearGradient>
+  </defs>
+  <rect width="600" height="750" fill="url(#sky)"/>
+  <circle cx="300" cy="380" r="110" fill="#FFF3C4"/>
+  <rect x="0" y="380" width="600" height="190" fill="url(#sea)"/>
+  <g stroke="#FFF7FA" stroke-width="5" stroke-linecap="round" opacity=".7"><path d="M220 410h160M250 440h100M60 470h90M440 490h110"/></g>
+  <path d="M0 540 Q300 500 600 560 V750 H0Z" fill="#F7D9A8"/>
+  <!-- palm -->
+  <path d="M500 640c-10-90-6-170 20-250" stroke="#7A5230" stroke-width="16" fill="none" stroke-linecap="round"/>
+  <g fill="#3FA37A"><path d="M520 390c-50-30-110-20-140 10 40-6 80 0 140-10Z"/><path d="M520 390c30-50 90-60 120-40-40 4-80 20-120 40Z"/><path d="M520 390c-20-60-70-90-110-80 40 20 70 50 110 80Z"/><path d="M520 390c50-20 100 0 120 40-40-20-80-30-120-40Z"/></g>
+  <!-- two people sitting -->
+  <g fill="#2A1F5C">
+    <circle cx="220" cy="556" r="22"/><path d="M190 640c0-40 12-62 30-62s30 22 30 62Z"/>
+    <circle cx="282" cy="550" r="24"/><path d="M250 640c0-42 14-66 32-66s32 24 32 66Z"/>
+  </g>
+  <path d="M245 600c10 6 18 6 26 0" stroke="#E8457A" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <g fill="#E8457A"><path d="M120 130q10-8 20 0q10-8 20 0" fill="none" stroke="#2A1F5C" stroke-width="3"/><path d="M420 90q8-6 16 0q8-6 16 0" fill="none" stroke="#2A1F5C" stroke-width="3"/></g>
+  <rect x="380" y="610" width="70" height="44" rx="6" fill="#E8457A"/><path d="M380 624h70" stroke="#FFF7FA" stroke-width="5"/>
+</svg>
