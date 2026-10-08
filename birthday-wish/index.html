@@ -135,10 +135,11 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
 
 /* 4. gifts */
 .giftart{display:flex;flex-direction:column;align-items:center;gap:10px}
-.pol{width:min(52vw,24dvh);aspect-ratio:4/5;background:#fff;padding:7% 7% 22%;border-radius:4px;box-shadow:0 14px 30px rgba(42,31,92,.22);transform:rotate(var(--r,-3deg));position:relative}
-.pol .ph{width:100%;height:100%;border-radius:2px;overflow:hidden;background:linear-gradient(135deg,var(--soft),#fff);display:flex;align-items:center;justify-content:center;font-size:2.4rem}
+.pol{width:min(66vw,30dvh,300px);display:flex;flex-direction:column;background:#fff;padding:10px 10px 0;margin:0;border-radius:4px;box-shadow:0 14px 30px rgba(42,31,92,.22);transform:rotate(var(--r,-3deg));position:relative}
+.pol .ph{width:100%;aspect-ratio:4/5;border-radius:2px;overflow:hidden;background:linear-gradient(135deg,var(--soft),#fff);display:flex;align-items:center;justify-content:center;font-size:2.4rem;flex:none}
 .pol .ph img{width:100%;height:100%;object-fit:cover;display:block}
-.pol figcaption{position:absolute;left:6%;right:6%;bottom:5%;font-family:var(--hand);font-size:1.45rem;line-height:1;color:#2A1F5C;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pol figcaption{font-family:var(--hand);font-size:1.45rem;line-height:1.05;color:#2A1F5C;text-align:center;padding:8px 4px 12px;min-height:2.2em;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.pol figcaption:empty{min-height:1.4em}
 .pol.empty .ph{color:var(--muted)}
 .giftrow{display:flex;align-items:flex-end;justify-content:center;gap:4%;width:min(86vw,46dvh)}
 .gift{border:0;background:none;padding:0;cursor:pointer;flex:0 1 auto;transition:opacity .4s,filter .4s}
@@ -193,7 +194,8 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
   .open-bear{width:min(30vw,62dvh)}
   .cakebox{width:min(30vw,66dvh)}
   .sky{width:min(22vw,42dvh)}
-  .pol{width:min(19vw,42dvh)}
+  .pol{width:min(22vw,46dvh,380px)}
+  .pol figcaption{font-size:1.75rem}
   .giftrow{width:min(32vw,60dvh)}
   .cutzone{width:min(30vw,62dvh)}
   .letter{max-height:62dvh}
