@@ -141,6 +141,33 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .shake{animation:shake .45s}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
+/* sparkler: draw with a phuljhadi, save the picture */
+.pad{position:relative;width:min(88vw,44dvh);aspect-ratio:1;flex:none;border-radius:22px;overflow:hidden;touch-action:none;cursor:crosshair;
+  background:radial-gradient(120% 90% at 50% 110%,#3A1F66,#0B0620 70%);box-shadow:inset 0 0 0 1px rgba(245,185,66,.35),0 14px 30px rgba(0,0,0,.45)}
+.pad canvas{position:absolute;inset:0;width:100%;height:100%}
+.pad .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:400 1.5rem var(--hand);color:rgba(255,226,160,.6);pointer-events:none;transition:opacity .4s}
+.pad.drawn .ph{opacity:0}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.btn.small{padding:12px 20px;font-size:.95rem}
+/* mithai box: scratch the gold foil to find the real gift */
+.mithai{position:relative;width:min(86vw,44dvh);aspect-ratio:1;flex:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.mithai>img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 16px 26px rgba(0,0,0,.45))}
+.giftcard{position:absolute;left:25%;top:27%;width:50%;height:46%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;padding:4%;color:#5A1E0C}
+.giftcard .k{font:700 clamp(.58rem,2.2vw,.8rem)/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:#B5452A}
+.giftcard .g{font:400 clamp(1rem,4.6vw,1.7rem)/1.12 var(--display);color:#6B1D10;overflow-wrap:anywhere}
+.giftcard .f{font:400 clamp(.85rem,3.4vw,1.1rem)/1.2 var(--hand);color:#8A3A1E}
+.foil{position:absolute;left:24%;top:26%;width:52%;height:48%;border-radius:8px;touch-action:none;cursor:grab;transition:opacity .9s}
+.foil.gone{opacity:0;pointer-events:none}
+/* wish back: their answer travels to the buyer in a lantern */
+.wishback{width:100%;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:16px;background:rgba(255,244,226,.07);box-shadow:inset 0 0 0 1px rgba(245,185,66,.3);text-align:left}
+.wishback[hidden]{display:none}
+.wishback label{font:400 1.15rem var(--display);color:var(--gold-hi)}
+.wishback textarea{width:100%;min-height:80px;resize:vertical;border-radius:12px;border:1px solid rgba(245,185,66,.45);background:rgba(10,6,30,.55);color:var(--cream);font:400 1.1rem/1.35 var(--hand);padding:10px 12px}
+.wishback .btn{align-self:center}
+.wishback .note{font-size:.88rem;color:var(--muted);text-align:center;min-height:1.2em}
+.flylantern{position:fixed;z-index:4;width:76px;pointer-events:none;animation:flyup 4.5s ease-in forwards;filter:drop-shadow(0 0 16px rgba(255,150,40,.7))}
+@keyframes flyup{to{transform:translateY(-120vh) rotate(-6deg) scale(.55);opacity:.15}}
+
 /* laptops: full-screen, art | words */
 @media (min-width:760px) and (min-aspect-ratio:1/1){
   #bg{background-position:center}
@@ -151,6 +178,8 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .diya{width:min(26vw,52dvh)}
   .rangoli{width:min(30vw,60dvh)}
   .launch{width:min(32vw,62dvh)}
+  .pad{width:min(30vw,60dvh)}
+  .mithai{width:min(30vw,62dvh)}
   h1{font-size:clamp(3rem,4.4vw,4.6rem)}
   h2{font-size:clamp(2.1rem,2.8vw,3rem)}
   .scroll{max-width:500px}
@@ -173,10 +202,10 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <section class="scene two" data-scene="open">
     <div class="art"><div class="diya"><img src="img/diya.webp" alt="A glowing clay diya" width="1200" height="1200"></div></div>
     <div class="words">
-      <p class="pre">Happy Diwali</p>
+      <p class="pre" id="openPre">Happy Diwali</p>
       <h1 tabindex="-1" class="gold" data-to></h1>
       <p class="whisper" id="countLine"></p>
-      <p class="sub">Someone wants to light up your night. Turn your sound on.</p>
+      <p class="sub" id="openSub">Someone wants to light up your night. Turn your sound on.</p>
       <button class="btn" data-next><span class="lbl"></span></button>
     </div>
   </section>
@@ -223,6 +252,20 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
   </section>
 
+  <!-- 4b. Sparkler: draw on the night sky, save it -->
+  <section class="scene two" data-scene="sparkle" hidden>
+    <div class="art"><div class="pad" id="pad"><canvas id="padTrail"></canvas><canvas id="padSpark"></canvas><p class="ph">Draw with your finger</p></div></div>
+    <div class="words">
+      <h2 tabindex="-1" class="gold">Write with a phuljhadi</h2>
+      <p class="sub" id="padSub">Draw a heart, write a name, anything at all. Then save it for your story.</p>
+      <div class="row">
+        <button class="btn ghost small" id="padClear"><span class="lbl">Clear</span></button>
+        <button class="btn ghost small" id="padSave"><span class="lbl">Save my sparkler art</span></button>
+      </div>
+      <button class="btn" data-next><span class="lbl"></span></button>
+    </div>
+  </section>
+
   <!-- 5. Letter -->
   <section class="scene" data-scene="letter" hidden>
     <h2 tabindex="-1" class="gold">A letter by diya light</h2>
@@ -243,6 +286,21 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
   </section>
 
+  <!-- 6b. The real gift, under gold foil in a mithai box -->
+  <section class="scene two" data-scene="gift" hidden>
+    <div class="art"><div class="mithai" id="mithai">
+      <img src="img/mithai.webp" alt="An open box of mithai" width="1200" height="1200">
+      <div class="giftcard"><p class="k" id="giftKick">Your Diwali gift</p><p class="g" id="giftText"></p><p class="f" id="giftFrom"></p></div>
+      <canvas class="foil" id="foil" tabindex="0" aria-label="Scratch off the gold foil. Press Enter to reveal it."></canvas>
+    </div></div>
+    <div class="words">
+      <h2 tabindex="-1" class="gold" id="giftTitle">One more thing…</h2>
+      <p class="sub" id="giftSub">There's something hidden under the gold foil. Scratch it off.</p>
+      <button class="linkish" id="giftAuto">Reveal it for me</button>
+      <button class="btn" data-next id="afterGift" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
   <!-- 7. Finale -->
   <section class="scene two" data-scene="end" hidden>
     <div class="art"><div class="diya"><img src="img/diya.webp" alt="A glowing clay diya" width="1200" height="1200"></div></div>
@@ -251,6 +309,12 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <h1 tabindex="-1" class="gold" id="endTitle"></h1>
       <p class="sub" id="endLine"></p>
       <p class="sub" id="endFrom"></p>
+      <div class="wishback" id="wishBack">
+        <label for="wishText" id="wishLabel">Send a wish back</label>
+        <textarea id="wishText" maxlength="300" placeholder="Write your Diwali wish…"></textarea>
+        <button class="btn" id="wishSend"><span class="lbl">Send it in a lantern</span></button>
+        <p class="note" id="wishNote" aria-live="polite"></p>
+      </div>
       <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
       <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
     </div>
@@ -278,13 +342,38 @@ const DEMO = {
   yesReply: "They already love you. Mom's making your favourite."
 };
 
+DEMO.extra = { relation: "partner", gift: "A weekend in Lonavala, just us two" };
+const DEMO_FAMILY = Object.assign({}, DEMO, { to: "Maa & Papa", from: "Riya", number: "",
+  reasons: ["You made every Diwali feel like magic","Your kitchen smells like the festival itself","You taught me to light the first diya","You never let anyone leave hungry","Home is wherever you two are"],
+  letter: ["Maa, Papa,","Every Diwali I remember starts with you two: the rangoli at dawn, the diyas on every ledge, the sweets I was not supposed to eat yet.","This year I wanted to give a little of that light back.","Happy Diwali. I love you both."],
+  question: "Can I take you both out for Diwali dinner this year?", yesReply: "It's booked. Wear your best!",
+  extra: { relation: "family", gift: "A family trip to Goa this winter" } });
+const DEMO_SIBLING = Object.assign({}, DEMO, { to: "Didi", from: "Aarav", number: "",
+  reasons: ["You always took the blame (sometimes)","You saved me the last kaju katli once","You're my first best friend","You still fight for me, every time","Nobody annoys me like you do"],
+  letter: ["Didi,","Happy Diwali and Happy Bhai Dooj!","Thank you for every time you had my back, even when I didn't deserve it.","This year the gift is on me. Finally."],
+  question: "Sweets run together after the tilak, my treat?", yesReply: "Deal. You still owe me one kaju katli though.",
+  extra: { relation: "sibling", gift: "That jacket you keep stealing. It's yours now." } });
+/* wording for each "who is it for" choice */
+const WORDS = {
+  partner: { pre: "Happy Diwali", open: "Someone wants to light up your night. Turn your sound on.", count: n => `${n} Diwali${n === 1 ? "" : "s"} together, and still my favourite light.`,
+             sky: "Every firework carries something I love about you.", tag: "Reason", lantern: "Tap a lantern to let it go. Each one carries a memory.",
+             endNoQ: "May this year be as bright as you make mine.", wish: f => `Send ${f} a Diwali wish back` },
+  family:  { pre: "Happy Diwali", open: "A little Diwali surprise, made just for you. Turn your sound on.", count: n => `${n} Diwali${n === 1 ? "" : "s"} together, and every one brighter with you.`,
+             sky: "Every firework carries something I love about you.", tag: "Reason", lantern: "Tap a lantern to let it go. Each one carries a memory of us.",
+             endNoQ: "May your home always be this full of light.", wish: f => `Send ${f} a Diwali wish back` },
+  sibling: { pre: "Happy Diwali & Bhai Dooj", open: "From your favourite sibling (obviously). Turn your sound on.", count: n => `${n} year${n === 1 ? "" : "s"} of fighting over the last kaju katli.`,
+             sky: "Every firework carries something I'd never say to your face.", tag: "Confession", lantern: "Tap a lantern to let it go. Each one carries a memory of us growing up.",
+             endNoQ: "Love you, even when you steal my mithai.", wish: f => `Send ${f} a Bhai Dooj wish back` }
+};
+let REL = "partner", W = WORDS.partner;
+
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const qs = new URLSearchParams(location.search);
 const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autoplay");
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const LABELS = { rangoli:"Draw the rangoli", sky:"Light up the sky", lanterns:"Send up the lanterns", letter:"Read your letter", ask:"One more wish", end:"Finish" };
+const LABELS = { rangoli:"Draw the rangoli", sky:"Light up the sky", lanterns:"Send up the lanterns", sparkle:"Write with a sparkler", letter:"Read your letter", ask:"One more wish", gift:"Open your mithai box", end:"Finish" };
 const LANT = [[20, 6], [50, 0], [80, 6], [35, 26], [65, 26]];   // [x %, raise %] for up to five lanterns
 let C, seq = [], current = 0;
 
@@ -305,7 +394,7 @@ function addWatermark(){
 }
 async function start(){
   try {
-    let d = DEMO;
+    let d = qs.get("rel") === "family" ? DEMO_FAMILY : qs.get("rel") === "sibling" ? DEMO_SIBLING : DEMO;
     if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
     else if (id && !isAuto){
       const res = await fetch(API_URL + "?id=" + encodeURIComponent(id)); d = await res.json();
@@ -326,16 +415,25 @@ function build(d){
     reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
     letter: (d.letter || []).map(t).filter(Boolean),
     question: t(d.question), yesReply: t(d.yesReply) };
+  const x = d.extra && typeof d.extra === "object" ? d.extra : {};
+  C.gift = t(x.gift).slice(0, 80);
+  REL = WORDS[x.relation] ? x.relation : "partner"; W = WORDS[REL];
   if (id) C.photos = C.photos.filter(p => p.src);
-  document.title = "Happy Diwali, " + C.to;
+  document.title = (REL === "sibling" ? "Happy Bhai Dooj, " : "Happy Diwali, ") + C.to;
+  $("#openPre").textContent = W.pre; $("#openSub").textContent = W.open;
+  $("#skySub").textContent = W.sky; $("#lnSub").textContent = W.lantern;
+  $("#wishLabel").textContent = W.wish(C.from || "them");
+  $("#giftText").textContent = C.gift; $("#giftFrom").textContent = C.from ? "from " + C.from : "";
   $$("[data-to]").forEach(e => e.textContent = C.to);
   const n = /^\d{1,3}$/.test(C.number) ? +C.number : 0;
-  $("#countLine").textContent = n ? `${n} Diwali${n === 1 ? "" : "s"} together, and still my favourite light.` : "";
+  $("#countLine").textContent = n ? W.count(n) : "";
 
   seq = ["open", "rangoli", "sky"];
   if (C.photos.length) seq.push("lanterns");
+  seq.push("sparkle");
   if (C.letter.length) seq.push("letter");
   if (C.question) seq.push("ask");
+  if (C.gift) seq.push("gift");
   seq.push("end");
   $$("[data-scene]").forEach(sc => {
     const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl");
@@ -345,9 +443,9 @@ function build(d){
 
   buildLanterns(); buildLetter();
   $("#question").textContent = C.question;
-  $("#endPre").textContent = C.question ? "You said yes!" : "Happy Diwali";
-  $("#endTitle").textContent = C.question ? "Happy Diwali, " + C.to : C.to;
-  $("#endLine").textContent = C.question ? (C.yesReply || "This is going to be the brightest one yet.") : "May this year be as bright as you make mine.";
+  $("#endPre").textContent = C.question ? "You said yes!" : W.pre;
+  $("#endTitle").textContent = C.question ? W.pre + ", " + C.to : C.to;
+  $("#endLine").textContent = C.question ? (C.yesReply || "This is going to be the brightest one yet.") : W.endNoQ;
   $("#endFrom").textContent = C.from ? "With love, " + C.from : "";
   const goal = C.reasons.length || 3;
   $("#skyCount").textContent = `0 of ${goal}`;
@@ -377,6 +475,8 @@ function go(name){
   if (h && !isPreview) h.focus({ preventScroll: true });
   if (name === "rangoli") startMusic();
   if (name === "letter") $("#letter").classList.add("reveal");
+  if (name === "sparkle") padOpen();
+  if (name === "gift") foilOpen();
   if (name === "end"){ finale(); }
 }
 $$("[data-next]").forEach(b => b.addEventListener("click", () => { ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n) go(n); }));
@@ -511,7 +611,7 @@ function explode(p){
     const w = $("#wish"); w.textContent = txt; w.style.left = Math.min(Math.max(p.tx, innerWidth * .3), innerWidth * .7) + "px"; w.style.top = Math.min(Math.max(p.ty + 90, 150), innerHeight * .6) + "px";
     w.classList.remove("show"); void w.offsetWidth; w.classList.add("show");
     const card = $("#skyCard"); card.innerHTML = "";
-    const tag = document.createElement("p"); tag.className = "tag"; tag.textContent = C.reasons.length ? `Reason ${i + 1}` : "Firework " + (i + 1);
+    const tag = document.createElement("p"); tag.className = "tag"; tag.textContent = C.reasons.length ? `${W.tag} ${i + 1}` : "Firework " + (i + 1);
     const big = document.createElement("p"); big.className = "big"; big.textContent = txt;
     card.append(tag, big); card.classList.remove("pop-in"); void card.offsetWidth; card.classList.add("pop-in");
     $("#skyCount").textContent = `${i + 1} of ${goal}`;
@@ -562,7 +662,7 @@ $("#againBtn").addEventListener("click", () => {
   if (asks > AGAIN.length){ $("#againBtn .lbl").textContent = "Fine, yes!"; $("#againBtn").onclick = sayYes; }
 });
 $("#yesBtn").addEventListener("click", sayYes);
-function sayYes(){ go("end"); }
+function sayYes(){ go(seq.includes("gift") ? "gift" : "end"); }
 let showTimer = null;
 function finale(){
   if (ctx) [0, .15, .3, .45, .75].forEach((d, k) => chime([74, 78, 81, 86, 90][k], d, .12));
@@ -572,6 +672,130 @@ function finale(){
   fire(); setTimeout(fire, 300); setTimeout(fire, 650);
   if (!reduce) showTimer = setInterval(fire, 1400);
 }
+
+/* ---------- 4b. sparkler: glowing trails that stay, sparks that fly off the tip ---------- */
+const pad = $("#pad"), padT = $("#padTrail"), padS = $("#padSpark");
+let tg, sg, padW = 0, padDown = false, padLast = null, padParts = [], padRun = false, padDrawn = false;
+function padOpen(){
+  const r = pad.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+  if (Math.abs(r.width - padW) < 1 && tg) return;
+  padW = r.width; [padT, padS].forEach(c => { c.width = Math.max(1, r.width * d); c.height = Math.max(1, r.height * d); });
+  tg = padT.getContext("2d"); sg = padS.getContext("2d"); tg.setTransform(d, 0, 0, d, 0, 0); sg.setTransform(d, 0, 0, d, 0, 0);
+  tg.lineCap = sg.lineCap = "round"; tg.lineJoin = "round";
+}
+function padSeg(a, b){
+  tg.save(); tg.globalCompositeOperation = "lighter";
+  tg.strokeStyle = "rgba(255,150,40,.32)"; tg.lineWidth = 11; tg.shadowColor = "#FF9A2A"; tg.shadowBlur = 16;
+  tg.beginPath(); tg.moveTo(a.x, a.y); tg.lineTo(b.x, b.y); tg.stroke();
+  tg.strokeStyle = "#FFF1C2"; tg.lineWidth = 3.2; tg.shadowBlur = 6; tg.shadowColor = "#FFD36B";
+  tg.beginPath(); tg.moveTo(a.x, a.y); tg.lineTo(b.x, b.y); tg.stroke(); tg.restore();
+  for (let k = 0; k < 5; k++){ const ang = Math.random() * Math.PI * 2, v = 1 + Math.random() * 3.2;
+    padParts.push({ x: b.x, y: b.y, vx: Math.cos(ang) * v, vy: Math.sin(ang) * v, life: 14 + Math.random() * 16, c: Math.random() < .5 ? "#FFE7A8" : "#FF9A2A" }); }
+  if (!padRun){ padRun = true; requestAnimationFrame(padLoop); }
+  if (!padDrawn){ padDrawn = true; pad.classList.add("drawn"); }
+  if (ctx && Math.random() < .3) crackle();
+}
+function padLoop(){
+  sg.clearRect(0, 0, padW, padW); sg.globalCompositeOperation = "lighter";
+  padParts.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .08; p.life--; sg.fillStyle = p.c; sg.globalAlpha = Math.max(0, p.life / 30);
+    sg.beginPath(); sg.arc(p.x, p.y, 1.4, 0, 7); sg.fill(); });
+  sg.globalAlpha = 1; padParts = padParts.filter(p => p.life > 0);
+  if (padParts.length || padDown) requestAnimationFrame(padLoop); else { padRun = false; sg.clearRect(0, 0, padW, padW); }
+}
+function padPt(e){ const r = pad.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+pad.addEventListener("pointerdown", e => { e.preventDefault(); ensureAudio(); padOpen(); padDown = true; pad.setPointerCapture(e.pointerId); padLast = padPt(e); padSeg(padLast, { x: padLast.x + .1, y: padLast.y }); });
+pad.addEventListener("pointermove", e => { if (!padDown) return; const p = padPt(e); padSeg(padLast, p); padLast = p; });
+["pointerup", "pointercancel"].forEach(ev => pad.addEventListener(ev, () => { padDown = false; padLast = null; }));
+function crackle(){ const t = ctx.currentTime, c = noise(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+  f.type = "highpass"; f.frequency.value = 5000; env(g, t, .001, .05, .03); c.connect(f); f.connect(g); g.connect(master); c.start(t, Math.random()); c.stop(t + .05); }
+$("#padClear").addEventListener("click", () => { if (tg) tg.clearRect(0, 0, padW, padW); padDrawn = false; pad.classList.remove("drawn"); });
+$("#padSave").addEventListener("click", async () => {
+  if (!tg) return;
+  const W2 = 1080, H2 = 1350, cv = document.createElement("canvas"); cv.width = W2; cv.height = H2; const g = cv.getContext("2d");
+  const bg = g.createRadialGradient(W2 / 2, H2 * 1.05, 50, W2 / 2, H2 * .7, H2); bg.addColorStop(0, "#3A1F66"); bg.addColorStop(1, "#0B0620");
+  g.fillStyle = bg; g.fillRect(0, 0, W2, H2);
+  g.drawImage(padT, 40, 60, 1000, 1000);
+  try { await document.fonts.load('64px "Rozha One"'); } catch (e) {}
+  g.textAlign = "center"; g.fillStyle = "#F5B942"; g.font = '64px "Rozha One", Georgia, serif';
+  g.fillText(W.pre + (C.to && C.to !== "you" ? ", " + C.to : ""), W2 / 2, 1170);
+  g.fillStyle = "rgba(255,226,160,.6)"; g.font = '600 28px Figtree, sans-serif'; g.fillText("made on littlegasp.com", W2 / 2, 1262);
+  cv.toBlob(async blob => {
+    const file = new File([blob], "diwali-sparkler.png", { type: "image/png" });
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })){ await navigator.share({ files: [file], title: "My Diwali sparkler" }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "diwali-sparkler.png"; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }, "image/png");
+});
+async function padAutoHeart(){
+  padOpen(); const c = padW / 2, s = padW * .022, pts = [];
+  for (let k = 0; k <= 60; k++){ const t = k / 60 * Math.PI * 2;
+    pts.push({ x: c + s * 16 * Math.pow(Math.sin(t), 3), y: padW * .47 - s * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t)) }); }
+  padDown = true; for (let k = 1; k < pts.length; k++){ padSeg(pts[k - 1], pts[k]); await sleep(28); } padDown = false;
+}
+
+/* ---------- 6b. the mithai box: scratch the gold foil ---------- */
+let foilDone = false, foilDown = false, foilN = 0;
+function foilOpen(){
+  if (foilDone) return;
+  const cv = $("#foil"), r = cv.getBoundingClientRect(), d = Math.min(2, devicePixelRatio || 1);
+  cv.width = Math.max(1, r.width * d); cv.height = Math.max(1, r.height * d);
+  const g = cv.getContext("2d"), w = cv.width, h = cv.height;
+  const grd = g.createLinearGradient(0, 0, w, h); grd.addColorStop(0, "#B8862F"); grd.addColorStop(.35, "#FFE7A8"); grd.addColorStop(.55, "#E9B44C"); grd.addColorStop(.8, "#FFF0C2"); grd.addColorStop(1, "#B8862F");
+  g.fillStyle = grd; g.fillRect(0, 0, w, h);
+  for (let k = 0; k < 260; k++){ g.fillStyle = `rgba(255,255,255,${Math.random() * .35})`; g.fillRect(Math.random() * w, Math.random() * h, 1.5 * d, 1.5 * d); }
+  g.strokeStyle = "rgba(120,72,10,.35)"; g.lineWidth = 2 * d; g.setLineDash([6 * d, 6 * d]); g.strokeRect(8 * d, 8 * d, w - 16 * d, h - 16 * d);
+  g.fillStyle = "rgba(110,62,8,.75)"; g.textAlign = "center"; g.font = `400 ${Math.round(w * .11)}px "Rozha One", Georgia, serif`;
+  g.fillText("Scratch me", w / 2, h * .48); g.font = `600 ${Math.round(w * .06)}px Figtree, sans-serif`; g.fillText("✦ ✦ ✦", w / 2, h * .66);
+}
+function foilAt(e){
+  const cv = $("#foil"), r = cv.getBoundingClientRect(), g = cv.getContext("2d"), k = cv.width / r.width;
+  const x = (e.clientX - r.left) * k, y = (e.clientY - r.top) * k, rad = Math.max(16, r.width * .1) * k;
+  g.globalCompositeOperation = "destination-out"; g.beginPath(); g.arc(x, y, rad, 0, 7); g.fill(); g.globalCompositeOperation = "source-over";
+  if (ctx && Math.random() < .25) crackle();
+}
+function foilShare(){ const cv = $("#foil"), d = cv.getContext("2d").getImageData(0, 0, cv.width, cv.height).data; let c = 0, t = 0;
+  for (let i = 3; i < d.length; i += 4 * 61){ t++; if (d[i] < 60) c++; } return t ? c / t : 1; }
+function foilReveal(){
+  if (foilDone) return; foilDone = true; $("#foil").classList.add("gone"); $("#giftAuto").hidden = true;
+  $("#giftTitle").textContent = "Surprise!"; $("#giftSub").textContent = C.from ? `With love, from ${C.from}.` : "With love.";
+  if (ctx) [0, .12, .24, .4].forEach((d, k) => chime([78, 81, 86, 90][k], d, .12));
+  const r = $("#mithai").getBoundingClientRect(); [.3, .5, .7].forEach((fx2, k) => setTimeout(() => sparks(r.left + r.width * fx2, r.top + r.height * .35, HUES[k], 60), k * 220));
+  $("#afterGift").hidden = false;
+  if (!isAuto) setTimeout(() => $("#afterGift").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 700);
+}
+(() => {
+  const cv = $("#foil");
+  cv.addEventListener("pointerdown", e => { if (foilDone) return; e.preventDefault(); ensureAudio(); foilDown = true; cv.setPointerCapture(e.pointerId); foilAt(e); });
+  cv.addEventListener("pointermove", e => { if (!foilDown || foilDone) return; foilAt(e); if (++foilN % 6 === 0 && foilShare() > .55) foilReveal(); });
+  ["pointerup", "pointercancel"].forEach(ev => cv.addEventListener(ev, () => { foilDown = false; if (!foilDone && foilShare() > .45) foilReveal(); }));
+  cv.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); foilReveal(); } });
+})();
+$("#giftAuto").addEventListener("click", async () => {
+  ensureAudio(); const cv = $("#foil"), r = cv.getBoundingClientRect();
+  for (let k = 0; k <= 12 && !foilDone; k++){ const y = r.top + r.height * (.1 + .8 * k / 12);
+    for (let j = 0; j <= 6; j++) foilAt({ clientX: r.left + r.width * (k % 2 ? 1 - j / 6 : j / 6), clientY: y }); await sleep(45); }
+  foilReveal();
+});
+
+/* ---------- 7. wish back: travels to the buyer's email in a lantern ---------- */
+$("#wishSend").addEventListener("click", async () => {
+  const txt = $("#wishText").value.trim(), note = $("#wishNote"), btn = $("#wishSend");
+  if (!txt){ note.textContent = "Write a little something first."; $("#wishText").focus(); return; }
+  btn.disabled = true; ensureAudio(); chime(81, 0, .1); chime(86, .15, .08);
+  const r = btn.getBoundingClientRect(), fl = document.createElement("img"); fl.src = "img/lantern.webp"; fl.alt = ""; fl.className = "flylantern";
+  fl.style.left = (r.left + r.width / 2 - 38) + "px"; fl.style.top = (r.top - 90) + "px"; document.body.appendChild(fl); setTimeout(() => fl.remove(), 4600);
+  const who = C.from || "them";
+  if (id && !isPreview && !isAuto){
+    try {
+      const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reply", id, kind: "wish", text: txt }) });
+      const j = await res.json(); if (!j.ok) throw new Error(j.error);
+      note.textContent = `Sent! ${who} will find your wish in their email.`; $("#wishText").disabled = true;
+    } catch (e) { note.textContent = "Couldn't send it just now. Please try again."; btn.disabled = false; }
+  } else {
+    note.textContent = isPreview ? "Preview only: on the real link, their wish comes straight to your email." : `Sent! ${who} will find your wish in their email.`;
+    $("#wishText").disabled = true;
+  }
+});
 
 /* ---------- particles: rockets, bursts, sparks ---------- */
 const fx = $("#fx"), fg = fx.getContext("2d");
@@ -617,9 +841,12 @@ async function runAutoplay(){
   await sleep(800);
   if (seq.includes("lanterns")){ go("lanterns"); await sleep(900);
     const ls = $$(".lantern"); for (let i = 0; i < Math.min(2, ls.length); i++){ ls[i].click(); await sleep(1500); } }
+  go("sparkle"); await sleep(700); await padAutoHeart(); await sleep(1400);
   if (seq.includes("letter")){ go("letter"); await sleep(4200); }
-  if (seq.includes("ask")){ go("ask"); await sleep(1300); $("#againBtn").click(); await sleep(1000); sayYes(); await sleep(3800); }
-  else { go("end"); await sleep(3200); }
+  if (seq.includes("ask")){ go("ask"); await sleep(1300); $("#againBtn").click(); await sleep(1000); sayYes(); await sleep(1200); }
+  if (seq.includes("gift")){ if (seq[current] !== "gift") go("gift"); await sleep(800); $("#giftAuto").click(); await sleep(3200); go("end"); }
+  else if (seq[current] !== "end") go("end");
+  await sleep(3400);
   clearInterval(showTimer);
   if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
   else location.reload();

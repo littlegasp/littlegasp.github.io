@@ -82,6 +82,8 @@ textarea{min-height:170px;resize:vertical}
 .themeopt .sw{width:22px;height:22px;border-radius:50%;flex:none}
 .themeopt small{font-weight:400;color:var(--muted,#6B5F93);margin-left:auto}
 #themeBox[hidden]{display:none}
+.xopt small{display:block;margin-left:0}
+.xhint{margin:0 0 8px}
 .linkbtn{border:0;background:none;font:700 .92rem var(--body);color:var(--berry-dark);cursor:pointer;text-decoration:underline}
 .ov{position:fixed;inset:0;background:rgba(27,22,64,.62);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
 .ov[hidden]{display:none}
@@ -118,6 +120,8 @@ textarea{min-height:170px;resize:vertical}
       </div>
     </fieldset>
 
+    <div id="extrasTop"></div>
+
     <fieldset>
       <legend>Names</legend>
       <label for="f-to">Their name</label>
@@ -153,6 +157,8 @@ textarea{min-height:170px;resize:vertical}
       <label for="f-yes">What they see after tapping Yes</label>
       <input type="text" id="f-yes" data-field="yesReply" maxlength="120" placeholder="e.g. I'll pick you up at 8.">
     </fieldset>
+
+    <div id="extrasMore"></div>
 
     <fieldset id="songBox" hidden>
       <legend>Background song <span class="hint">(optional)</span></legend>
@@ -251,6 +257,11 @@ const DESIGNS = {
     maxPhotos: 5,                      // five sky lanterns
     song: "A festive Diwali tune already plays on this design.",
     numberLabel: "Diwalis together", numberHint: "e.g. 5",
+    extras: [
+      { key: "relation", type: "choice", label: "Who is it for?", options: [["partner", "Partner", "romantic"], ["family", "Family", "parents, friends"], ["sibling", "Brother or sister", "Bhai Dooj"]] },
+      { key: "gift", type: "text", max: 80, label: "Your real Diwali gift (optional)",
+        hint: "Hidden under gold foil in a mithai box. They scratch it off to find out. Leave empty to skip.", example: "e.g. A weekend in Lonavala, just us" }
+    ],
     questionHint: "e.g. Diwali dinner with my family this year?", yesHint: "e.g. They already love you. Mom's making your favourite."
   },
   "apology": {
@@ -262,8 +273,16 @@ const DESIGNS = {
     offerEnds: "",
     song: "A soft music-box tune already plays on this design.",
     numberLabel: "Years together", numberHint: "e.g. 4",
-    reasonsTitle: "What you're sorry for, and what you'll do better",
-    reasonsExamples: ["I'm sorry I didn't listen","I'm sorry I made you feel small","You deserved better from me","I'll call when I'm running late","I'll stop saying 'calm down'","I'll show up, every time"],
+    reasonsTitle: "What you're sorry for (one per heart piece)",
+    reasonsExamples: ["I'm sorry I didn't listen","I'm sorry I made you feel small","I'm sorry I picked my phone over you","I'm sorry I said things I didn't mean","I'm sorry I wasn't there","I'm sorry. No excuses."],
+    extras: [
+      { key: "promises", type: "list", count: 5, max: 80, label: "Promises for the jar (optional)",
+        hint: "They shake the jar and each paper star unfolds into one promise.",
+        examples: ["I'll call when I'm running late","I'll stop saying 'calm down'","Phones away at dinner, every night","I'll listen before I try to fix","I'll show up, every time"] },
+      { key: "menu", type: "list", count: 6, max: 50, label: "Your make-up menu (optional)",
+        hint: "They pick the treats they want and their order comes straight to your email. Leave empty to use our menu.",
+        examples: ["Pani puri date, unlimited plates","I do the dishes for a week","Foot massage, no complaints","You pick every movie this month","Breakfast in bed on Sunday","A long drive, your playlist"] }
+    ],
     letterHint: "Ananya,\n\nI've been replaying it all day, and you were right...",
     questionHint: "e.g. Coffee tomorrow, my treat, and I'll listen this time?", yesHint: "e.g. Thank you. I'll be there at 6, with your favourite."
   },
@@ -303,7 +322,7 @@ const pb = $("#pricebox");
 pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (offerOn ? `<span class="offer">${D.offerLabel}</span>` : "");
 
 /* ---------- state ---------- */
-let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null, theme:"her" };
+let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null, theme:"her", extra:{} };
 
 function payload(){
   return {
@@ -313,8 +332,19 @@ function payload(){
     letter: state.letter.split(/\n+/).map(l => l.trim()).filter(Boolean),
     question: state.question.trim(), yesReply: state.yesReply.trim(),
     song: D.song && state.song ? { src: state.song.src, bpm: state.song.bpm, offset: state.song.offset } : null,
-    theme: D.themes ? (state.theme === "him" ? "him" : "her") : ""
+    theme: D.themes ? (state.theme === "him" ? "him" : "her") : "",
+    extra: extraPayload()
   };
+}
+/* design-specific extras (D.extras): choice / text / list fields, sent as content.extra */
+function extraPayload(){
+  const out = {}, x = state.extra || {};
+  (D.extras || []).forEach(f => {
+    if (f.type === "choice") out[f.key] = f.options.some(o => o[0] === x[f.key]) ? x[f.key] : f.options[0][0];
+    else if (f.type === "text"){ const v = String(x[f.key] || "").trim(); if (v) out[f.key] = v; }
+    else if (f.type === "list"){ const v = (x[f.key] || []).map(t => String(t || "").trim()).filter(Boolean); if (v.length) out[f.key] = v; }
+  });
+  return out;
 }
 
 /* ---------- draft saved on this device (IndexedDB) ---------- */
@@ -331,6 +361,42 @@ function renderTheme(){
   document.querySelectorAll('input[name="theme"]').forEach(r => {
     r.checked = r.value === (state.theme || "her");
     r.onchange = () => { state.theme = r.value; changed(); if (desktop()) loadPreview(); };
+  });
+}
+function renderExtras(){
+  const top = $("#extrasTop"), more = $("#extrasMore"); top.innerHTML = more.innerHTML = "";
+  state.extra = state.extra || {};
+  const mk = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+  (D.extras || []).forEach(f => {
+    const fs = mk("fieldset"); fs.appendChild(mk("legend", "", f.label));
+    if (f.hint) fs.appendChild(mk("p", "hint xhint", f.hint));
+    if (f.type === "choice"){
+      if (!f.options.some(o => o[0] === state.extra[f.key])) state.extra[f.key] = f.options[0][0];
+      const wrap = mk("div", "themes"); wrap.setAttribute("role", "radiogroup"); wrap.setAttribute("aria-label", f.label);
+      f.options.forEach(([val, lab, small]) => {
+        const l = mk("label", "themeopt xopt"), r = document.createElement("input");
+        r.type = "radio"; r.name = "x-" + f.key; r.value = val; r.checked = state.extra[f.key] === val;
+        r.onchange = () => { state.extra[f.key] = val; changed(); if (desktop()) loadPreview(); };
+        const t = mk("span"); t.append(lab); if (small) t.appendChild(mk("small", "", small));
+        l.append(r, t); wrap.appendChild(l);
+      });
+      fs.appendChild(wrap); top.appendChild(fs);
+    } else if (f.type === "text"){
+      const inp = document.createElement("input"); inp.type = "text"; inp.maxLength = f.max || 80;
+      inp.placeholder = f.example || ""; inp.value = state.extra[f.key] || ""; inp.setAttribute("aria-label", f.label);
+      inp.oninput = () => { state.extra[f.key] = inp.value; changed(); };
+      fs.appendChild(inp); more.appendChild(fs);
+    } else if (f.type === "list"){
+      const box = mk("div", "notes"), cur = (state.extra[f.key] || []).slice(0, f.count);
+      while (cur.length < f.count) cur.push(""); state.extra[f.key] = cur;
+      cur.forEach((v, i) => {
+        const inp = document.createElement("input"); inp.type = "text"; inp.maxLength = f.max || 60; inp.value = v;
+        inp.placeholder = (f.examples || [])[i] || ""; inp.setAttribute("aria-label", f.label + " " + (i + 1));
+        inp.oninput = () => { state.extra[f.key][i] = inp.value; changed(); };
+        box.appendChild(inp);
+      });
+      fs.appendChild(box); more.appendChild(fs);
+    }
   });
 }
 function bindFields(){
@@ -629,7 +695,7 @@ $("#startOver").onclick = async () => {
 (async () => {
   const saved = await loadDraft();
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
-  bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); fitLayout();
+  bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); renderExtras(); fitLayout();
   if (desktop()) loadPreview();
   const done = await idbGet("done:" + designKey);
   if (done && done.link){ showLink(done); return; }
