@@ -148,6 +148,23 @@ body[data-lights="on"] .cake-body{filter:none}
 canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:10}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .made{font-size:.8rem;color:var(--muted);margin-top:6px}
+/* birthday selfie booth */
+#booth{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  padding:calc(14px + env(safe-area-inset-top,0px)) 16px calc(14px + env(safe-area-inset-bottom,0px));background:rgba(27,22,64,.96);color:#EDE7FF;text-align:center}
+#booth[hidden]{display:none}
+#booth h2{font-size:1.6rem;color:#fff}
+#booth h2:focus{outline:none}
+.bframe{position:relative;width:min(88vw,calc((100dvh - 230px) * .8),440px);aspect-ratio:4/5;flex:none;border-radius:18px;overflow:hidden;background:#2E2560;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.bframe video,.bframe img,.bframe canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#cam{transform:scaleX(-1)}
+#shot[hidden]{display:none}
+.bframe.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:bflash .45s ease-out forwards}
+@keyframes bflash{to{opacity:0}}
+.bcount{position:absolute;inset:0;display:grid;place-items:center;font:400 6rem/1 var(--display);color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.5);pointer-events:none}
+.bnote{margin:0;font-size:.88rem;color:#C9BEEA;max-width:34ch}
+.brow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+#booth .btn.ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 2px #fff}
+.blink{appearance:none;border:0;background:none;color:#C9BEEA;font:600 .95rem var(--body);text-decoration:underline;cursor:pointer;padding:6px}
 .made a{color:var(--berry-dark);font-weight:600}
 
 /* phones: the picture/words wrappers don't change the single column */
@@ -316,10 +333,31 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
     <p class="whisper" style="color:var(--berry)">Happy birthday, <span data-to></span></p>
     <h2 tabindex="-1" id="endTitle">You said yes!</h2>
     <p class="sub" id="yesReply"></p>
+    <button class="btn" id="selfieBtn"><span class="lbl">📸 Take a birthday selfie</span></button>
     <button class="btn ghost" id="replay"><span class="lbl">Watch it again</span></button>
     <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
   </section>
 </main>
+
+<!-- birthday selfie booth: front camera (or a chosen photo) + crown + "Happy Birthday" frame. The photo never leaves the phone. -->
+<div id="booth" hidden role="dialog" aria-modal="true" aria-labelledby="boothTitle">
+  <h2 id="boothTitle" tabindex="-1">Birthday selfie</h2>
+  <div class="bframe" id="bframe">
+    <video id="cam" playsinline muted autoplay></video>
+    <img id="shot" alt="Your birthday selfie" hidden>
+    <canvas id="deco" aria-hidden="true"></canvas>
+    <div class="bcount" id="bcount" aria-live="assertive"></div>
+  </div>
+  <p class="bnote" id="bnote">Fit your face under the crown. Your photo stays on your phone.</p>
+  <div class="brow">
+    <button class="btn" id="snapBtn"><span class="lbl">Snap!</span></button>
+    <button class="btn ghost" id="pickBtn"><span class="lbl">Choose a photo</span></button>
+    <button class="btn" id="saveShot" hidden><span class="lbl">Save or share</span></button>
+    <button class="btn ghost" id="retake" hidden><span class="lbl">Retake</span></button>
+  </div>
+  <button class="blink" id="boothClose">Close</button>
+  <input type="file" id="pickIn" accept="image/*" capture="user" hidden>
+</div>
 </div><!-- /stage -->
 
 <script>
@@ -383,7 +421,11 @@ async function runAutoplay(){
   if (seq.includes("photos")){ go("photos"); await wait(1500); for (let i = 0; i < 2; i++){ $("#stack").click(); await wait(1300); } }
   if (seq.includes("notes")){ go("notes"); await wait(900); for (const b of document.querySelectorAll(".flip")){ b.click(); await wait(450); } await wait(1000); }
   if (seq.includes("letter")){ go("letter"); await wait(4300); }
-  if (seq.includes("ask")){ go("ask"); await wait(1300); dodge(); await wait(900); dodge(); await wait(1000); sayYes(); await wait(3600); }
+  if (seq.includes("ask")){ go("ask"); await wait(1300); dodge(); await wait(900); dodge(); await wait(1000); sayYes(); await wait(3000); }
+  else { go("end"); await wait(2000); }
+  await openBooth(); await wait(900);
+  await new Promise(r => { const im = new Image(); im.onload = () => { compose(im, im.naturalWidth || 600, im.naturalHeight || 750, false); r(); }; im.onerror = r; im.src = "img/demo-1.svg"; });
+  await wait(2800);
   /* homepage showcase: tell the homepage this design has finished, so it can play the next one */
   if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
   else location.reload();
@@ -655,6 +697,122 @@ $("#yesBtn").addEventListener("click", sayYes);
 function sayYes(){ go("end"); burst(220); setTimeout(() => burst(140), 600); }
 
 $("#replay").addEventListener("click", () => location.reload());
+
+/* ---------- birthday selfie booth ---------- */
+const OUT_W = 1080, OUT_H = 1350;
+let stream = null, shotBlob = null;
+function crown(g, cx, top, w){
+  const h = w * .62, x = cx - w / 2;
+  const gr = g.createLinearGradient(0, top, 0, top + h); gr.addColorStop(0, "#FFE59A"); gr.addColorStop(.55, "#FFC857"); gr.addColorStop(1, "#E39B1F");
+  g.save(); g.shadowColor = "rgba(0,0,0,.35)"; g.shadowBlur = w * .06; g.shadowOffsetY = w * .03;
+  g.beginPath(); g.moveTo(x, top + h); g.lineTo(x + w * .04, top + h * .28); g.lineTo(x + w * .27, top + h * .58); g.lineTo(x + w * .5, top);
+  g.lineTo(x + w * .73, top + h * .58); g.lineTo(x + w * .96, top + h * .28); g.lineTo(x + w, top + h); g.closePath();
+  g.fillStyle = gr; g.fill(); g.restore();
+  g.fillStyle = "#FFF3C4"; g.fillRect(x + w * .02, top + h * .8, w * .96, h * .08);
+  [[.04, .28, "#E8457A"], [.5, 0, "#8FD6BD"], [.96, .28, "#E8457A"]].forEach(([dx, dy, c]) => { g.beginPath(); g.arc(x + w * dx, top + h * dy, w * .055, 0, 7); g.fillStyle = c; g.fill(); });
+  [[.25, "#E8457A"], [.5, "#7B6CF6"], [.75, "#E8457A"]].forEach(([dx, c]) => { g.beginPath(); g.arc(x + w * dx, top + h * .7, w * .045, 0, 7); g.fillStyle = c; g.fill(); });
+}
+function drawDeco(g, W, H){
+  const u = W / 100;
+  /* bunting along the top */
+  const cols = ["#E8457A", "#FFC857", "#8FD6BD", "#7B6CF6"];
+  g.strokeStyle = "rgba(255,255,255,.9)"; g.lineWidth = u * .35; g.beginPath(); g.moveTo(0, u * 3); g.quadraticCurveTo(W / 2, u * 10, W, u * 3); g.stroke();
+  for (let i = 0; i < 9; i++){ const t = (i + .5) / 9, x = t * W, y = u * 3 + Math.sin(t * Math.PI) * u * 3.4;
+    g.beginPath(); g.moveTo(x - u * 4, y); g.lineTo(x + u * 4, y); g.lineTo(x, y + u * 7.5); g.closePath(); g.fillStyle = cols[i % 4]; g.fill(); }
+  /* confetti on the edges */
+  const R = (seed => () => (seed = seed * 16807 % 2147483647) / 2147483647)(42);
+  for (let i = 0; i < 46; i++){ const side = i % 2, x = side ? W - R() * u * 12 : R() * u * 12, y = u * 14 + R() * (H - u * 40);
+    g.save(); g.translate(x, y); g.rotate(R() * 6); g.fillStyle = cols[i % 4]; g.fillRect(-u * .9, -u * .35, u * 1.8, u * .7); g.restore(); }
+  /* crown, over where their head is */
+  crown(g, W / 2, H * .1, W * .34);
+  /* banner */
+  const by = H - u * 26, bh = u * 19;
+  g.save(); g.shadowColor = "rgba(0,0,0,.3)"; g.shadowBlur = u * 2; g.fillStyle = "#E8457A";
+  g.beginPath(); g.roundRect(u * 6, by, W - u * 12, bh, u * 4); g.fill(); g.restore();
+  g.fillStyle = "#fff"; g.textAlign = "center"; g.textBaseline = "middle";
+  const name = C.to.length > 14 ? C.to.slice(0, 13) + "…" : C.to;
+  g.font = `${u * 5.2}px Caprasimo, Georgia, serif`; g.fillText("Happy Birthday,", W / 2, by + bh * .32);
+  g.font = `${u * (name.length > 9 ? 6.4 : 8)}px Caprasimo, Georgia, serif`; g.fillText(name + "!", W / 2, by + bh * .7);
+  g.font = `600 ${u * 2.6}px Figtree, system-ui, sans-serif`; g.fillStyle = "rgba(255,255,255,.85)"; g.fillText("made on littlegasp.com", W / 2, H - u * 3.6);
+  /* age badge */
+  if (/^\d{1,3}$/.test(C.age)){
+    const bx = W - u * 15, byy = H * .16;
+    g.beginPath(); g.arc(bx, byy, u * 9, 0, 7); g.fillStyle = "#FFC857"; g.fill();
+    g.lineWidth = u * .8; g.strokeStyle = "#fff"; g.stroke();
+    g.fillStyle = "#2A1F5C"; g.font = `${u * (C.age.length > 2 ? 6 : 8)}px Caprasimo, Georgia, serif`; g.fillText(C.age, bx, byy + u * .6);
+  }
+}
+function sizeDeco(){
+  const cv = $("#deco"), r = cv.getBoundingClientRect(), k = Math.min(2, devicePixelRatio || 1);
+  cv.width = Math.round(r.width * k); cv.height = Math.round(r.height * k);
+  const g = cv.getContext("2d"); g.clearRect(0, 0, cv.width, cv.height); drawDeco(g, cv.width, cv.height);
+}
+function coverDraw(g, src, sw, sh, mirror){
+  const s = Math.max(OUT_W / sw, OUT_H / sh), w = sw * s, h = sh * s;
+  g.save(); if (mirror){ g.translate(OUT_W, 0); g.scale(-1, 1); }
+  g.drawImage(src, (OUT_W - w) / 2, (OUT_H - h) / 2, w, h); g.restore();
+}
+function compose(src, sw, sh, mirror){
+  const cv = document.createElement("canvas"); cv.width = OUT_W; cv.height = OUT_H;
+  const g = cv.getContext("2d"); g.fillStyle = "#2E2560"; g.fillRect(0, 0, OUT_W, OUT_H);
+  coverDraw(g, src, sw, sh, mirror); drawDeco(g, OUT_W, OUT_H);
+  const img = $("#shot"); img.src = cv.toDataURL("image/jpeg", .92); img.hidden = false;
+  $("#deco").hidden = true; $("#cam").hidden = true;
+  cv.toBlob(b => shotBlob = b, "image/jpeg", .92);
+  boothMode("done");
+}
+function boothMode(m){
+  $("#snapBtn").hidden = m !== "live"; $("#pickBtn").hidden = m === "done";
+  $("#saveShot").hidden = $("#retake").hidden = m !== "done";
+  $("#bnote").textContent = m === "done" ? "Looking good! Save it or send it to someone." :
+    m === "live" ? "Fit your face under the crown. Your photo stays on your phone." : "No camera here? Choose a photo instead. It stays on your phone.";
+}
+function stopCam(){ if (stream){ stream.getTracks().forEach(t => t.stop()); stream = null; } }
+async function startCam(){
+  $("#shot").hidden = true; $("#deco").hidden = false; $("#cam").hidden = false; shotBlob = null;
+  requestAnimationFrame(sizeDeco);
+  if (isAuto || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ boothMode("nocam"); return; }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1600 } }, audio: false });
+    const v = $("#cam"); v.srcObject = stream; await v.play().catch(() => {});
+    boothMode("live");
+  } catch (e){ boothMode("nocam"); }
+}
+async function openBooth(){
+  $("#booth").hidden = false; $("#boothTitle").focus({ preventScroll: true });
+  await startCam();
+}
+function closeBooth(){ stopCam(); $("#booth").hidden = true; $("#selfieBtn").focus({ preventScroll: true }); }
+$("#selfieBtn").addEventListener("click", openBooth);
+$("#boothClose").addEventListener("click", closeBooth);
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#booth").hidden) closeBooth(); });
+addEventListener("resize", () => { if (!$("#booth").hidden && !$("#deco").hidden) sizeDeco(); });
+$("#snapBtn").addEventListener("click", async () => {
+  const v = $("#cam"), c = $("#bcount"); $("#snapBtn").disabled = true;
+  for (const n of ["3", "2", "1"]){ c.textContent = n; await new Promise(r => setTimeout(r, 750)); }
+  c.textContent = ""; const f = $("#bframe"); f.classList.remove("flash"); void f.offsetWidth; f.classList.add("flash");
+  $("#snapBtn").disabled = false;
+  if (!v.videoWidth){ boothMode("nocam"); return; }
+  compose(v, v.videoWidth, v.videoHeight, true); stopCam(); burst(90);
+});
+$("#pickBtn").addEventListener("click", () => $("#pickIn").click());
+$("#pickIn").addEventListener("change", e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  const url = URL.createObjectURL(f), img = new Image();
+  img.onload = () => { stopCam(); compose(img, img.naturalWidth, img.naturalHeight, false); URL.revokeObjectURL(url); burst(90); };
+  img.onerror = () => { URL.revokeObjectURL(url); $("#bnote").textContent = "That photo couldn't be opened. Try another one."; };
+  img.src = url;
+});
+$("#retake").addEventListener("click", startCam);
+$("#saveShot").addEventListener("click", async () => {
+  if (!shotBlob) return;
+  const file = new File([shotBlob], "birthday-selfie.jpg", { type: "image/jpeg" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })){
+    try { await navigator.share({ files: [file], title: "Happy Birthday, " + C.to, text: "Made on littlegasp.com" }); return; } catch (e){ if (e.name === "AbortError") return; }
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(shotBlob); a.download = "birthday-selfie.jpg";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+});
 
 </script>
 </body>
