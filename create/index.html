@@ -84,6 +84,22 @@ textarea{min-height:170px;resize:vertical}
 #themeBox[hidden]{display:none}
 .xopt small{display:block;margin-left:0}
 .xhint{margin:0 0 8px}
+/* who is it for + writing ideas */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:2px solid #EBD3DD;background:#fff;border-radius:999px;padding:9px 15px;font:700 .92rem var(--body);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--berry);background:#FFF0F5;box-shadow:0 0 0 3px rgba(232,69,122,.15)}
+.chip.self{border-style:dashed;font-weight:600;color:var(--muted)}
+.ideas{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}
+.ideas[hidden],.letterIdeas[hidden]{display:none}
+.ideas .lbl,.letterIdeas .lbl{font-size:.8rem;font-weight:700;color:var(--berry-dark);margin-right:2px}
+.idea{border:1.5px dashed #E7B5C7;background:#fff;border-radius:999px;padding:6px 12px;font:600 .85rem/1.3 var(--body);color:var(--ink);cursor:pointer;text-align:left}
+.idea:hover,.lcard:hover{border-style:solid;border-color:var(--berry)}
+.idea.more{border:0;background:none;color:var(--berry-dark);text-decoration:underline;padding:6px 4px}
+.letterIdeas{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:0 0 10px}
+.letterIdeas .lbl{grid-column:1/-1}
+.lcard{border:1.5px dashed #E7B5C7;background:#fff;border-radius:14px;padding:10px 12px;text-align:left;cursor:pointer;font:400 .82rem/1.35 var(--body);color:var(--muted)}
+.lcard b{display:block;color:var(--ink);font-size:.9rem;margin-bottom:2px}
+.lcard .use{display:block;margin-top:6px;color:var(--berry-dark);font-weight:700}
 .linkbtn{border:0;background:none;font:700 .92rem var(--body);color:var(--berry-dark);cursor:pointer;text-decoration:underline}
 .ov{position:fixed;inset:0;background:rgba(27,22,64,.62);z-index:30;display:flex;align-items:center;justify-content:center;padding:20px}
 .ov[hidden]{display:none}
@@ -112,8 +128,14 @@ textarea{min-height:170px;resize:vertical}
     <p class="sub">Fill this in, watch it come alive in the preview, then unlock your private link.</p>
     <div class="restore" id="restoreBar" hidden><span>We kept your last draft on this device.</span><button class="linkbtn" id="startOver">Start over</button></div>
 
-    <fieldset id="themeBox" hidden>
+    <fieldset id="forBox" hidden>
       <legend>Who is it for?</legend>
+      <p class="hint xhint">Pick one and we'll suggest words you can tap to use. You can always change them or write your own.</p>
+      <div class="chips" id="forChips" role="group" aria-label="Who is it for?"></div>
+    </fieldset>
+
+    <fieldset id="themeBox" hidden>
+      <legend>Party colours</legend>
       <div class="themes" role="radiogroup" aria-label="Who is it for?">
         <label class="themeopt"><input type="radio" name="theme" value="her" checked> <span class="sw" style="background:linear-gradient(135deg,#F7C6D6,#E8457A)"></span> For her <small>pink party</small></label>
         <label class="themeopt"><input type="radio" name="theme" value="him"> <span class="sw" style="background:linear-gradient(135deg,#BFD8F2,#2A5BD7)"></span> For him <small>blue party</small></label>
@@ -134,6 +156,7 @@ textarea{min-height:170px;resize:vertical}
 
     <fieldset>
       <legend>Photos <span class="hint" id="photoMax">up to 5</span></legend>
+      <div class="ideas" id="capIdeas" hidden></div>
       <div class="photos" id="photos"></div>
       <input type="file" id="fileIn" accept="image/*" multiple hidden>
     </fieldset>
@@ -141,17 +164,20 @@ textarea{min-height:170px;resize:vertical}
     <fieldset>
       <legend id="reasonsLegend">Things you love about them</legend>
       <p class="hint" style="margin:0 0 8px">Short and sweet works best. Fill as many as you like, up to <span id="reasonMax">6</span>.</p>
+      <div class="ideas" id="reasonIdeas" hidden></div>
       <div class="notes" id="notes"></div>
     </fieldset>
 
     <fieldset>
       <legend>Your letter</legend>
+      <div class="letterIdeas" id="letterIdeas" hidden></div>
       <label for="f-letter" class="hint" style="font-weight:400">Each new line becomes a new paragraph.</label>
       <textarea id="f-letter" data-field="letter" maxlength="2000" placeholder="Dear Meera,&#10;&#10;..."></textarea>
     </fieldset>
 
     <fieldset>
       <legend>The final question</legend>
+      <div class="ideas" id="askIdeas" hidden></div>
       <label for="f-question">Question <span class="hint">(optional)</span></label>
       <input type="text" id="f-question" data-field="question" maxlength="80" placeholder="e.g. Birthday dinner, just us, this Saturday?">
       <label for="f-yes">What they see after tapping Yes</label>
@@ -206,6 +232,7 @@ textarea{min-height:170px;resize:vertical}
   </div>
 </div>
 
+<script src="ideas.js?v=1"></script>
 <script>
 /* ================= SETTINGS ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";   // same /exec URL as in the birthday template
@@ -213,6 +240,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9U
    beatGame: true tells the buyer a tap game will follow their song's beat. */
 const DESIGNS = {
   "birthday-cake": {
+    occasion: "birthday", forWho: ["wife","husband","girlfriend","boyfriend","mom","dad","sister","brother","bestie"],   // writing ideas (create/ideas.js)
     name: "Birthday Cake",
     path: "/birthday-cake/",
     price: 99,           // what buyers pay now (must match Apps Script PRICES)
@@ -224,6 +252,7 @@ const DESIGNS = {
     questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
   },
   "karwa-chauth": {
+    occasion: "karwa", forWho: ["wife","husband"],   // writing ideas (create/ideas.js)
     name: "Karwa Chauth Moon",
     path: "/karwa-chauth/",
     price: 149,
@@ -235,6 +264,7 @@ const DESIGNS = {
     questionHint: "e.g. Dinner on the terrace after the moon comes out?", yesHint: "e.g. It's a date. I've got your favourite sweets."
   },
   "birthday-wish": {
+    occasion: "birthday", forWho: ["wife","husband","girlfriend","boyfriend","mom","dad","sister","brother","bestie"],   // writing ideas (create/ideas.js)
     name: "Make a Wish",
     path: "/birthday-wish/",
     price: 149,
@@ -248,6 +278,7 @@ const DESIGNS = {
     questionHint: "e.g. Birthday dinner, just us, this Saturday?", yesHint: "e.g. I'll pick you up at 8."
   },
   "diwali": {
+    occasion: "diwali", forWho: ["wife","husband","girlfriend","boyfriend","mom","dad","sister","brother","bestie"],   // writing ideas (create/ideas.js)
     name: "Diwali Night",
     path: "/diwali/",
     price: 149,
@@ -258,13 +289,14 @@ const DESIGNS = {
     song: "A festive Diwali tune already plays on this design.",
     numberLabel: "Diwalis together", numberHint: "e.g. 5",
     extras: [
-      { key: "relation", type: "choice", label: "Who is it for?", options: [["partner", "Partner", "romantic"], ["family", "Family", "parents, friends"], ["sibling", "Brother or sister", "Bhai Dooj"]] },
+      { key: "relation", type: "choice", label: "Which Diwali?", options: [["partner", "Partner", "romantic"], ["family", "Family", "parents, friends"], ["sibling", "Brother or sister", "Bhai Dooj"]] },
       { key: "gift", type: "text", max: 80, label: "Your real Diwali gift (optional)",
         hint: "Hidden under gold foil in a mithai box. They scratch it off to find out. Leave empty to skip.", example: "e.g. A weekend in Lonavala, just us" }
     ],
     questionHint: "e.g. Diwali dinner with my family this year?", yesHint: "e.g. They already love you. Mom's making your favourite."
   },
   "apology": {
+    occasion: "apology", forWho: ["wife","husband","girlfriend","boyfriend","mom","dad","sister","brother","bestie"],   // writing ideas (create/ideas.js)
     name: "Mend the Heart",
     path: "/apology/",
     price: 149,
@@ -287,6 +319,7 @@ const DESIGNS = {
     questionHint: "e.g. Coffee tomorrow, my treat, and I'll listen this time?", yesHint: "e.g. Thank you. I'll be there at 6, with your favourite."
   },
   "garba-circle": {
+    occasion: "garba", forWho: ["wife","husband","girlfriend","boyfriend","bestie"],   // writing ideas (create/ideas.js)
     name: "Garba Circle",
     path: "/garba-circle/",
     price: 149,
@@ -322,7 +355,7 @@ const pb = $("#pricebox");
 pb.innerHTML = (D.regularPrice > D.price ? `<s>₹${D.regularPrice}</s>` : "") + `<span class="now">₹${D.price}</span>` + (offerOn ? `<span class="offer">${D.offerLabel}</span>` : "");
 
 /* ---------- state ---------- */
-let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null, theme:"her", extra:{} };
+let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""], letter:"", question:"", yesReply:"", email:"", song:null, theme:"her", extra:{}, forWho:"" };
 
 function payload(){
   return {
@@ -420,6 +453,104 @@ function renderNotes(){
   });
 }
 
+/* ---------- who is it for + writing ideas (create/ideas.js) ---------- */
+const REL = window.LG_REL || {}, IDEAS = window.LG_IDEAS || {};
+const ideaOff = { reasons: 0, captions: 0 };
+function ideaList(field){
+  const r = REL[state.forWho]; if (!r) return [];
+  const keys = [state.forWho, r.group, r.kind], out = [];
+  [IDEAS[D.occasion], IDEAS.common].forEach(src => {
+    const box = src && src[field]; if (!box) return;
+    for (const k of keys) if (box[k]){ box[k].forEach(v => { if (!out.includes(v)) out.push(v); }); break; }
+  });
+  return out;
+}
+function renderFor(){
+  if (!D.forWho || !IDEAS.common) return;
+  $("#forBox").hidden = false;
+  const box = $("#forChips"); box.innerHTML = "";
+  const add = (key, label, cls) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "chip" + (cls ? " " + cls : "");
+    b.textContent = label; b.setAttribute("aria-pressed", state.forWho === key);
+    b.onclick = () => pickFor(key); box.appendChild(b);
+  };
+  D.forWho.forEach(k => REL[k] && add(k, REL[k].label));
+  add("self", "Someone else, I'll write it", "self");
+}
+function pickFor(key){
+  state.forWho = key; ideaOff.reasons = ideaOff.captions = 0;
+  const r = REL[key];
+  let reload = false;
+  if (r && D.themes && r.g && state.theme !== r.g){ state.theme = r.g; renderTheme(); reload = true; }   // Make a Wish: pink / blue
+  if (r && (D.extras || []).some(f => f.key === "relation")){                                          // Diwali: partner / family / sibling
+    const rel = r.kind === "partner" ? "partner" : r.kind === "sibling" ? "sibling" : "family";
+    if (state.extra.relation !== rel){ state.extra.relation = rel; renderExtras(); reload = true; }
+  }
+  renderFor(); renderIdeas(); changed();
+  if (reload && desktop()) loadPreview();
+}
+function chipRow(el, label, items, onPick, more){
+  el.innerHTML = "";
+  if (!items.length){ el.hidden = true; return; }
+  el.hidden = false;
+  const l = document.createElement("span"); l.className = "lbl"; l.textContent = label; el.appendChild(l);
+  items.forEach(t => { const b = document.createElement("button"); b.type = "button"; b.className = "idea"; b.textContent = t; b.onclick = () => onPick(t); el.appendChild(b); });
+  if (more){ const b = document.createElement("button"); b.type = "button"; b.className = "idea more"; b.textContent = "More ideas ↻"; b.onclick = more; el.appendChild(b); }
+}
+function pageOf(field, used){
+  const all = ideaList(field).filter(t => !used.includes(t));
+  if (ideaOff[field] >= all.length) ideaOff[field] = 0;
+  const page = all.slice(ideaOff[field], ideaOff[field] + 3);
+  return { page, more: all.length > 3 ? () => { ideaOff[field] += 3; renderIdeas(); } : null };
+}
+function renderIdeas(){
+  const r = REL[state.forWho], ids = ["#reasonIdeas", "#capIdeas", "#letterIdeas", "#askIdeas"];
+  if (!r){ ids.forEach(i => $(i).hidden = true); return; }
+  const name = () => state.to.trim() || r.hello;
+  /* reasons: fill the first empty line */
+  const rs = pageOf("reasons", state.reasons.map(x => x.trim()));
+  chipRow($("#reasonIdeas"), "✨ Tap to use:", rs.page, t => {
+    const i = state.reasons.findIndex(x => !x.trim());
+    if (i < 0){ toast(`All ${MAXR} are filled. Clear one to use this.`); return; }
+    state.reasons[i] = t; renderNotes(); renderIdeas(); changed();
+  }, rs.more);
+  /* captions: the first photo without one */
+  const cs = pageOf("captions", state.photos.map(p => (p.caption || "").trim()));
+  chipRow($("#capIdeas"), "✨ Caption ideas:", cs.page, t => {
+    if (!state.photos.length){ toast("Add a photo first, then tap a caption."); return; }
+    const p = state.photos.find(x => !(x.caption || "").trim());
+    if (!p){ toast("Every photo has a caption. Clear one to use this."); return; }
+    p.caption = t; renderPhotos(); renderIdeas(); changed();
+  }, cs.more);
+  /* letters: whole letters, the greeting uses their name */
+  const L = $("#letterIdeas"), letters = ideaList("letters");
+  L.innerHTML = ""; L.hidden = !letters.length;
+  if (letters.length){
+    const l = document.createElement("span"); l.className = "lbl"; l.textContent = "✨ Start from one of ours:"; L.appendChild(l);
+    letters.forEach(([title, ...lines]) => {
+      const b = document.createElement("button"); b.type = "button"; b.className = "lcard";
+      const h = document.createElement("b"); h.textContent = title;
+      const t = document.createElement("span"); t.textContent = lines[1].length > 70 ? lines[1].slice(0, 68) + "…" : lines[1];
+      const u = document.createElement("span"); u.className = "use"; u.textContent = "Use this letter";
+      b.append(h, t, u);
+      b.onclick = () => {
+        if (state.letter.trim() && !confirm("Replace what you've written with this letter?")) return;
+        state.letter = lines.map(x => x.replace("{to}", name())).join("\n\n");
+        $("#f-letter").value = state.letter; $("#f-letter").removeAttribute("aria-invalid"); changed();
+        toast("Added. Change any words you like.");
+      };
+      L.appendChild(b);
+    });
+  }
+  /* final question + their yes reply, as a pair */
+  const asks = ideaList("asks");
+  chipRow($("#askIdeas"), "✨ Ideas:", asks.map(a => a[0]), t => {
+    const a = asks.find(x => x[0] === t);
+    state.question = a[0]; state.yesReply = a[1];
+    $("#f-question").value = a[0]; $("#f-yes").value = a[1]; changed();
+  });
+}
+
 /* ---------- photos: compressed in the browser ---------- */
 function compress(file){
   return new Promise((res, rej) => {
@@ -462,7 +593,7 @@ $("#fileIn").addEventListener("change", async e => {
     try { state.photos.push({ src: await compress(f), caption: "" }); }
     catch(err){ toast("One photo couldn't be read. Try a JPG or PNG."); }
   }
-  renderPhotos(); changed();
+  renderPhotos(); renderIdeas(); changed();
 });
 
 /* ---------- own song (designs with song set) ---------- */
@@ -695,7 +826,7 @@ $("#startOver").onclick = async () => {
 (async () => {
   const saved = await loadDraft();
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
-  bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); renderExtras(); fitLayout();
+  bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); renderExtras(); renderFor(); renderIdeas(); fitLayout();
   if (desktop()) loadPreview();
   const done = await idbGet("done:" + designKey);
   if (done && done.link){ showLink(done); return; }
