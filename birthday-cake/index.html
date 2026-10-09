@@ -424,7 +424,7 @@ async function runAutoplay(){
   if (seq.includes("ask")){ go("ask"); await wait(1300); dodge(); await wait(900); dodge(); await wait(1000); sayYes(); await wait(3000); }
   else { go("end"); await wait(2000); }
   await openBooth(); await wait(900);
-  await new Promise(r => { const im = new Image(); im.onload = () => { compose(im, im.naturalWidth || 600, im.naturalHeight || 750, false); r(); }; im.onerror = r; im.src = "img/demo-1.svg"; });
+  await new Promise(r => { const im = new Image(); im.onload = () => { compose(im, im.naturalWidth, im.naturalHeight, false, poseFrom(DEMO_LM, im.naturalWidth, im.naturalHeight, false)); r(); }; im.onerror = r; im.src = "img/demo-selfie.jpg"; });
   await wait(2800);
   /* homepage showcase: tell the homepage this design has finished, so it can play the next one */
   if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
@@ -698,21 +698,61 @@ function sayYes(){ go("end"); burst(220); setTimeout(() => burst(140), 600); }
 
 $("#replay").addEventListener("click", () => location.reload());
 
-/* ---------- birthday selfie booth ---------- */
+/* ---------- birthday selfie booth ----------
+   A painted crown (img/crown.webp) sits on their head: face detection (vendored MediaPipe, /vendor/face/, loaded only
+   when the booth opens, runs on the phone) finds the eyes, and the crown follows the head and its tilt. No face found:
+   the crown waits at the top of the frame. If detection can't load, it simply stays there. */
 const OUT_W = 1080, OUT_H = 1350;
-let stream = null, shotBlob = null;
-function crown(g, cx, top, w){
+const DEFAULT_POSE = { x: .5, y: .27, w: .36, a: 0 };
+const DEMO_LM = [{ x: .412, y: .524 }, { x: .545, y: .494 }];   // eyes in img/demo-selfie.jpg (for the homepage showcase, no detection needed)
+const CROWN = new Image(); CROWN.src = "img/crown.webp";
+let stream = null, shotBlob = null, FD = null, fdReady = null, faceCb = null;
+let boothRaf = 0, sending = false, lastSend = 0, seenAt = 0, target = null, pose = null, lastNote = "";
+function loadFD(){
+  if (fdReady) return fdReady;
+  fdReady = new Promise(res => {
+    const done = ok => { res(ok); }, t = setTimeout(() => done(false), 20000);
+    const sc = document.createElement("script"); sc.src = "/vendor/face/face_detection.js";
+    sc.onload = async () => {
+      try {
+        const fd = new FaceDetection({ locateFile: f => "/vendor/face/" + f });
+        fd.setOptions({ model: "short", minDetectionConfidence: .5 });
+        fd.onResults(r => faceCb && faceCb(r));
+        await fd.initialize(); FD = fd; clearTimeout(t); done(true);   // only use it once it has fully started
+      } catch (e){ FD = null; clearTimeout(t); done(false); }
+    };
+    sc.onerror = () => { clearTimeout(t); done(false); };
+    document.head.appendChild(sc);
+  });
+  return fdReady;
+}
+/* eyes (normalised to the source image) → where the crown sits, normalised to the 4:5 frame */
+function poseFrom(lm, sw, sh, mirror){
+  if (!lm || lm.length < 2) return null;
+  const W = OUT_W, H = OUT_H, s = Math.max(W / sw, H / sh), ox = (W - sw * s) / 2, oy = (H - sh * s) / 2;
+  const map = p => { let x = ox + p.x * sw * s; const y = oy + p.y * sh * s; if (mirror) x = W - x; return [x, y]; };
+  let A = map(lm[0]), B = map(lm[1]); if (A[0] > B[0]) [A, B] = [B, A];
+  const d = Math.hypot(B[0] - A[0], B[1] - A[1]), a = Math.atan2(B[1] - A[1], B[0] - A[0]);
+  if (d < 8) return null;
+  const mx = (A[0] + B[0]) / 2, my = (A[1] + B[1]) / 2, up = d * 1.55;
+  return { x: (mx + Math.sin(a) * up) / W, y: (my - Math.cos(a) * up) / H, w: d * 2.45 / W, a };
+}
+const lerp = (p, q, k) => ({ x: p.x + (q.x - p.x) * k, y: p.y + (q.y - p.y) * k, w: p.w + (q.w - p.w) * k, a: p.a + (q.a - p.a) * k });
+function crownDrawn(g, cx, top, w){   // fallback if crown.webp can't load
   const h = w * .62, x = cx - w / 2;
   const gr = g.createLinearGradient(0, top, 0, top + h); gr.addColorStop(0, "#FFE59A"); gr.addColorStop(.55, "#FFC857"); gr.addColorStop(1, "#E39B1F");
-  g.save(); g.shadowColor = "rgba(0,0,0,.35)"; g.shadowBlur = w * .06; g.shadowOffsetY = w * .03;
   g.beginPath(); g.moveTo(x, top + h); g.lineTo(x + w * .04, top + h * .28); g.lineTo(x + w * .27, top + h * .58); g.lineTo(x + w * .5, top);
-  g.lineTo(x + w * .73, top + h * .58); g.lineTo(x + w * .96, top + h * .28); g.lineTo(x + w, top + h); g.closePath();
-  g.fillStyle = gr; g.fill(); g.restore();
-  g.fillStyle = "#FFF3C4"; g.fillRect(x + w * .02, top + h * .8, w * .96, h * .08);
-  [[.04, .28, "#E8457A"], [.5, 0, "#8FD6BD"], [.96, .28, "#E8457A"]].forEach(([dx, dy, c]) => { g.beginPath(); g.arc(x + w * dx, top + h * dy, w * .055, 0, 7); g.fillStyle = c; g.fill(); });
-  [[.25, "#E8457A"], [.5, "#7B6CF6"], [.75, "#E8457A"]].forEach(([dx, c]) => { g.beginPath(); g.arc(x + w * dx, top + h * .7, w * .045, 0, 7); g.fillStyle = c; g.fill(); });
+  g.lineTo(x + w * .73, top + h * .58); g.lineTo(x + w * .96, top + h * .28); g.lineTo(x + w, top + h); g.closePath(); g.fillStyle = gr; g.fill();
 }
-function drawDeco(g, W, H){
+function drawCrown(g, W, H, p){
+  const w = p.w * W;
+  g.save(); g.translate(p.x * W, p.y * H); g.rotate(p.a);
+  g.shadowColor = "rgba(0,0,0,.35)"; g.shadowBlur = w * .05; g.shadowOffsetY = w * .02;
+  if (CROWN.complete && CROWN.naturalWidth){ const h = w * CROWN.naturalHeight / CROWN.naturalWidth; g.drawImage(CROWN, -w / 2, -h * .86, w, h); }
+  else crownDrawn(g, 0, -w * .55, w);
+  g.restore();
+}
+function drawDeco(g, W, H, p){
   const u = W / 100;
   /* bunting along the top */
   const cols = ["#E8457A", "#FFC857", "#8FD6BD", "#7B6CF6"];
@@ -723,8 +763,8 @@ function drawDeco(g, W, H){
   const R = (seed => () => (seed = seed * 16807 % 2147483647) / 2147483647)(42);
   for (let i = 0; i < 46; i++){ const side = i % 2, x = side ? W - R() * u * 12 : R() * u * 12, y = u * 14 + R() * (H - u * 40);
     g.save(); g.translate(x, y); g.rotate(R() * 6); g.fillStyle = cols[i % 4]; g.fillRect(-u * .9, -u * .35, u * 1.8, u * .7); g.restore(); }
-  /* crown, over where their head is */
-  crown(g, W / 2, H * .1, W * .34);
+  /* the crown, on their head */
+  drawCrown(g, W, H, p || DEFAULT_POSE);
   /* banner */
   const by = H - u * 26, bh = u * 19;
   g.save(); g.shadowColor = "rgba(0,0,0,.3)"; g.shadowBlur = u * 2; g.fillStyle = "#E8457A";
@@ -744,18 +784,34 @@ function drawDeco(g, W, H){
 }
 function sizeDeco(){
   const cv = $("#deco"), r = cv.getBoundingClientRect(), k = Math.min(2, devicePixelRatio || 1);
-  cv.width = Math.round(r.width * k); cv.height = Math.round(r.height * k);
-  const g = cv.getContext("2d"); g.clearRect(0, 0, cv.width, cv.height); drawDeco(g, cv.width, cv.height);
+  cv.width = Math.max(1, Math.round(r.width * k)); cv.height = Math.max(1, Math.round(r.height * k)); paintDeco();
 }
+function paintDeco(){ const cv = $("#deco"), g = cv.getContext("2d"); g.clearRect(0, 0, cv.width, cv.height); drawDeco(g, cv.width, cv.height, pose); }
+function note(t){ if (t !== lastNote){ lastNote = t; $("#bnote").textContent = t; } }
+/* live: detect ~14 times a second, glide the crown there */
+function loop(){
+  boothRaf = requestAnimationFrame(loop);
+  const v = $("#cam"), now = performance.now();
+  if (FD && stream && v.videoWidth && !sending && now - lastSend > 70){
+    sending = true; lastSend = now;
+    faceCb = r => { const d = r.detections && r.detections[0]; if (d){ const p = poseFrom(d.landmarks, v.videoWidth, v.videoHeight, true); if (p){ target = p; seenAt = performance.now(); } } };
+    Promise.resolve(FD.send({ image: v })).catch(() => {}).finally(() => { sending = false; });
+  }
+  if (now - seenAt > 700) target = null;
+  pose = pose ? lerp(pose, target || DEFAULT_POSE, target ? .45 : .12) : (target || DEFAULT_POSE);
+  if (stream) note(target ? "Crown on! Smile and tap Snap." : FD ? "Look at the camera so the crown can find your head." : "Fit your face under the crown. Your photo stays on your phone.");
+  paintDeco();
+}
+function stopLoop(){ cancelAnimationFrame(boothRaf); boothRaf = 0; }
 function coverDraw(g, src, sw, sh, mirror){
   const s = Math.max(OUT_W / sw, OUT_H / sh), w = sw * s, h = sh * s;
   g.save(); if (mirror){ g.translate(OUT_W, 0); g.scale(-1, 1); }
   g.drawImage(src, (OUT_W - w) / 2, (OUT_H - h) / 2, w, h); g.restore();
 }
-function compose(src, sw, sh, mirror){
+function compose(src, sw, sh, mirror, p){
   const cv = document.createElement("canvas"); cv.width = OUT_W; cv.height = OUT_H;
   const g = cv.getContext("2d"); g.fillStyle = "#2E2560"; g.fillRect(0, 0, OUT_W, OUT_H);
-  coverDraw(g, src, sw, sh, mirror); drawDeco(g, OUT_W, OUT_H);
+  coverDraw(g, src, sw, sh, mirror); drawDeco(g, OUT_W, OUT_H, p);
   const img = $("#shot"); img.src = cv.toDataURL("image/jpeg", .92); img.hidden = false;
   $("#deco").hidden = true; $("#cam").hidden = true;
   cv.toBlob(b => shotBlob = b, "image/jpeg", .92);
@@ -764,18 +820,18 @@ function compose(src, sw, sh, mirror){
 function boothMode(m){
   $("#snapBtn").hidden = m !== "live"; $("#pickBtn").hidden = m === "done";
   $("#saveShot").hidden = $("#retake").hidden = m !== "done";
-  $("#bnote").textContent = m === "done" ? "Looking good! Save it or send it to someone." :
-    m === "live" ? "Fit your face under the crown. Your photo stays on your phone." : "No camera here? Choose a photo instead. It stays on your phone.";
+  note(m === "done" ? "Looking good! Save it or send it to someone." :
+    m === "live" ? "Fit your face under the crown. Your photo stays on your phone." : "No camera here? Choose a photo instead. It stays on your phone.");
 }
-function stopCam(){ if (stream){ stream.getTracks().forEach(t => t.stop()); stream = null; } }
+function stopCam(){ stopLoop(); if (stream){ stream.getTracks().forEach(t => t.stop()); stream = null; } }
 async function startCam(){
-  $("#shot").hidden = true; $("#deco").hidden = false; $("#cam").hidden = false; shotBlob = null;
+  $("#shot").hidden = true; $("#deco").hidden = false; $("#cam").hidden = false; shotBlob = null; pose = null; target = null;
   requestAnimationFrame(sizeDeco);
   if (isAuto || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ boothMode("nocam"); return; }
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 1600 } }, audio: false });
     const v = $("#cam"); v.srcObject = stream; await v.play().catch(() => {});
-    boothMode("live");
+    boothMode("live"); loadFD(); stopLoop(); loop();
   } catch (e){ boothMode("nocam"); }
 }
 async function openBooth(){
@@ -793,14 +849,22 @@ $("#snapBtn").addEventListener("click", async () => {
   c.textContent = ""; const f = $("#bframe"); f.classList.remove("flash"); void f.offsetWidth; f.classList.add("flash");
   $("#snapBtn").disabled = false;
   if (!v.videoWidth){ boothMode("nocam"); return; }
-  compose(v, v.videoWidth, v.videoHeight, true); stopCam(); burst(90);
+  compose(v, v.videoWidth, v.videoHeight, true, target || pose); stopCam(); burst(90);
 });
 $("#pickBtn").addEventListener("click", () => $("#pickIn").click());
+async function crownForPhoto(img){   // a chosen photo: find the face once
+  if (!(await loadFD()) || !FD) return null;
+  const d = await new Promise(res => { const t = setTimeout(() => res(null), 6000);
+    faceCb = r => { clearTimeout(t); res(r.detections && r.detections[0]); };
+    Promise.resolve(FD.send({ image: img })).catch(() => { clearTimeout(t); res(null); }); });
+  return d ? poseFrom(d.landmarks, img.naturalWidth, img.naturalHeight, false) : null;
+}
 $("#pickIn").addEventListener("change", e => {
   const f = e.target.files[0]; e.target.value = ""; if (!f) return;
   const url = URL.createObjectURL(f), img = new Image();
-  img.onload = () => { stopCam(); compose(img, img.naturalWidth, img.naturalHeight, false); URL.revokeObjectURL(url); burst(90); };
-  img.onerror = () => { URL.revokeObjectURL(url); $("#bnote").textContent = "That photo couldn't be opened. Try another one."; };
+  img.onload = async () => { stopCam(); note("Finding your head for the crown…"); const p = await crownForPhoto(img);
+    compose(img, img.naturalWidth, img.naturalHeight, false, p); URL.revokeObjectURL(url); burst(90); };
+  img.onerror = () => { URL.revokeObjectURL(url); note("That photo couldn't be opened. Try another one."); };
   img.src = url;
 });
 $("#retake").addEventListener("click", startCam);
