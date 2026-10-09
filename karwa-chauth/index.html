@@ -1134,10 +1134,11 @@ function roundDone(){
 async function pheriSpin(roundsToDo, ms = 900){   // "Turn it for me", keyboard, and the homepage showcase
   if (pheriBusy) return; pheriBusy = true;
   const goal = Math.min(C.vows.length, rounds + roundsToDo);
+  let last = performance.now();
   while (rounds < goal){
-    const step = TAU / (ms / 16);
-    turnBy(Math.min(step, (rounds + 1) * TAU - pheriTotal + 1e-6));
     await sleep(16);
+    const now = performance.now(), step = TAU * Math.min(120, now - last) / ms; last = now;   // speed by the clock, not by frames
+    turnBy(Math.min(step, (rounds + 1) * TAU - pheriTotal + 1e-6));
   }
   pheriBusy = false;
 }
