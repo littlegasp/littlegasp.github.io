@@ -250,11 +250,11 @@ body.art-frame .frame-art{display:block;position:absolute;inset:0;width:100%;hei
 
 /* second background for the later scenes */
 #bg2{position:fixed;inset:0;z-index:0;background:var(--sky-top) center bottom / cover no-repeat;opacity:0;transition:opacity 1.4s ease}
-body.art-bg2:is([data-scene="diyas"],[data-scene="photos"],[data-scene="letter"],[data-scene="ask"],[data-scene="finale"]) #bg2{opacity:1}
+body.art-bg2:is([data-scene="diyas"],[data-scene="photos"],[data-scene="thali"],[data-scene="letter"],[data-scene="ask"],[data-scene="finale"]) #bg2{opacity:1}
 /* the question and finale text sit on the lit palace: dim that band so it stays readable */
 #bg2::after{content:"";position:absolute;inset:0;opacity:0;transition:opacity 1s ease;
   background:linear-gradient(180deg,rgba(10,6,30,0) 26%,rgba(10,6,30,.68) 40%,rgba(10,6,30,.68) 76%,rgba(10,6,30,0) 90%)}
-body:is([data-scene="ask"],[data-scene="finale"]) #bg2::after{opacity:1}
+body:is([data-scene="ask"],[data-scene="finale"],[data-scene="thali"]) #bg2::after{opacity:1}
 
 /* props: thali, lanterns, corners (each shows only on the scenes listed) */
 .decor{position:fixed;inset:0;z-index:4;pointer-events:none;overflow:hidden}
@@ -298,6 +298,31 @@ body.art-scroll .scroll::before,body.art-scroll .scroll::after{content:"";displa
 body.art-scroll .scroll::before{top:calc(-1 * var(--scroll-edge))}
 body.art-scroll .scroll::after{bottom:calc(-1 * var(--scroll-edge));background-position:center bottom}
 body.art-scroll .scroll .orn{display:none}
+
+/* thali pheri */
+.pheri{position:relative;width:min(calc(80 * var(--vw)),calc(40 * var(--vh)),360px);aspect-ratio:1;flex:none;touch-action:none;user-select:none;-webkit-user-select:none}
+.pheri .track{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transform:rotate(-90deg)}
+.pheri .trk{fill:none;stroke:rgba(243,213,142,.28);stroke-width:1;stroke-dasharray:1.2 2.2}
+.pheri .prog{fill:none;stroke:var(--gold);stroke-width:1.4;stroke-linecap:round;stroke-dasharray:0 100;filter:drop-shadow(0 0 2px rgba(243,213,142,.9))}
+.thali-top{position:absolute;left:50%;top:50%;width:40%;aspect-ratio:1;margin:-20% 0 0 -20%;padding:0;border:0;background:none;border-radius:50%;cursor:grab;touch-action:none;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(255,186,90,.35));will-change:transform}
+.thali-top img{width:100%;height:100%;display:block;pointer-events:none;-webkit-user-drag:none}
+.thali-top.dragging{cursor:grabbing}
+.thali-top:focus-visible{outline:3px solid var(--gold-soft);outline-offset:4px}
+.lamps{position:absolute;inset:0;pointer-events:none}
+.plamp{position:absolute;width:15%;aspect-ratio:320/141;margin:-3.3% 0 0 -7.5%;background:url(img/diya.webp) center / contain no-repeat;filter:grayscale(.5) brightness(.7);transition:filter .5s}
+.plamp::after{content:"";position:absolute;left:50%;top:-60%;width:22%;aspect-ratio:1/2;margin-left:-11%;border-radius:50% 50% 45% 45%;
+  background:radial-gradient(circle at 50% 70%,#FFF6C8,#FFB627 55%,rgba(255,120,30,0) 72%);opacity:0;transition:opacity .4s;transform-origin:50% 100%}
+.plamp.lit{filter:brightness(1.15) drop-shadow(0 0 6px rgba(255,190,80,1)) drop-shadow(0 0 16px rgba(255,150,40,.8))}
+.plamp.lit::after{opacity:1;animation:flick .2s ease-in-out infinite alternate}
+.pheri-hint{position:absolute;left:0;right:0;bottom:-6px;font-size:.88rem;color:var(--gold-soft);transition:opacity .4s;pointer-events:none}
+.pheri-hint.gone{opacity:0}
+.vow{min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.vtag{font:700 .78rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.vtag:empty{display:none}
+.vtext{font-family:var(--serif);font-style:italic;font-size:1.45rem;line-height:1.25;color:var(--cream);max-width:24ch}
+.vtext.swap{animation:glowin .7s ease both}
+body[data-scene="thali"] .moon{opacity:0}
 
 /* ===== Laptops: full screen (owner decision 8 Oct 2026). Wide paintings; picture on the left, words on the right.
    Column 1 is centred at 26vw, which is where the arched window sits in bg-wide.webp, so the moon rises inside it. ===== */
@@ -352,6 +377,10 @@ body.art-scroll .scroll .orn{display:none}
   html{--scroll-w:min(32vw,520px);--scroll-edge:calc(var(--scroll-w) * var(--scroll-slice) / 900)}
   .scene[data-scene="letter"] > .scroll{grid-column:1;grid-row:1 / -1;align-self:start;width:var(--scroll-w);max-width:none;margin:calc(var(--scroll-edge) - 20px) 0 40px}
   .scene[data-scene="letter"] .scroll p{font-size:1.22rem}
+  .scene[data-scene="thali"]{grid-template-rows:1fr auto auto auto auto 1fr}
+  .scene[data-scene="thali"] > h2{grid-row:2}.scene[data-scene="thali"] > .sub{grid-row:3}
+  .scene[data-scene="thali"] > .vow{grid-row:4}.scene[data-scene="thali"] > .ctl{grid-row:5}
+  .scene[data-scene="thali"] > .pheri{grid-column:1;grid-row:1 / -1;align-self:center;width:min(30vw,62vh)}
   /* question + finale: centred over the dimmed palace band */
   .scene:is([data-scene="ask"],[data-scene="finale"]){grid-template-columns:1fr;max-width:760px;margin:0 auto}
   .scene:is([data-scene="ask"],[data-scene="finale"]) > *{grid-column:1}
@@ -470,6 +499,26 @@ body.art-scroll .scroll .orn{display:none}
     <p class="sub" id="swipeHint">Tap a photo to see it closer.</p>
     <div class="gallery" id="gallery"></div>
     <button class="btn" data-next>Read my letter</button>
+  </section>
+
+  <!-- 3b. Thali pheri: pass the thali around, one promise per round (extra.vows, or ours) -->
+  <section class="scene center" data-scene="thali" hidden>
+    <h2 tabindex="-1" id="thaliTitle">Seven rounds, seven promises</h2>
+    <p class="sub" id="thaliSub">Pass the thali around, like at the puja. Each full round opens one promise.</p>
+    <div class="pheri" id="pheri">
+      <svg class="track" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="34" class="trk"/>
+        <circle cx="50" cy="50" r="34" class="prog" id="pheriProg" pathLength="100"/>
+      </svg>
+      <div class="lamps" id="lamps" aria-hidden="true"></div>
+      <button class="thali-top" id="thaliTop" aria-label="Pass the thali around once"><img src="img/thali-top.webp" alt="" width="600" height="600" draggable="false"></button>
+      <p class="pheri-hint" id="pheriHint">Drag it around the circle</p>
+    </div>
+    <div class="vow" aria-live="polite"><p class="vtag" id="vowTag"></p><p class="vtext" id="vowText">&nbsp;</p></div>
+    <div class="ctl">
+      <button class="btn ghost" id="pheriAuto">Turn it for me</button>
+      <button class="btn" id="afterThali" data-next style="visibility:hidden">Read my letter</button>
+    </div>
   </section>
 
   <!-- 4. Letter -->
@@ -793,6 +842,7 @@ const onEnter = {
   moon(){ moonScene(); },
   diyas(){},
   photos(){ requestAnimationFrame(layoutPhotos); },
+  thali(){ requestAnimationFrame(() => placeThali(pheriAngle)); },
   letter(){ $("#letter").classList.add("reveal"); },
   finale(){ ["cornerL","cornerR"].forEach(i => $("#"+i).classList.add("show")); rainPetals(9000); }
 };
@@ -988,6 +1038,9 @@ function apply(d){
     letter: (Array.isArray(d.letter) ? d.letter : []).map(s).filter(Boolean),
     question: s(d.question), yesReply: s(d.yesReply)
   };
+  const x = d.extra && typeof d.extra === "object" ? d.extra : {};
+  C.vows = (Array.isArray(x.vows) ? x.vows : []).map(v => s(v).slice(0, 70)).filter(Boolean).slice(0, 7);
+  if (!C.vows.length) C.vows = VOWS;
   /* the buyer's own song (from the editor) plays instead of our tune; if it won't load, our tune plays */
   if (d.song && d.song.src && !isAuto){
     mp3 = new Audio(d.song.src); mp3.loop = true; mp3.preload = "auto";
@@ -1018,13 +1071,77 @@ function apply(d){
   const n = parseInt(C.number, 10);
   if (n > 0){ $("#finaleNum").hidden = false; $("#finaleNum").textContent = n === 1 ? "Our first Karwa Chauth together, and my favourite moon so far." : `${n} Karwa Chauths together, and I'd wait for every one again.`; }
 
-  flow = ["open","moon"].concat(C.reasons.length ? ["diyas"] : [], hasPhotos ? ["photos"] : [], ["letter"], C.question ? ["ask"] : [], ["finale"]);
-  const NEXT_LABEL = { diyas:"Light the diyas", photos:"See our moments", letter:"Read my letter", ask:"One last question", finale:"One more thing" };
+  buildPheri();
+  flow = ["open","moon"].concat(C.reasons.length ? ["diyas"] : [], hasPhotos ? ["photos"] : [], ["thali","letter"], C.question ? ["ask"] : [], ["finale"]);
+  const NEXT_LABEL = { diyas:"Light the diyas", photos:"See our moments", thali:"Pass the thali", letter:"Read my letter", ask:"One last question", finale:"One more thing" };
   flow.forEach((nm, i) => { const b = sceneEl(nm).querySelector("[data-next]"); if (b && flow[i+1]) b.textContent = NEXT_LABEL[flow[i+1]]; });
   const dots = $("#dots"); dots.innerHTML = ""; flow.forEach(() => dots.appendChild(document.createElement("span")));
 }
 
 $("#beginBtn").addEventListener("click", () => { ensureAudio(); next(); });
+
+/* ---------- 3b. thali pheri: pass the puja thali around; every full round lights a diya and opens one promise ---------- */
+const VOWS = ["I'll choose you, even on the hard days", "I'll listen, really listen", "I'll make you laugh when you need it most",
+  "I'll respect your dreams like my own", "I'll never let you feel alone", "I'll fill our home with love", "I'll hold your hand for seven lifetimes"];
+const NUM = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven"];
+const TAU = Math.PI * 2;
+let pheriAngle = -Math.PI / 2, pheriTotal = 0, rounds = 0, pheriBusy = false;
+function buildPheri(){
+  const n = C.vows.length, L = $("#lamps"); L.innerHTML = "";
+  $("#thaliTitle").textContent = n === 1 ? "One round, one promise" : `${NUM[n]} rounds, ${NUM[n].toLowerCase()} promises`;
+  for (let k = 0; k < n; k++){
+    const a = -Math.PI / 2 + (k + .5) * TAU / n, el = document.createElement("span"); el.className = "plamp";
+    el.style.left = (50 + Math.cos(a) * 47) + "%"; el.style.top = (50 + Math.sin(a) * 47) + "%"; L.appendChild(el);
+  }
+}
+function placeThali(a){
+  const P = $("#pheri"), r = P.clientWidth * .34;
+  $("#thaliTop").style.transform = `translate(${Math.cos(a) * r}px,${Math.sin(a) * r}px) rotate(${(a + Math.PI / 2) * 57.3}deg)`;
+  $("#pheriProg").style.strokeDasharray = `${rounds >= C.vows.length ? 100 : (pheriTotal % TAU) / TAU * 100} 100`;
+}
+function turnBy(d){
+  if (rounds >= C.vows.length) return;
+  pheriAngle += d; pheriTotal += Math.abs(d);
+  while (pheriTotal >= (rounds + 1) * TAU && rounds < C.vows.length) roundDone();
+  placeThali(pheriAngle);
+}
+function roundDone(){
+  const k = rounds++, n = C.vows.length;
+  $$("#lamps .plamp")[k].classList.add("lit"); chime(k); ensureAudio();
+  $("#vowTag").textContent = `Promise ${k + 1} of ${n}`;
+  const t = $("#vowText"); t.textContent = C.vows[k]; t.classList.remove("swap"); void t.offsetWidth; t.classList.add("swap");
+  $("#pheriHint").classList.add("gone");
+  if (rounds === n){
+    pheriTotal = n * TAU; $("#pheriAuto").style.visibility = "hidden"; $("#afterThali").style.visibility = "visible";
+    $("#thaliSub").textContent = "Every promise, made in front of the diya. I mean every one.";
+    rainPetals(3500);
+  }
+}
+(() => {
+  const P = $("#pheri"), T = $("#thaliTop"); let drag = false, last = 0;
+  const ang = e => { const r = P.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2); };
+  T.addEventListener("pointerdown", e => { e.preventDefault(); ensureAudio(); drag = true; last = ang(e); T.setPointerCapture(e.pointerId); T.classList.add("dragging"); });
+  T.addEventListener("pointermove", e => {
+    if (!drag) return; const a = ang(e); let d = a - last; last = a;
+    if (d > Math.PI) d -= TAU; if (d < -Math.PI) d += TAU;
+    turnBy(Math.max(-.6, Math.min(.6, d)));
+  });
+  const up = () => { drag = false; T.classList.remove("dragging"); };
+  T.addEventListener("pointerup", up); T.addEventListener("pointercancel", up);
+  T.addEventListener("click", e => { if (e.detail === 0) pheriSpin(1); });   // keyboard: one round per press
+  addEventListener("resize", () => placeThali(pheriAngle));
+})();
+async function pheriSpin(roundsToDo, ms = 900){   // "Turn it for me", keyboard, and the homepage showcase
+  if (pheriBusy) return; pheriBusy = true;
+  const goal = Math.min(C.vows.length, rounds + roundsToDo);
+  while (rounds < goal){
+    const step = TAU / (ms / 16);
+    turnBy(Math.min(step, (rounds + 1) * TAU - pheriTotal + 1e-6));
+    await sleep(16);
+  }
+  pheriBusy = false;
+}
+$("#pheriAuto").addEventListener("click", async () => { ensureAudio(); await pheriSpin(C.vows.length); });
 /* ---------- 5. question: No runs away (same as Birthday) ---------- */
 const noBtn = $("#noBtn"), area = $("#askArea");
 const NO_LINES = ["Are you sure?","Think again","Wrong button","Can't catch me"];
@@ -1086,6 +1203,7 @@ async function autoplay(){
   for (const [i,b] of $$(".diya").entries()){ lightDiya(i, b, C.reasons[i] || ""); await sleep(650); }
   await sleep(1200);
   if (flow.includes("photos")){ next(); await sleep(2200); openPhoto(0); await sleep(1800); closePhoto(); await sleep(600); }
+  next(); await sleep(1400); await pheriSpin(C.vows.length, 520); await sleep(1600);
   next(); await sleep(4200);
   if (flow.includes("ask")){ next(); await sleep(1300); dodge(); await sleep(900); dodge(); await sleep(1000); sayYes(); await sleep(5200); }
   else { go("finale"); await sleep(5200); }
