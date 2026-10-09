@@ -367,9 +367,9 @@ body.sunny #gloom{opacity:0 !important}
 <script>
 /* ============ SETUP: same Apps Script URL as the other designs ============ */
 const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";
-/* Default music: our own music-box tune, synthesised in the browser (no file, no licence needed).
-   A buyer's own song (d.song) plays instead when they add one. */
-const SONG = { src: "", credit: "Original music-box tune by Little Gasp" };
+/* Default song (owner's pick, 10 Oct 2026; Pixabay Content Licence, leading silence trimmed).
+   A buyer's own song (d.song) plays instead; if neither loads, our synthesised music-box tune plays. */
+const SONG = { src: "audio/thoda-muskura-do.mp3", volume: .8, credit: "Thoda Muskura Do by RahulSapkal, Pixabay Content Licence" };
 /* ========================================================================= */
 
 const DEMO = {
@@ -470,10 +470,11 @@ function build(d){
 
   if (!isAuto){
     const own = d.song && d.song.src;
-    if (own){
-      song = new Audio(own); song.loop = true; song.preload = "auto";
-      song.addEventListener("error", () => { song = null; if (musicOn) Music.start(); });   // their song won't load: play our tune
-    }
+    song = new Audio(own || SONG.src); song.loop = true; song.preload = "auto"; song.volume = own ? .9 : SONG.volume;
+    song.addEventListener("error", () => {
+      if (own && song && !song.src.endsWith(SONG.src)){ song.src = SONG.src; song.volume = SONG.volume; if (musicOn) song.play().catch(() => {}); return; }   // their song won't load: ours
+      song = null; if (musicOn) Music.start();                                                                                                         // ours won't either: the music-box tune
+    });
     document.addEventListener("visibilitychange", () => {
       if (ctx) document.hidden ? ctx.suspend() : ctx.resume();
       if (song && musicOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {}));
