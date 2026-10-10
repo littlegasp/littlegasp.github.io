@@ -395,9 +395,9 @@ function waitForPreviewData(){
   return new Promise(res => {
     addEventListener("message", e => {
       if (e.origin !== location.origin) return;
-      if (e.data && e.data.type === "tsc-data") res(e.data.data);
+      if (e.data && e.data.type === "lg-data") res(e.data.data);
     });
-    parent.postMessage({ type: "tsc-ready" }, location.origin);
+    parent.postMessage({ type: "lg-ready" }, location.origin);
   });
 }
 /* Watermark shown only inside the editor's preview */
@@ -427,7 +427,7 @@ async function runAutoplay(){
   await new Promise(r => { const im = new Image(); im.onload = () => { compose(im, im.naturalWidth, im.naturalHeight, false, poseFrom(DEMO_LM, im.naturalWidth, im.naturalHeight, false)); r(); }; im.onerror = r; im.src = "img/demo-selfie.jpg"; });
   await wait(2800);
   /* homepage showcase: tell the homepage this design has finished, so it can play the next one */
-  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
   else location.reload();
 }
 async function start(){
@@ -630,7 +630,7 @@ function buildPhotos(){
     stack.appendChild(f); return f;
   });
   order = cards.map((_,i) => i); layout();
-  if (cards.length < 2) stack.previousElementSibling.textContent = "";
+  if (cards.length < 2){ const hint = stack.closest("[data-scene]").querySelector(".sub"); if (hint) hint.textContent = ""; }   // one photo: nothing to tap through
   stack.addEventListener("click", () => {
     if (busy || cards.length < 2) return; busy = true;
     const top = cards[order[0]]; top.classList.add("fling");

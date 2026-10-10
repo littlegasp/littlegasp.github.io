@@ -1182,9 +1182,9 @@ function waitForPreviewData(){
   return new Promise(res => {
     addEventListener("message", e => {
       if (e.origin !== location.origin) return;
-      if (e.data && e.data.type === "tsc-data") res(e.data.data);
+      if (e.data && e.data.type === "lg-data") res(e.data.data);
     });
-    parent.postMessage({ type: "tsc-ready" }, location.origin);
+    parent.postMessage({ type: "lg-ready" }, location.origin);
   });
 }
 function showError(msg){
@@ -1209,7 +1209,7 @@ async function autoplay(){
   if (flow.includes("ask")){ next(); await sleep(1300); dodge(); await sleep(900); dodge(); await sleep(1000); sayYes(); await sleep(5200); }
   else { go("finale"); await sleep(5200); }
   /* homepage showcase: tell the homepage this design has finished, so it can play the next one */
-  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
   else location.reload();
 }
 

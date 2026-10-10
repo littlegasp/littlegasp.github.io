@@ -368,8 +368,8 @@ let C, seq = [], current = 0, theme = "her";
 /* ---------- load ---------- */
 function waitForPreviewData(){
   return new Promise(res => {
-    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "tsc-data") res(e.data.data); });
-    parent.postMessage({ type: "tsc-ready" }, location.origin);
+    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "lg-data") res(e.data.data); });
+    parent.postMessage({ type: "lg-ready" }, location.origin);
   });
 }
 function addWatermark(){
@@ -711,7 +711,7 @@ async function runAutoplay(){
   if (seq.includes("gifts")){ go("gifts"); await sleep(900); for (const g of $$(".gift").slice(0, 2)) { g.click(); await sleep(1500); } }
   if (seq.includes("cake")){ go("cake"); await sleep(1200); cutCake(); await sleep(3800); }
   if (seq.includes("ask")){ go("ask"); await sleep(1300); $("#noBtn").click(); await sleep(1300); sayYes(); await sleep(3600); }
-  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin); else location.reload();
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin); else location.reload();
 }
 </script>
 </body>

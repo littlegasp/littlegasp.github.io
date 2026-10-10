@@ -13,7 +13,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=9">
+<link rel="stylesheet" href="/style.css?v=10">
 <style>
 body{padding-bottom:110px}
 .ed{max-width:1100px;margin:16px auto 0;padding:0 20px;display:grid;gap:28px}
@@ -386,7 +386,7 @@ function extraPayload(){
 }
 
 /* ---------- draft saved on this device (IndexedDB) ---------- */
-function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("tsc", 1); r.onupgradeneeded = () => r.result.createObjectStore("drafts"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("littlegasp", 1); r.onupgradeneeded = () => r.result.createObjectStore("drafts"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 let saveT;
 function saveDraft(){ clearTimeout(saveT); saveT = setTimeout(async () => { try { const db = await idb(); db.transaction("drafts","readwrite").objectStore("drafts").put(state, designKey); } catch(e){} }, 500); }
 async function loadDraft(){ try { const db = await idb(); return await new Promise(res => { const r = db.transaction("drafts").objectStore("drafts").get(designKey); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); }); } catch(e){ return null; } }
@@ -669,7 +669,7 @@ function loadPreview(){
 }
 addEventListener("message", e => {
   if (e.origin !== location.origin || e.source !== pv.contentWindow) return;
-  if (e.data && e.data.type === "tsc-ready") pv.contentWindow.postMessage({ type: "tsc-data", data: payload() }, location.origin);
+  if (e.data && e.data.type === "lg-ready") pv.contentWindow.postMessage({ type: "lg-data", data: payload() }, location.origin);
 });
 function desktop(){ return matchMedia("(min-width:900px)").matches; }
 function changed(){

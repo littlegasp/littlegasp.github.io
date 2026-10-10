@@ -371,9 +371,9 @@ function waitForPreviewData(){
   return new Promise(res => {
     addEventListener("message", e => {
       if (e.origin !== location.origin) return;
-      if (e.data && e.data.type === "tsc-data") res(e.data.data);
+      if (e.data && e.data.type === "lg-data") res(e.data.data);
     });
-    parent.postMessage({ type: "tsc-ready" }, location.origin);
+    parent.postMessage({ type: "lg-ready" }, location.origin);
   });
 }
 function addWatermark(){
@@ -828,7 +828,7 @@ async function runAutoplay(){
   if (seq.includes("letter")){ go("letter"); await wait(4200); }
   if (seq.includes("ask")){ go("ask"); await wait(1600); $("#againBtn").click(); await wait(1000); sayYes(); await wait(3600); }
   else { go("end"); await wait(3000); }
-  if (parent !== window) parent.postMessage({ type: "tsc-autoplay-done" }, location.origin);
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
   else location.reload();
 }
 </script>
