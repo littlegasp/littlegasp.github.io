@@ -168,6 +168,24 @@ window.LG_IDEAS = {
     }
   },
 
+  proposal: {
+    reasons: {
+      partner: ["You laugh at my worst jokes","You make every house feel like home","You steal my hoodies and I let you","You believe in me, loudly","You're my favourite person to do nothing with","You make the hard days easy","You still give me butterflies","I can be completely myself with you","Just… you"]
+    },
+    captions: { partner: ["Our first sunset","The day I knew","Two chais, one table","That rainy evening","Road trip, no plan","Our first trip together","Us, always"] },
+    letters: {
+      partner: [
+        ["Romantic", "{to},", "I hid my feelings so badly when we met that everyone knew except you.", "Tonight I hid a few things around the house instead, and I hope I did a better job.", "You are my favourite place, my calmest morning and my best adventure. I don't want to find anything else.", "So here's the last clue. Turn around, and look at me."],
+        ["Playful", "{to},", "You've found the cushion, the frame, the cookie jar and now this book. Detective of the year.", "There's one more thing to find, and it's the most important one.", "Spoiler: it's shiny, and it comes with me for the rest of your life."],
+        ["Deep", "{to},", "I've thought about how to say this a hundred times, and every version ends the same way: with you.", "You made a home out of me. I want to spend every day making one with you.", "Whatever comes, I want to face it holding your hand."],
+        ["Short", "{to},", "Every clue tonight led to the same answer.", "It's you. It was always going to be you."]
+      ]
+    },
+    asks: {
+      partner: [["Will you marry me?", "You just made me the luckiest person alive. I love you."], ["Will you spend forever with me?", "Forever starts right now."], ["Will you be my wife?", "I can't stop smiling. I love you."], ["Will you be my husband?", "I can't stop smiling. I love you."]]
+    }
+  },
+
   love: {
     reasons: {
       partner: ["The way you say my name","You hold my hand in crowds","Your 2 a.m. chai","You make ordinary days feel like a song","You believe in me, loudly","Your sleepy good mornings","How you dance in the kitchen","You still give me butterflies","You read my silences","Just… you"]
