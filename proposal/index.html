@@ -25,6 +25,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <style>
+@property --r{syntax:'<percentage>';inherits:true;initial-value:26%}
 :root{
   --ink:#2A1F5C; --muted:#6B5A6E; --accent:#E8457A; --accent-dark:#B42D5E; --butter:#FFC857; --mint:#8FD6BD; --mint-dark:#4E9C84;
   --paper:#FFF6E6; --paper-line:#EEDCBF;
@@ -41,7 +42,7 @@ body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink);bac
 #bg::before{content:"";position:absolute;inset:0;background:radial-gradient(90% 55% at 50% 0%,rgba(255,200,110,.38),transparent 70%);opacity:0;transition:opacity 1.6s}
 #bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(25,15,40,0) 40%,rgba(25,15,40,.42))}
 body[data-bg="room"] #bg{background-image:url(img/room.webp);background-position:center 60%;filter:brightness(.4) saturate(.75)}
-body.lit[data-bg="room"] #bg{filter:brightness(1.04) saturate(1.05)}
+body.lit[data-bg="room"] #bg{filter:brightness(.62) saturate(.95)}
 body.lit[data-bg="room"] #bg::before{opacity:1}
 body[data-bg="balcony"] #bg{background-image:url(img/balcony.webp);background-position:center 45%}
 body.ring #bg{animation:glow .9s ease 2}
@@ -155,6 +156,40 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .xmark b{position:absolute;right:-30%;top:-34%;font:700 1.1rem/1 var(--body);color:#fff;background:var(--ink);width:1.5em;height:1.5em;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .xmark.gold svg{filter:drop-shadow(0 0 6px rgba(255,200,87,.9))}
 
+/* the search: a dark room, a torch, tap where it's hidden */
+.stage{position:relative;height:min(54dvh,560px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 0 0 5px #FFF6E6,0 18px 36px rgba(10,5,30,.5);touch-action:none;cursor:crosshair;--x:50%;--y:62%;--r:26%;background:#0E0B22}
+.stage[hidden]{display:none}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;user-select:none}
+.stage .dark{filter:brightness(.2) saturate(.6)}
+.stage .lit{filter:brightness(1.15) saturate(1.1);-webkit-mask-image:radial-gradient(var(--r) calc(var(--r) * .5625) at var(--x) var(--y),#000 55%,transparent 100%);mask-image:radial-gradient(var(--r) calc(var(--r) * .5625) at var(--x) var(--y),#000 55%,transparent 100%)}
+.stage.win{--r:160%;transition:--r 1s}
+.stage.win .lit{transition:-webkit-mask-size 1s}
+.stage .glow{position:absolute;width:30%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,120,.55),transparent);opacity:0;transition:opacity .8s;pointer-events:none}
+.stage.hint .glow{opacity:1;animation:pulse2 1.4s ease-in-out infinite}
+@keyframes pulse2{50%{transform:translate(-50%,-50%) scale(1.25)}}
+.stage .ping{position:absolute;transform:translate(-50%,-50%);font:700 1.2rem/1 var(--body);color:#fff;text-shadow:0 1px 4px #000;pointer-events:none;animation:pingout 1.2s ease-out forwards}
+@keyframes pingout{to{opacity:0;transform:translate(-50%,-120%)}}
+.stage .hand{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font:700 1.2rem/1 var(--hand);color:#fff;background:rgba(42,31,92,.8);padding:5px 12px 6px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+.stage.moved .hand{opacity:0}
+.say{font:700 1.45rem/1.1 var(--hand);color:var(--accent-dark);min-height:1.1em}
+.say:empty{display:none}
+.found[hidden],.after[hidden]{display:none}
+.after{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.digit{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink)}
+.digit[hidden]{display:none}
+.digit b,.dial,.num{display:inline-flex;align-items:center;justify-content:center;width:44px;height:54px;border-radius:10px;font:400 1.9rem/1 var(--display);color:var(--ink);background:#FFF9EE;box-shadow:inset 0 0 0 2px var(--paper-line),0 3px 0 #E2CFAE;transform:rotate(-3deg)}
+.lockui{display:flex;flex-direction:column;align-items:center;gap:10px}
+.lockui[hidden]{display:none}
+.dials{display:flex;gap:8px}
+.dial{border:0;cursor:pointer;transform:none;background:linear-gradient(#FFF6DC,#F1D78E 50%,#E5C46A);box-shadow:inset 0 0 0 2px #C9A24A,0 3px 0 #9C7A2A}
+.dials.bad{animation:shake .5s}
+.padlock{position:absolute;left:39%;top:58%;width:22%;aspect-ratio:1/1.15;z-index:4;transition:transform .9s cubic-bezier(.5,-.3,.6,1),opacity .4s .6s;pointer-events:none}
+.padlock .shackle{position:absolute;left:20%;right:20%;top:-28%;height:50%;border:5px solid #B8923A;border-bottom:0;border-radius:40px 40px 0 0;transition:transform .35s}
+.padlock .lbody{position:absolute;left:0;right:0;bottom:0;height:72%;border-radius:18%;background:linear-gradient(160deg,#F7E3A1,#D4AE52 55%,#9C7A2A);box-shadow:0 6px 10px rgba(0,0,0,.4)}
+.padlock .hole{position:absolute;left:50%;top:38%;width:16%;height:34%;margin-left:-8%;border-radius:50% 50% 30% 30%;background:#4A3511}
+.padlock.open .shackle{transform:translateY(-34%)}
+.padlock.gone{transform:translateY(160%) rotate(28deg);opacity:0}
+
 /* clue header */
 .clue{display:flex;flex-direction:column;align-items:center;gap:4px}
 
@@ -253,6 +288,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .jar{width:min(22vw,58dvh*.8)}
   .book{width:min(34vw,60dvh*1.37)}
   .boxart{width:min(26vw,50dvh)}
+  .stage{height:min(80dvh,780px)}
   .hug{width:min(20vw,62dvh*.42)}
   h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
   .name{font-size:clamp(3.2rem,5vw,5rem)}
@@ -301,7 +337,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="words">
       <p class="kick">It's a little dark in here</p>
       <h2 tabindex="-1">Lights, please</h2>
-      <p class="sub" id="lightsSub">Pull the chain down to switch on the fairy lights.</p>
+      <p class="sub" id="lightsSub">Pull the chain down to switch on the lights.</p>
       <p class="whisper" id="lightsLine"></p>
       <button class="btn mint" id="pullBtn"><span class="lbl">Pull it 💡</span></button>
       <button class="btn" data-next id="afterLights" hidden><span class="lbl"></span></button>
@@ -328,16 +364,21 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <!-- 4. Clue: under the cushion (photos) -->
   <section class="scene two" data-scene="cushion" hidden>
     <div class="art">
-      <div class="sofa">
+      <div class="stage" data-stage="cushion"></div>
+      <div class="found" hidden><div class="sofa">
         <div class="pols" id="pols"></div>
         <button class="plain cushion" id="cushion" type="button" aria-label="Lift the cushion"><img src="img/cushion.webp" alt="A pink embroidered sofa cushion" width="620" height="559"><span class="halo"></span></button>
-      </div>
+      </div></div>
     </div>
     <div class="words">
-      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1">Under the cushion</h2></div>
-      <p class="riddle">Where we fight over the remote every night… look under a cushion.</p>
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" data-found="Under the cushion!"></h2></div>
+      <p class="riddle">Where we fight over the remote every night… something is hiding there.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
       <p class="sub" id="cushionSub">Lift the cushion (drag it away, or tap it).</p>
       <p class="count" id="polCount"></p>
+      <p class="digit" data-digit hidden></p>
+      </div>
       <button class="btn" data-next id="afterCushion" hidden><span class="lbl"></span></button>
     </div>
   </section>
@@ -345,16 +386,21 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <!-- 5. Clue: behind the photo frame (reasons) -->
   <section class="scene two" data-scene="frame" hidden>
     <div class="art">
-      <div class="wall">
+      <div class="stage" data-stage="frame"></div>
+      <div class="found" hidden><div class="wall">
         <button class="plain frame" id="frame" type="button" aria-label="Tilt the photo frame"><span class="win" id="win"></span><img src="img/frame.webp" alt="A carved wooden photo frame" width="640" height="872"><span class="halo"></span></button>
         <button class="plain env" id="env" type="button" aria-label="Open the envelope" tabindex="-1"><img src="img/envelope.webp" alt="A sealed envelope" width="520" height="372"></button>
-      </div>
+      </div></div>
     </div>
     <div class="words">
-      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1">Behind the photo frame</h2></div>
-      <p class="riddle" id="frameRiddle">We smile at it every day. Look behind it.</p>
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" data-found="Behind the photo frame!"></h2></div>
+      <p class="riddle" id="frameRiddle">We smile at it every day. It hangs on the wall.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
       <div class="note" id="frameNote" aria-live="polite"><span class="tag" id="frameTag"></span><span class="big" id="frameText"></span><span class="hint" id="frameHint">Tilt the frame on its nail (drag it, or tap it).</span></div>
       <p class="count" id="frameCount"></p>
+      <p class="digit" data-digit hidden></p>
+      </div>
       <button class="btn" data-next id="afterFrame" hidden><span class="lbl"></span></button>
     </div>
   </section>
@@ -362,18 +408,23 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <!-- 6. Clue: in the cookie jar (a sweet note) -->
   <section class="scene two" data-scene="jar" hidden>
     <div class="art">
-      <div class="jar">
+      <div class="stage" data-stage="jar"></div>
+      <div class="found" hidden><div class="jar">
         <span class="scroll" id="scroll"></span>
         <img class="body" src="img/jar.webp" alt="A glass cookie jar full of cookies" width="620" height="774">
         <button class="plain lid" id="lid" type="button" aria-label="Twist the lid open"><img src="img/lid.webp" alt="" width="620" height="276"><span class="halo"></span></button>
-      </div>
+      </div></div>
     </div>
     <div class="words">
-      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1">In the cookie jar</h2></div>
-      <p class="riddle">Something sweet, kept just for you. Check the cookie jar.</p>
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" data-found="In the cookie jar!"></h2></div>
+      <p class="riddle">Something sweet, kept just for you, up on the kitchen shelf.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
       <p class="sub" id="jarSub">Twist the lid open (drag it up, or tap it).</p>
       <div class="paper" id="jarNote" hidden></div>
       <button class="btn mint" id="twistBtn"><span class="lbl">Twist it open 🍪</span></button>
+      <p class="digit" data-digit hidden></p>
+      </div>
       <button class="btn" data-next id="afterJar" hidden><span class="lbl"></span></button>
     </div>
   </section>
@@ -381,16 +432,22 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <!-- 7. Clue: inside a book (the letter) -->
   <section class="scene two" data-scene="book" hidden>
     <div class="art">
-      <div class="book" id="book">
+      <div class="stage" data-stage="book"></div>
+      <div class="found" hidden><div class="book" id="book">
         <img class="opened" src="img/book-open.webp" alt="The book lying open, a pressed rose between its pages" width="900" height="658">
         <button class="plain closed" id="bookBtn" type="button" aria-label="Open the book"><img src="img/book.webp" alt="A pink cloth-bound book" width="560" height="852" style="height:100%;width:auto;display:block"><span class="halo"></span></button>
-      </div>
+      </div></div>
     </div>
     <div class="words">
-      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" id="bookTitle">Inside a book</h2></div>
-      <p class="riddle" id="bookRiddle">Our story is my favourite one. Open the book.</p>
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" id="bookTitle" data-found="Inside a book!"></h2></div>
+      <p class="riddle" id="bookRiddle">Our story is my favourite one. It sits on the shelf with all the others.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
+      <p class="sub" id="bookSub">Open the book.</p>
       <div class="paper" id="letter" hidden></div>
       <button class="btn ghost" id="letterSkip" hidden><span class="lbl">Show it all</span></button>
+      <p class="digit" data-digit hidden></p>
+      </div>
       <button class="btn" data-next id="afterBook" hidden><span class="lbl"></span></button>
     </div>
   </section>
@@ -400,13 +457,20 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="art">
       <div class="boxart" id="boxart">
         <span class="rays"></span>
-        <button class="plain ringbox" id="ringbox" type="button" aria-label="Open the little box"><img class="c" src="img/box.webp" alt="A small red velvet ring box" width="520" height="504"><img class="o" src="img/box-open.webp" alt="The box open, a diamond ring inside" width="620" height="833"><span class="halo"></span></button>
+        <button class="plain ringbox" id="ringbox" type="button" aria-label="Open the little box"><img class="c" src="img/box.webp" alt="A small red velvet ring box" width="520" height="504"><img class="o" src="img/box-open.webp" alt="The box open, a diamond ring inside" width="620" height="833"><span class="halo" hidden id="boxHalo"></span></button>
+        <span class="padlock" id="padlock" aria-hidden="true"><i class="shackle"></i><i class="lbody"><i class="hole"></i></i></span>
       </div>
     </div>
     <div class="words">
       <p class="kick">The final secret</p>
       <h2 tabindex="-1" id="askTitle">Under the stars</h2>
-      <p class="sub" id="askSub">The last thing is waiting on the balcony. Open the little box.</p>
+      <p class="sub" id="askSub">The last thing is waiting on the balcony, but the little box is locked. Enter the four numbers you found on your hunt.</p>
+      <div class="lockui" id="lockUi">
+        <div class="dials" id="dials" role="group" aria-label="Lock code"></div>
+        <p class="count" id="haveNums"></p>
+        <button class="btn" id="unlockBtn"><span class="lbl">Unlock 🔓</span></button>
+        <p class="say" id="lockSay" aria-live="polite"></p>
+      </div>
       <p class="question" id="question" tabindex="-1"></p>
       <div class="askrow" id="askRow" hidden>
         <button class="btn" id="yesBtn"><span class="lbl">Yes! 💍</span></button>
@@ -453,6 +517,11 @@ const DEMO = {
   yesReply: "You just made me the luckiest person alive. I love you.",
   extra: { jar: "You're sweeter than every cookie in this jar. (I counted. I ate two.) Keep going, you're close." }
 };
+const DEFAULT_REASONS = ["You make every day feel like home","You believe in me, loudly","You still give me butterflies","Just… you"];
+const DEFAULT_CODE = "1402";
+/* where each clue hides in the dark room painting (room.webp): x, y as fractions, r as a fraction of the width */
+const SPOT = { cushion:[.47,.53,.13], frame:[.45,.19,.1], jar:[.73,.41,.09], book:[.44,.35,.09] };
+const NOPE = { cushion:"Not here. Somewhere we sit together?", frame:"Not here. Look higher, on the wall.", jar:"Not here. Think kitchen.", book:"Not here. Where do the books live?" };
 const DEFAULT_JAR = "You're sweeter than every cookie in this jar. Keep going, you're getting close.";
 const COAX = ["I'll let you have the last bite. Always.", "Lifetime supply of cookies. From that very jar.", "I'll never hog the blanket again. Mostly."];
 /* the X's on the painted map (fractions of the map picture) */
@@ -510,6 +579,9 @@ function build(d){
   const x = d.extra && typeof d.extra === "object" ? d.extra : {};
   if (id) C.photos = C.photos.filter(p => p.src);
   C.jar = t(x.jar).slice(0, 160) || DEFAULT_JAR;
+  C.code = /^\d{4}$/.test(t(x.code)) ? t(x.code) : DEFAULT_CODE;
+  if (!C.reasons.length) C.reasons = DEFAULT_REASONS;
+  if (!C.letter.length) C.letter = [C.to + ",", "Every clue tonight led to the same answer.", "It's you. It was always going to be you."];
   const n = /^\d{1,3}$/.test(C.number) ? +C.number : 0; C.years = n;
 
   document.title = "Someone hid something for " + C.to;
@@ -517,20 +589,18 @@ function build(d){
   $("#openLine").textContent = n ? `${n} year${n === 1 ? "" : "s"} of us, and one more surprise` : "";
 
   /* the clues that have something to hide */
-  clues = [];
-  if (C.photos.length) clues.push("cushion");
-  if (C.reasons.length) clues.push("frame");
-  clues.push("jar");
-  if (C.letter.length) clues.push("book");
+  clues = ["cushion", "frame", "jar", "book"];   // always four clues: each one gives one number of the lock code
   seq = ["open", "lights", "map", ...clues, "ask", "end"];
-  const label = s => clues.includes(s) ? `Clue ${clues.indexOf(s) + 1}: ${CLUE_NAME[s]}` : { lights:"Step inside", map:"Read the map", ask:"To the balcony", end:"Finish" }[s];
+  const label = s => clues.includes(s) ? `Find clue ${clues.indexOf(s) + 1}` : { lights:"Step inside", map:"Read the map", ask:"To the balcony", end:"Finish" }[s];
   $$("[data-scene]").forEach(sc => {
     const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl"), k = sc.querySelector("[data-clueno]");
     if (b && i > -1 && seq[i + 1]) b.textContent = label(seq[i + 1]);
     if (k) k.textContent = `Clue ${clues.indexOf(sc.dataset.scene) + 1} of ${clues.length}`;
+    const h = sc.querySelector("[data-found]"); if (h) h.textContent = "Find it in the dark";
   });
   const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
 
+  clues.forEach(buildSearch);
   buildOpen(); buildLights(); buildMap(); buildCushion(); buildFrame(); buildJar(); buildBook(); buildAsk();
   if (!coarse){
     $("#cushionSub").textContent = "Lift the cushion (drag it away, or click it).";
@@ -570,6 +640,7 @@ function go(name){
   const sc = document.querySelector(`[data-scene="${name}"]`), h = sc.querySelector("h1,h2");
   if (h && !isPreview) h.focus({ preventScroll: true });
   if (name === "end"){ confetti(true); hearts(60); chimeUp(); }
+  if (name === "ask") resetDials();
 }
 function nextScene(){ ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n) go(n); }
 $$("[data-next]").forEach(b => b.addEventListener("click", nextScene));
@@ -704,8 +775,8 @@ async function pull(){
   document.body.classList.add("lit");
   if (ctx) for (let i = 0; i < 12; i++) ding(hz(74 + [0,4,7,12,7,4,2,5,9,14,12,16][i]), i * .15, .05);
   startMusic();
-  $("#lightsSub").textContent = "There. Now you can see where I hid everything.";
-  await sleep(reduce ? 0 : 1600); $("#lightsLine").textContent = "Welcome home. ✨";
+  $("#lightsSub").textContent = "Only the fairy lights work… the big light is broken. You'll have to search with a torch. 🔦";
+  await sleep(reduce ? 0 : 1600); $("#lightsLine").textContent = "Good luck, detective. ✨";
   showNext($("#afterLights"));
 }
 
@@ -730,10 +801,74 @@ async function unroll(){
 }
 const found = new Set();
 
+/* ---------- the search: a dark room, a torch, tap where you think it's hidden ---------- */
+const searching = {};
+function buildSearch(clue){
+  const st = document.querySelector(`[data-stage="${clue}"]`), [sx, sy] = SPOT[clue];
+  st.innerHTML = `<img class="dark" src="img/room.webp" alt=""><img class="lit" src="img/room.webp" alt=""><span class="glow" style="left:${sx * 100}%;top:${sy * 100}%"></span><span class="hand">${coarse ? "drag the torch · tap to search" : "move the torch · click to search"}</span>`;
+  st.tabIndex = 0; st.setAttribute("role", "application"); st.setAttribute("aria-label", "A dark room. Move the torch and tap where you think the clue is hidden. Arrow keys move the torch, Enter searches.");
+  const S = searching[clue] = { misses: 0, done: false, x: .5, y: .62 };
+  const at = (e) => { const r = st.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]; };
+  const put = (x, y) => { S.x = Math.max(0, Math.min(1, x)); S.y = Math.max(0, Math.min(1, y)); st.style.setProperty("--x", S.x * 100 + "%"); st.style.setProperty("--y", S.y * 100 + "%"); };
+  let p0 = null;
+  st.addEventListener("pointerdown", e => { if (S.done) return; e.preventDefault(); ensureAudio(); p0 = [e.clientX, e.clientY]; st.setPointerCapture(e.pointerId); put(...at(e)); });
+  st.addEventListener("pointermove", e => { if (S.done) return; if (p0 || !coarse) put(...at(e)); if (p0 && Math.hypot(e.clientX - p0[0], e.clientY - p0[1]) > 12) st.classList.add("moved"); });
+  st.addEventListener("pointerup", e => { if (S.done || !p0) return; const tap = Math.hypot(e.clientX - p0[0], e.clientY - p0[1]) < 12; p0 = null; if (tap) guess(clue, ...at(e)); });
+  st.addEventListener("pointercancel", () => p0 = null);
+  st.addEventListener("keydown", e => {
+    const k = { ArrowLeft:[-.05,0], ArrowRight:[.05,0], ArrowUp:[0,-.04], ArrowDown:[0,.04] }[e.key];
+    if (k){ e.preventDefault(); put(S.x + k[0], S.y + k[1]); st.classList.add("moved"); }
+    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); guess(clue, S.x, S.y); }
+  });
+  S.put = put;
+}
+function guess(clue, x, y){
+  const S = searching[clue]; if (S.done) return;
+  const st = document.querySelector(`[data-stage="${clue}"]`), say = document.querySelector(`[data-scene="${clue}"] [data-say]`);
+  const [sx, sy, r] = SPOT[clue], w = st.clientWidth, h = st.clientHeight;
+  const d = Math.hypot((x - sx) * w, (y - sy) * h) / w;
+  S.put(x, y);
+  if (d <= r){ return foundIt(clue); }
+  S.misses++;
+  const other = clues.find(c => c !== clue && Math.hypot((x - SPOT[c][0]) * w, (y - SPOT[c][1]) * h) / w <= SPOT[c][2]);
+  const line = other ? "Ooh, something's there… but that's for another clue." : d < r * 2 ? "So warm! You're really close. 🔥" : d < r * 3.6 ? "Warmer…" : S.misses > 2 ? NOPE[clue] : ["Cold. Nothing here. ❄️", "Brrr, cold.", "Nope, just dust."][S.misses % 3];
+  say.textContent = line; pop(say);
+  const pg = document.createElement("span"); pg.className = "ping"; pg.textContent = d < r * 2 ? "🔥" : d < r * 3.6 ? "♨" : "❄"; pg.style.left = x * 100 + "%"; pg.style.top = y * 100 + "%";
+  st.appendChild(pg); setTimeout(() => pg.remove(), 1300);
+  if (ctx) ding(d < r * 2 ? 988 : d < r * 3.6 ? 784 : 392, 0, .06);
+  if (S.misses >= 3 && !st.classList.contains("hint")){ st.classList.add("hint"); setTimeout(() => { say.textContent = "Psst… see that soft glow? 👀"; pop(say); }, 1400); }
+}
+async function foundIt(clue){
+  const S = searching[clue]; S.done = true; ensureAudio();
+  const sc = document.querySelector(`[data-scene="${clue}"]`), st = sc.querySelector("[data-stage]"), say = sc.querySelector("[data-say]");
+  st.classList.add("win"); say.textContent = "Found it! 🎉"; pop(say);
+  if (ctx){ [1175, 1480, 1760].forEach((f, i) => ding(f, i * .08, .09)); }
+  const r = st.getBoundingClientRect(); sparkleXY(r.left + SPOT[clue][0] * r.width, r.top + SPOT[clue][1] * r.height);
+  await sleep(reduce ? 0 : 1300);
+  st.hidden = true; const f = sc.querySelector(".found"); f.hidden = false; pop(f);
+  const h = sc.querySelector("[data-found]"); h.textContent = h.dataset.found;
+  sc.querySelector(".riddle").hidden = true; say.textContent = "";
+  sc.querySelector(".after").hidden = false;
+}
+function finishClue(clue){
+  if (found.has(clue)) return; found.add(clue);
+  const sc = document.querySelector(`[data-scene="${clue}"]`), i = clues.indexOf(clue), dg = sc.querySelector("[data-digit]");
+  dg.innerHTML = `Number ${i + 1} of the lock code: <b></b>`; dg.querySelector("b").textContent = C.code[i]; dg.hidden = false; pop(dg);
+  if (ctx) ding(1568, .1, .1);
+  showNext(sc.querySelector("[data-next]"));
+}
+async function autoFind(clue){   // homepage showcase: sweep the torch, one miss, then the right spot
+  const S = searching[clue], [sx, sy] = SPOT[clue], wx = sx > .5 ? .2 : .78, wy = .75;
+  const glide = async (x, y) => { const x0 = S.x, y0 = S.y; for (let k = 1; k <= 20; k++){ S.put(x0 + (x - x0) * k / 20, y0 + (y - y0) * k / 20); await sleep(40); } };
+  document.querySelector(`[data-stage="${clue}"]`).classList.add("moved");
+  await glide(wx, wy); guess(clue, wx, wy); await sleep(1100); await glide(sx, sy); await sleep(300); guess(clue, sx, sy); await sleep(1500);
+}
+
 /* ---------- 4. under the cushion: the photos ---------- */
 let cushionOff = false, polSeen = 0;
+const NO_PHOTO = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'><defs><linearGradient id='g' x2='0' y2='1'><stop offset='0' stop-color='#F7C6D3'/><stop offset='1' stop-color='#FCE7C7'/></linearGradient></defs><rect width='300' height='300' fill='url(#g)'/><path d='M150 238C80 188 52 150 52 112 52 82 76 62 102 62c20 0 38 12 48 30 10-18 28-30 48-30 26 0 50 20 50 50 0 38-28 76-98 126Z' fill='#E8457A'/></svg>");
 function buildCushion(){
-  if (!C.photos.length) return;
+  if (!C.photos.length) C.photos = [{ src: NO_PHOTO, caption: "The best photo of us hasn't been taken yet" }];
   const rot = [-5, 4, -2, 6, -7];
   $("#pols").innerHTML = C.photos.map((p, i) => `<div class="pol" style="transform:rotate(${rot[i % 5]}deg);z-index:${10 - i}"><img alt=""><span></span></div>`).join("");
   $$("#pols .pol").forEach((el, i) => { const p = C.photos[i]; el.querySelector("img").src = p.src; el.querySelector("img").alt = p.caption || "One of our photos"; el.querySelector("span").textContent = p.caption || ""; });
@@ -761,14 +896,13 @@ async function nextPhoto(){
   if (polSeen === C.photos.length) finishCushion();
   polBusy = false;
 }
-function finishCushion(){ found.add("cushion"); $("#polCount").textContent += " · clue found ✓"; showNext($("#afterCushion")); }
+function finishCushion(){ finishClue("cushion"); }
 
 /* ---------- 5. behind the frame: the envelope of reasons ---------- */
 let tilted = false, reasonAt = 0;
 function buildFrame(){
-  if (!C.reasons.length) return;
   const w = $("#win"), p = C.photos[0];
-  if (p && p.src){ const im = new Image(); im.src = p.src; im.alt = p.caption || "Our photo"; w.appendChild(im); }
+  if (p && p.src && p.src !== NO_PHOTO){ const im = new Image(); im.src = p.src; im.alt = p.caption || "Our photo"; w.appendChild(im); }
   else { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} + ${ini(C.from)}` : "us"; w.appendChild(b); }
   dragOrTap($("#frame"), tilt, (dx, dy) => Math.abs(dx) > 30);
   $("#env").addEventListener("click", nextReason);
@@ -787,7 +921,7 @@ function nextReason(){
   $("#frameTag").textContent = `Reason ${i + 1}`; $("#frameText").textContent = C.reasons[i]; $("#frameHint").textContent = i < C.reasons.length - 1 ? "Tap the envelope for the next one." : "";
   pop($("#frameText")); ding(880 + i * 110, 0, .09); if (ctx) noise(.12, 3200, .05, 1);
   $("#frameCount").textContent = `${i + 1} of ${C.reasons.length} reasons`;
-  if (i === C.reasons.length - 1){ found.add("frame"); $("#frameCount").textContent = "That's why I love you. Clue found ✓"; chimeUp(); showNext($("#afterFrame")); }
+  if (i === C.reasons.length - 1){ $("#frameCount").textContent = "That's why I love you."; chimeUp(); finishClue("frame"); }
 }
 
 /* ---------- 6. the cookie jar: twist the lid, a rolled note pops out ---------- */
@@ -808,13 +942,12 @@ async function openJar(){
   await sleep(reduce ? 0 : 900);
   $("#jarSub").hidden = true; const box = $("#jarNote"); box.hidden = false; pop(box);
   await revealLines(box, () => true);
-  found.add("jar"); showNext($("#afterJar"));
+  finishClue("jar");
 }
 
 /* ---------- 7. inside a book: the letter ---------- */
 let bookOpen = false, letterRun = false;
 function buildBook(){
-  if (!C.letter.length) return;
   const lines = [...C.letter]; if (C.from) lines.push("— " + C.from);
   writeLines($("#letter"), lines, C.from ? lines.length - 1 : -1);
   dragOrTap($("#bookBtn"), openBook, (dx, dy) => Math.abs(dx) > 30);
@@ -822,19 +955,24 @@ function buildBook(){
 }
 async function openBook(){
   if (bookOpen) return; bookOpen = true; ensureAudio();
-  $("#book").classList.add("open"); $("#bookBtn").classList.add("done"); if (ctx){ noise(.4, 1200, .08, .7); setTimeout(() => noise(.3, 2600, .05, .7), 500); }
+  $("#bookSub").hidden = true; $("#book").classList.add("open"); $("#bookBtn").classList.add("done"); if (ctx){ noise(.4, 1200, .08, .7); setTimeout(() => noise(.3, 2600, .05, .7), 500); }
   await sleep(reduce ? 0 : 1100); sparkleAt($("#book")); ding(1319, 0, .08);
   $("#bookTitle").textContent = "A pressed rose, and a letter"; $("#bookRiddle").hidden = true;
   const box = $("#letter"); box.hidden = false; pop(box); $("#letterSkip").hidden = isAuto; letterRun = true;
   await revealLines(box, () => letterRun);
   showLetter();
 }
-function showLetter(){ $$("#letter p").forEach(p => p.classList.add("in")); $("#letterSkip").hidden = true; found.add("book"); if ($("#afterBook").hidden) showNext($("#afterBook")); }
+function showLetter(){ $$("#letter p").forEach(p => p.classList.add("in")); $("#letterSkip").hidden = true; finishClue("book"); }
 
 /* ---------- 8. the balcony: open the ring box, the question ---------- */
 let boxOpen = false, coaxed = 0, said = false;
 function buildAsk(){
   $("#question").textContent = C.question; $("#question").hidden = true;
+  $("#dials").innerHTML = [0,1,2,3].map(i => `<button class="dial" type="button" data-d="${i}" aria-label="Number ${i + 1}: 0">0</button>`).join("");
+  $$(".dial").forEach(b => { b.addEventListener("click", () => turnDial(b, 1)); b.addEventListener("keydown", e => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown"){ e.preventDefault(); turnDial(b, e.key === "ArrowUp" ? 1 : -1); } }); });
+  $("#unlockBtn").addEventListener("click", tryUnlock);
+  $("#ringbox").disabled = true;
   $("#ringbox").addEventListener("click", openBox);
   $("#yesBtn").addEventListener("click", sayYes);
   $("#coaxBtn").addEventListener("click", () => {
@@ -842,8 +980,25 @@ function buildAsk(){
     else sayYes();
   });
 }
+let unlocked2 = false;
+function resetDials(){ $("#haveNums").textContent = "Your numbers: " + clues.map((c, i) => found.has(c) ? C.code[i] : "?").join(" · "); }
+function turnDial(b, dir){
+  if (unlocked2) return; ensureAudio(); const v = (+b.textContent + dir + 10) % 10; b.textContent = v; b.setAttribute("aria-label", `Number ${+b.dataset.d + 1}: ${v}`);
+  if (ctx) noise(.03, 3200, .12, 4); $("#lockSay").textContent = "";
+}
+async function tryUnlock(){
+  if (unlocked2) return; ensureAudio();
+  const got = $$(".dial").map(b => b.textContent).join("");
+  if (got !== C.code){ const d = $("#dials"); d.classList.remove("bad"); void d.offsetWidth; d.classList.add("bad"); if (ctx) noise(.15, 300, .2, 2);
+    $("#lockSay").textContent = "Click… nope, still locked. Try the numbers in the order you found them."; return; }
+  unlocked2 = true; $("#lockSay").textContent = ""; $("#unlockBtn").hidden = true;
+  const pl = $("#padlock"); pl.classList.add("open"); if (ctx){ click(); ding(1568, .05, .08); }
+  await sleep(reduce ? 0 : 500); pl.classList.add("gone");
+  await sleep(reduce ? 0 : 700); $("#lockUi").hidden = true;
+  $("#askSub").textContent = "Unlocked! Now open the little box."; $("#ringbox").disabled = false; $("#boxHalo").hidden = false;
+}
 async function openBox(){
-  if (boxOpen) return; boxOpen = true; ensureAudio();
+  if (boxOpen || !unlocked2) return; boxOpen = true; ensureAudio();
   const r = $("#ringbox"); r.classList.add("shake", "done"); if (ctx) noise(.3, 900, .1, 2);
   await sleep(reduce ? 0 : 520); r.classList.remove("shake");
   $("#boxart").classList.add("open"); if (ctx){ noise(.08, 2400, .2, 3); [1568, 1976, 2349, 2794, 3136].forEach((f, i) => ding(f, .1 + i * .07, .07)); }
@@ -884,6 +1039,12 @@ function hearts(n){
     s: 7 + Math.random() * 9, c: ["#E8457A","#F49AB6","#FFC857","#B42D5E","#FFFFFF"][i % 5], w: Math.random() * 6, heart: true, life: 400 });
   run();
 }
+function sparkleXY(x, y){
+  if (reduce) return;
+  for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#FFC857","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
+  run();
+}
 function sparkleAt(el){
   if (reduce) return; const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
   for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
@@ -911,11 +1072,13 @@ async function runAutoplay(){
   await sleep(1600); await ring(); await sleep(1200); await readNote(); await sleep(1400);
   go("lights"); await sleep(900); await pull(); await sleep(1400);
   go("map"); await sleep(600); await unroll(); await sleep(1500);
-  if (clues.includes("cushion")){ go("cushion"); await sleep(800); await liftCushion(); await sleep(1300); for (let i = 1; i < C.photos.length; i++){ await nextPhoto(); await sleep(900); } await sleep(900); }
-  if (clues.includes("frame")){ go("frame"); await sleep(800); await tilt(); await sleep(1500); for (let i = 0; i < C.reasons.length; i++){ nextReason(); await sleep(1000); } await sleep(900); }
-  go("jar"); await sleep(800); await openJar(); await sleep(1500);
-  if (clues.includes("book")){ go("book"); await sleep(800); const p = openBook(); await sleep(4200); letterRun = false; await p; showLetter(); await sleep(1500); }
-  go("ask"); await sleep(1000); await openBox(); await sleep(1800); if (C.question){ await sayYes(); await sleep(1600); }
+  go("cushion"); await sleep(700); await autoFind("cushion"); await liftCushion(); await sleep(1100); for (let i = 1; i < C.photos.length; i++){ await nextPhoto(); await sleep(800); } await sleep(900);
+  go("frame"); await sleep(700); await autoFind("frame"); await tilt(); await sleep(1400); for (let i = 0; i < C.reasons.length; i++){ nextReason(); await sleep(900); } await sleep(900);
+  go("jar"); await sleep(700); await autoFind("jar"); await openJar(); await sleep(1300);
+  go("book"); await sleep(700); await autoFind("book"); { const p = openBook(); await sleep(3600); letterRun = false; await p; } showLetter(); await sleep(1300);
+  go("ask"); await sleep(1000);
+  for (const [i, b] of $$(".dial").entries()){ for (let k = 0; k < +C.code[i]; k++){ turnDial(b, 1); await sleep(90); } await sleep(200); }
+  await tryUnlock(); await sleep(900); await openBox(); await sleep(1800); if (C.question){ await sayYes(); await sleep(1600); }
   go("end");
   await sleep(4200);
   if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
