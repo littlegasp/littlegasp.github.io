@@ -43,7 +43,7 @@
       const f = document.createElement("footer");
       f.className = "site";
       f.innerHTML =
-        '<nav><a href="/terms.html">Terms</a><a href="/refund.html">Refunds</a><a href="/privacy.html">Privacy</a><a href="/contact.html">Contact</a><a href="' + IG + '" target="_blank" rel="noopener">Instagram</a></nav>' +
+        '<nav><a href="/about.html">About</a><a href="/terms.html">Terms</a><a href="/refund.html">Refunds</a><a href="/privacy.html">Privacy</a><a href="/contact.html">Contact</a><a href="' + IG + '" target="_blank" rel="noopener">Instagram</a></nav>' +
         '<p>Little Gasp, operated by Aniket Nandkumar Gurav, Mumbai, India · <a href="mailto:' + EMAIL + '">' + EMAIL + '</a></p>';
       body.appendChild(f);
     });
