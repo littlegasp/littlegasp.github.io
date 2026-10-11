@@ -194,7 +194,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .scene[data-scene="toll"]{justify-content:space-between;padding-bottom:0}
 .scene[data-scene="toll"]>.words{order:-1}
 .scene[data-scene="toll"]>.art{margin-top:auto}
-.tollart{position:relative;width:min(92vw,460px);height:min(40dvh,400px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:1.5%}
+.tollart{position:relative;width:min(92vw,460px);height:min(40dvh,400px);display:flex;align-items:flex-end;justify-content:flex-start;padding-bottom:1.5%;transform:translateX(-4%)}
 .tollart::before{content:"";position:absolute;left:0;right:-20%;bottom:0;height:8%;border-radius:50%;background:radial-gradient(closest-side,rgba(40,15,20,.42),transparent)}
 .booth{position:relative;height:82%;width:auto;flex:none;z-index:1}
 .arm{position:relative;height:40%;aspect-ratio:982/683;flex:none;margin-left:-3%;margin-right:-34%;border:0;padding:0;background:none;cursor:pointer;appearance:none;z-index:2}
@@ -266,6 +266,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .askrow[hidden]{display:none}
 
 /* 10. finale */
+#endTitle{font-size:clamp(2rem,9vw,2.8rem);overflow-wrap:anywhere}
 .ridefin{width:min(80vw,40dvh*.815,380px);animation:ridein 2.4s cubic-bezier(.2,.9,.3,1) both}
 .ridefin img{width:100%;height:auto;display:block;animation:rumble .12s linear infinite}
 @keyframes ridein{from{transform:translateX(-120vw)}}
@@ -287,12 +288,14 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .mapbtn{width:min(34vw,60dvh*1.5)}
   .pump{height:min(62dvh,560px)}
   .lane{height:min(74dvh,760px)}
-  .tollart{width:min(34vw,600px);height:min(66dvh,640px)}
+  .tollart{width:min(34vw,600px);height:min(66dvh,640px);transform:translateX(-30%)}
   .parked{width:min(28vw,64dvh*.815)}
   .lockart{width:min(26vw,56dvh)}
-  .ridefin{width:min(30vw,62dvh*.815)}
+  #endTitle{font-size:clamp(2rem,9vw,2.8rem);overflow-wrap:anywhere}
+.ridefin{width:min(30vw,62dvh*.815)}
   h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
   .name{font-size:clamp(3.2rem,5vw,5rem)}
+  #endTitle{font-size:clamp(2.4rem,3.2vw,3.6rem)}
   h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
 }
 @media (prefers-reduced-motion: reduce){
