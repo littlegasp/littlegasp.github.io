@@ -104,8 +104,25 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 
 /* 2. the wax seal */
 .env{position:relative;width:min(88vw,44dvh*1.33,460px);aspect-ratio:502/377;flex:none;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
-.env>img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 16px 22px rgba(20,8,20,.45));transition:transform 1s cubic-bezier(.5,0,.6,1),opacity 1s}
-.env.shake>img,.env.shake .seal{animation:tremble .12s linear infinite}
+.env{perspective:900px;filter:drop-shadow(0 16px 22px rgba(20,8,20,.45))}
+.eback,.epocket,.eflap{position:absolute;inset:0;border-radius:3px;transition:transform 1s cubic-bezier(.5,0,.6,1),opacity .9s}
+.eback{background:linear-gradient(180deg,#D9C7A4,#E9DCC2 60%);opacity:0}
+.epocket,.eflap{background:url(img/envelope.webp) center/100% 100% no-repeat}
+.epocket{z-index:3;clip-path:polygon(0 0,49.4% 57%,100% 0,100% 100%,0 100%)}
+.eflap{z-index:4;clip-path:polygon(0 0,100% 0,49.4% 57%);transform-origin:50% 0;transition:transform .8s cubic-bezier(.4,0,.2,1),filter .8s}
+.env.shake .epocket,.env.shake .eflap,.env.shake .seal{animation:tremble .12s linear infinite}
+.env.opened .eback{opacity:1}
+.env.opened .eflap{transform:rotateX(178deg);filter:brightness(.82) sepia(.2)}
+.env.out .eflap{z-index:1}
+.ecard{position:absolute;left:8%;right:8%;top:6%;bottom:8%;z-index:2;background:var(--paper);border-radius:4px;box-shadow:0 6px 16px rgba(20,8,20,.25);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;transition:transform 1.1s cubic-bezier(.3,1.1,.4,1);
+  background-image:repeating-linear-gradient(transparent 0 22px,var(--paper-line) 22px 23px)}
+.env.out .ecard{transform:translateY(-62%)}
+.env.lift .ecard{z-index:5;transform:translateY(-8%) scale(1.06)}
+.env.lift .epocket,.env.lift .eflap,.env.lift .eback{transform:translateY(55%) scale(.92);opacity:0}
+.ecard b{font:700 clamp(1.8rem,8vw,2.6rem)/1 var(--hand);color:var(--accent)}
+.ecard i{width:30px;height:27px;background:var(--berry);clip-path:path("M15 26C5 18 0 12.5 0 7.6 0 3.4 3.2 0 7.3 0 10.3 0 13 1.8 15 4.5 17 1.8 19.7 0 22.7 0 26.8 0 30 3.4 30 7.6 30 12.5 25 18 15 26Z")}
+.ecard span{font:700 1.15rem var(--hand);color:var(--muted)}
 @keyframes tremble{25%{transform:translate(-1px,1px) rotate(-.4deg)}75%{transform:translate(1px,-1px) rotate(.4deg)}}
 .seal{position:absolute;left:49.35%;top:50.46%;width:26.3%;aspect-ratio:1;transform:translate(-50%,-50%);border:0;padding:0;border-radius:50%;cursor:pointer;
   background:url(img/seal.webp) center/100% 100%;appearance:none;filter:drop-shadow(0 0 calc(var(--p,0) * 26px) rgba(255,170,90,calc(var(--p,0) * .95))) brightness(calc(1 + var(--p,0) * .35))}
@@ -118,12 +135,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   transform:translate(-50%,-50%);transition:transform 1.1s cubic-bezier(.3,.6,.4,1),opacity 1.1s ease .3s}
 .half.l{clip-path:polygon(0 0,52% 0,44% 22%,56% 40%,42% 58%,55% 78%,47% 100%,0 100%)}
 .half.r{clip-path:polygon(52% 0,100% 0,100% 100%,47% 100%,55% 78%,42% 58%,56% 40%,44% 22%)}
-.env.opened>img{transform:translateY(38%) scale(.9);opacity:0}
-.rise{position:absolute;left:12%;right:12%;top:8%;bottom:8%;background:var(--paper);border-radius:6px;box-shadow:0 14px 30px rgba(20,8,20,.35);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0;transform:translateY(30%) scale(.8);transition:all 1s cubic-bezier(.2,1.2,.4,1) .45s;pointer-events:none}
-.env.opened .rise{opacity:1;transform:none}
-.rise b{font:700 clamp(1.8rem,8vw,2.6rem)/1 var(--hand);color:var(--accent)}
-.rise span{font:600 .9rem var(--body);color:var(--muted)}
+
 .holdhint{font:700 1.5rem/1 var(--hand);color:var(--accent);min-height:1em}
 
 /* 3. the folds */
@@ -228,10 +240,15 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .bundle.untied .rib{display:none}
 .ribline{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
 .ribline path{fill:none;stroke:#C21F2E;stroke-width:13;stroke-linecap:round;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
-.lastletter{position:absolute;left:16%;right:16%;top:10%;bottom:14%;background:var(--paper);border-radius:6px;box-shadow:0 14px 30px rgba(20,8,20,.4);
+.lastletter{position:absolute;left:12%;right:12%;top:8%;bottom:10%;background:var(--paper);border-radius:6px;box-shadow:0 14px 30px rgba(20,8,20,.4);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px;opacity:0;transform:translateY(25%) scale(.7);transition:all 1s cubic-bezier(.2,1.2,.4,1) .4s;pointer-events:none}
 .bundle.untied .lastletter{opacity:1;transform:none}
-.lastletter b{font:700 clamp(1.7rem,7vw,2.3rem)/1 var(--hand);color:var(--accent)}
+.lastletter b{font:700 clamp(1.6rem,6.6vw,2.2rem)/1 var(--hand);color:var(--accent)}
+.lastletter p{font:700 clamp(1.25rem,5vw,1.6rem)/1.15 var(--hand);color:var(--inkwrite);text-align:center;max-width:92%}
+.lastletter .perch{position:absolute;right:-16%;top:-30%;width:52%;height:auto;transform:rotate(8deg);filter:drop-shadow(0 8px 10px rgba(20,8,20,.35));animation:bob 3s ease-in-out infinite}
+.lastletter .rose{position:absolute;left:-12%;bottom:-10%;width:30%;height:auto;transform:rotate(-28deg);filter:drop-shadow(0 4px 4px rgba(20,8,20,.3))}
+.lastletter .wseal{position:absolute;right:8%;bottom:6%;width:20%;height:auto;transform:rotate(-12deg)}
+.lastletter{background-image:repeating-linear-gradient(transparent 0 26px,var(--paper-line) 26px 27px)}
 .lastletter i{width:34px;height:30px;background:var(--berry);clip-path:path("M17 29C6 20 0 14 0 8.5 0 3.8 3.6 0 8.2 0 11.6 0 14.6 2 17 5 19.4 2 22.4 0 25.8 0 30.4 0 34 3.8 34 8.5 34 14 28 20 17 29Z")}
 .q{font:600 clamp(1.1rem,4.6vw,1.35rem)/1.35 var(--body);color:var(--ink);max-width:28ch}
 .ask-btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
@@ -320,8 +337,10 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <section class="scene two" data-scene="seal" hidden>
     <div class="art">
       <div class="env" id="env">
-        <img src="img/envelope.webp" alt="" width="502" height="377">
-        <div class="rise" aria-hidden="true"><b id="riseTo"></b><span>open me slowly</span></div>
+        <div class="eback"></div>
+        <div class="ecard" aria-hidden="true"><b id="riseTo"></b><i></i><span>open me slowly</span></div>
+        <div class="epocket" role="img" aria-label="A cream envelope tied with twine, sealed with a red wax heart"></div>
+        <div class="eflap"></div>
         <svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="bgc" cx="50" cy="50" r="45"/><circle cx="50" cy="50" r="45"/></svg>
         <button class="seal" id="seal" type="button" aria-label="Press and hold the wax seal to open the letter"></button>
       </div>
@@ -461,7 +480,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <div class="bundle" id="bundle">
         <img src="img/bundle.webp" alt="A stack of letters tied with a red silk ribbon" width="583" height="578">
         <svg class="ribline" id="ribline" aria-hidden="true"><path id="ribpath" d=""/></svg>
-        <div class="lastletter" aria-hidden="true"><b id="lastTo"></b><i></i></div>
+        <div class="lastletter" aria-hidden="true"><img class="perch" src="img/dove.webp" alt="" width="507" height="438"><b id="lastTo"></b><p id="lastQ"></p><i></i><img class="rose" src="img/flower-1.webp" alt=""><img class="wseal" src="img/seal.webp" alt=""></div>
         <button class="rib" id="rib" type="button" aria-label="Pull the ribbon to untie the letters"></button>
       </div>
     </div>
@@ -619,6 +638,7 @@ function build(d){
 
   $("#riseTo").textContent = "For " + C.to;
   $("#lastTo").textContent = C.to + ",";
+  $("#lastQ").textContent = C.question;
   buildFolds(); buildLetter(); buildFlowers(); buildBox(); buildSky(); buildReply();
   $("#question").textContent = C.question;
   $("#endPre").textContent = C.question ? "You said yes." : "";
@@ -752,15 +772,12 @@ function crack(){
   if (cracked) return; cracked = true; holding = false;
   const env = $("#env"); env.classList.remove("shake"); env.style.setProperty("--p", 0);
   const s = $("#seal"); s.hidden = true; $(".ring").style.display = "none";
-  const l = document.createElement("div"), r = document.createElement("div"); l.className = "half l"; r.className = "half r";
-  env.append(l, r);
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    l.style.transform = "translate(-160%,40%) rotate(-50deg)"; l.style.opacity = "0";
-    r.style.transform = "translate(60%,50%) rotate(45deg)"; r.style.opacity = "0";
-  }));
+  // the painted wax stays on the flap and the pocket, split along the flap's edge, like a real broken seal
   if (ctx){ noise(.25, 700, .3, .8); noise(.12, 4000, .12, 2); bell(hz(62), ctx.currentTime + .05, .1, 2); }
   const b = s.getBoundingClientRect(); petalBurst(b.left + b.width / 2, b.top + b.height / 2);
-  setTimeout(() => env.classList.add("opened"), 250);
+  setTimeout(() => { env.classList.add("opened"); if (ctx) noise(.5, 900, .1, .5); }, 350);
+  setTimeout(() => { env.classList.add("out"); if (ctx) noise(.6, 2200, .06, .5); }, 1200);
+  setTimeout(() => env.classList.add("lift"), 2500);
   $("#holdHint").textContent = "";
   $("#sealTitle").textContent = "It's open";
   $("#sealSub").textContent = "Careful, it's folded small.";
@@ -983,6 +1000,7 @@ function skyFinish(){
 }
 
 /* ---------- 8a. secret P.S.: invisible ink shows where the candle warms the paper ---------- */
+const coarse = matchMedia("(pointer: coarse)").matches;
 const GW = 24, GH = 14; let heat = new Float32Array(GW * GH), heatCv = null, tmpCv = null, inkMask = null, psDone = false, psRunning = false, inkCv = null, flame = null, psTimer = null;
 function startPs(){
   if (psRunning || psDone) return; psRunning = true;
@@ -1090,6 +1108,8 @@ function sayYes(){ ensureAudio(); hearts(50); go(seq[seq.indexOf("ask") + 1] || 
 let sealed = false, kisses = 0, sent = false;
 function buildReply(){
   $("#replyText").placeholder = C.from ? `Dear ${C.from},…` : "Write back…";
+  if (!coarse){ $("#sealHint").textContent = "click and hold the wax ↓";
+    $("#replySub").textContent = "Write a few words, click and hold the wax to press your seal, and click the lipstick for kisses. The dove will carry it."; }
   const w = $("#wax"); let p = 0, hold = false, lt = 0;
   const tick = now => { const dt = Math.min(64, now - (lt || now)); lt = now; if (sealed) return;
     p = Math.max(0, Math.min(1, p + (hold ? dt / 1000 : -dt / 500))); w.style.setProperty("--p", p.toFixed(3));
@@ -1140,7 +1160,7 @@ async function sendReply(){
   note.textContent = isPreview ? "Preview only: on the real link, their reply comes to your email."
     : `On its way! ${C.from ? C.from + " will have it in a moment." : "It'll arrive in a moment."}`;
   setTimeout(chimeUp, 500);
-  showNext($("#afterReply"));
+  setTimeout(() => go("end"), isAuto ? 1200 : 2600);
 }
 function reply(kind, text){   // only real, paid links send anything
   if (!id || isPreview || isAuto) return Promise.resolve(true);
