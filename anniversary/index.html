@@ -95,7 +95,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .drop{filter:drop-shadow(0 14px 18px rgba(40,10,30,.35))}
 
 /* 1. helmets */
-.stand{position:relative;width:min(70vw,40dvh*.693,340px);aspect-ratio:720/1039}
+.stand{position:relative;width:min(70vw,40dvh*.693,340px);aspect-ratio:720/1042}
 .stand>img{width:100%;height:100%;display:block}
 .helmet{position:absolute;width:26%;border:0;padding:0;background:none;cursor:pointer;appearance:none;transition:left .9s cubic-bezier(.5,-.3,.4,1.3),top .9s cubic-bezier(.5,-.3,.4,1.3),width .9s,transform .9s}
 .helmet img{width:100%;height:auto;display:block;pointer-events:none;transition:opacity .25s .75s}
@@ -107,8 +107,14 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .helmet.on{cursor:default}
 #hPink{left:-16%;top:-10%;width:25%;transform:rotate(-14deg)}
 #hYellow{left:86%;top:-14%;width:27.6%;transform:rotate(12deg)}
-#hPink.on{left:17.6%;top:5.4%;width:25%;transform:rotate(-9deg)}
-#hYellow.on{left:33.2%;top:-1.2%;width:27.6%;transform:rotate(7deg)}
+#hPink.on{left:15.5%;top:7.6%;width:18.5%;transform:rotate(-6deg)}
+#hYellow.on{left:41%;top:-.6%;width:18.5%;transform:rotate(4deg)}
+.helmet.on{opacity:0;transition:left .9s cubic-bezier(.5,-.3,.4,1.3),top .9s cubic-bezier(.5,-.3,.4,1.3),width .9s,transform .9s,opacity .3s .8s}
+/* the same painting with the helmets really worn, revealed one head at a time as each helmet lands */
+.hl{position:absolute;left:0;top:0;width:100%;height:auto;opacity:0;transition:opacity .45s .75s;pointer-events:none}
+.hl.show{opacity:1}
+.hlp{-webkit-mask-image:radial-gradient(16% 11.5% at 25.2% 16.4%,#000 66%,transparent 100%);mask-image:radial-gradient(16% 11.5% at 25.2% 16.4%,#000 66%,transparent 100%)}
+.hly{-webkit-mask-image:radial-gradient(17% 12.5% at 49% 9.4%,#000 66%,transparent 100%);mask-image:radial-gradient(17% 12.5% at 49% 9.4%,#000 66%,transparent 100%)}
 .helmet:not(.on){animation:bob 2.6s ease-in-out infinite}
 
 /* 2. kick-start */
@@ -307,9 +313,11 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   <section class="scene two" data-scene="open">
     <div class="art">
       <div class="stand">
-        <img src="img/couple.webp" alt="A couple holding hands beside a mint-green vintage scooter" width="720" height="1039">
-        <button class="helmet" id="hPink" type="button" aria-label="Put the pink helmet on her"><img src="img/helmet-pink.webp" alt="" width="300" height="344"><img class="worn" src="img/helmet-pink-on.webp" alt="" width="300" height="344"><span data-hn="0"></span></button>
-        <button class="helmet" id="hYellow" type="button" aria-label="Put the yellow helmet on him"><img src="img/helmet-yellow.webp" alt="" width="300" height="344"><img class="worn" src="img/helmet-yellow-on.webp" alt="" width="300" height="344"><span data-hn="1"></span></button>
+        <img src="img/couple.webp" alt="A couple holding hands beside a mint-green vintage scooter" width="720" height="1042">
+        <img class="hl hlp" id="hlPink" src="img/couple-helmets.webp" alt="" width="720" height="1054">
+        <img class="hl hly" id="hlYellow" src="img/couple-helmets.webp" alt="" width="720" height="1054">
+        <button class="helmet" id="hPink" type="button" aria-label="Put the pink helmet on her"><img src="img/helmet-pink.webp" alt="" width="300" height="344"><span data-hn="0"></span></button>
+        <button class="helmet" id="hYellow" type="button" aria-label="Put the yellow helmet on him"><img src="img/helmet-yellow.webp" alt="" width="300" height="344"><span data-hn="1"></span></button>
       </div>
     </div>
     <div class="words">
@@ -737,7 +745,7 @@ $("#muteBtn").addEventListener("click", e => {
 let helmetsOn = 0;
 $$(".helmet").forEach(h => h.addEventListener("click", () => {
   if (h.classList.contains("on")) return; ensureAudio(); unlockSong();
-  h.classList.add("on"); helmetsOn++;
+  h.classList.add("on"); helmetsOn++; $(h.id === "hPink" ? "#hlPink" : "#hlYellow").classList.add("show");
   if (ctx) setTimeout(() => { noise(.08, 700, .2, 1.5); ding(880 + helmetsOn * 220, 0, .08); }, 850);
   $("#helmetCount").textContent = helmetsOn === 2 ? "Helmets on. Safety first, romance second." : "1 of 2 on";
   if (helmetsOn === 2){ setTimeout(() => sparkleAt(h), 900); showNext($("#openBtn")); }
