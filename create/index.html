@@ -232,7 +232,7 @@ textarea{min-height:170px;resize:vertical}
   </div>
 </div>
 
-<script src="ideas.js?v=2"></script>
+<script src="ideas.js?v=3"></script>
 <script>
 /* ================= SETTINGS ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";   // same /exec URL as in the birthday template
@@ -323,6 +323,30 @@ const DESIGNS = {
     letterHint: "Ananya,\n\nI've been replaying it all day, and you were right...",
     questionHint: "e.g. Coffee tomorrow, my treat, and I'll listen this time?", yesHint: "e.g. Thank you. I'll be there at 6, with your favourite."
   },
+  "anniversary": {
+    occasion: "anniversary", forWho: ["wife","husband"],   // writing ideas (create/ideas.js); the pick also sets whose name goes on which helmet
+    genderFromWho: true,
+    name: "Memory Lane",
+    path: "/anniversary/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    song: "A bright, happy scooter-ride tune already plays on this design.",
+    numberLabel: "Years together", numberHint: "e.g. 7",
+    reasonsTitle: "Reasons that fill the fuel tank (one per bar)",
+    reasonsExamples: ["You laugh at my worst jokes","You hold my hand in every crowd","You remember how I take my chai","You make Mondays feel like Sundays","You believe in me, loudly","Just… you"],
+    extras: [
+      { key: "milestones", type: "list", count: 8, max: 80, label: "Milestones on Memory Lane (optional)",
+        hint: "They drive the scooter up a winding road; every milestone stone is one moment. Start with the year, then a colon. Leave empty and we'll use 'Year 1, Year 2…' with gentle lines.",
+        examples: ["2019: We met at the college fest","2020: Our first ride to Lonavala","2021: You met my family","2022: The proposal by the sea","2023: Our wedding, the best day","2024: Our own little home","Today: Still choosing you"] },
+      { key: "promises", type: "list", count: 5, max: 80, label: "Promises at the toll naka (optional)",
+        hint: "Every time they lift the barrier, one promise appears. Leave empty and we'll use sweet ones of our own.",
+        examples: ["The window seat is always yours","I'll carry the umbrella every monsoon","The last bite of everything is yours","I'll always let you choose the music","I'll never stop being your co-rider"] }
+    ],
+    letterHint: "Priya,\n\nSeven years ago you got on the back of my scooter and never got off...",
+    questionHint: "e.g. Will you keep riding with me, forever?", yesHint: "e.g. Then hold on tight. The best roads are still ahead."
+  },
   "love-letter": {
     occasion: "love", forWho: ["wife","husband","girlfriend","boyfriend"],   // writing ideas (create/ideas.js)
     name: "Sealed with Love",
@@ -392,7 +416,7 @@ function payload(){
     letter: state.letter.split(/\n+/).map(l => l.trim()).filter(Boolean),
     question: state.question.trim(), yesReply: state.yesReply.trim(),
     song: D.song && state.song ? { src: state.song.src, bpm: state.song.bpm, offset: state.song.offset } : null,
-    theme: D.themes ? (state.theme === "him" ? "him" : "her") : "",
+    theme: (D.themes || D.genderFromWho) ? (state.theme === "him" ? "him" : "her") : "",
     extra: extraPayload()
   };
 }
@@ -508,7 +532,7 @@ function pickFor(key){
   state.forWho = key; ideaOff.reasons = ideaOff.captions = 0;
   const r = REL[key];
   let reload = false;
-  if (r && D.themes && r.g && state.theme !== r.g){ state.theme = r.g; renderTheme(); reload = true; }   // Make a Wish: pink / blue
+  if (r && (D.themes || D.genderFromWho) && r.g && state.theme !== r.g){ state.theme = r.g; renderTheme(); reload = true; }   // Make a Wish: pink / blue; Memory Lane: whose helmet
   if (r && (D.extras || []).some(f => f.key === "relation")){                                          // Diwali: partner / family / sibling
     const rel = r.kind === "partner" ? "partner" : r.kind === "sibling" ? "sibling" : "family";
     if (state.extra.relation !== rel){ state.extra.relation = rel; renderExtras(); reload = true; }

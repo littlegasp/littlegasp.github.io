@@ -150,6 +150,24 @@ window.LG_IDEAS = {
     }
   },
 
+  anniversary: {
+    reasons: {
+      partner: ["You laugh at my worst jokes","You hold my hand in every crowd","You remember how I take my chai","You make Mondays feel like Sundays","You believe in me, loudly","You still give me butterflies","You make every road trip better","Home is wherever you are","Just… you"]
+    },
+    captions: { partner: ["Our first trip","The day we said yes","Two chais, one table","That rainy evening","Our first home","Road trip, no plan","Still us"] },
+    letters: {
+      partner: [
+        ["Romantic", "{to},", "Years ago you got on the back of my scooter and never got off. Best decision we ever made.", "We've had potholes, wrong turns and a lot of traffic, but I'd ride every kilometre again if you're the one holding on.", "Here's to the next milestone, and every chai stop on the way."],
+        ["Playful", "{to},", "Happy anniversary to my favourite co-rider, navigator and snack supplier.", "You still can't read a map and I still miss the turn, and somehow we always get there.", "Same time next year? I'll bring the chai."],
+        ["Deep", "{to},", "Some people spend their whole life looking for home. I found mine sitting next to me.", "Thank you for every year, the easy ones and the hard ones.", "I'd choose you again, on every road, in every lifetime."],
+        ["Short", "{to},", "Another year, another milestone, the same lucky me.", "Happy anniversary. I love you more than all our roads put together."]
+      ]
+    },
+    asks: {
+      partner: [["Will you keep riding with me, forever?", "Then hold on tight. The best roads are still ahead."], ["Anniversary dinner tonight, just us?", "8 pm. Wear the thing I like."], ["One more year of chai stops with me?", "Kettle's already on."], ["Will you be my co-rider for the next fifty years?", "Deal. You choose the music."]]
+    }
+  },
+
   love: {
     reasons: {
       partner: ["The way you say my name","You hold my hand in crowds","Your 2 a.m. chai","You make ordinary days feel like a song","You believe in me, loudly","Your sleepy good mornings","How you dance in the kitchen","You still give me butterflies","You read my silences","Just… you"]
