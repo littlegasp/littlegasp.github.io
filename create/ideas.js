@@ -150,6 +150,24 @@ window.LG_IDEAS = {
     }
   },
 
+  love: {
+    reasons: {
+      partner: ["The way you say my name","You hold my hand in crowds","Your 2 a.m. chai","You make ordinary days feel like a song","You believe in me, loudly","Your sleepy good mornings","How you dance in the kitchen","You still give me butterflies","You read my silences","Just… you"]
+    },
+    captions: { partner: ["Our first sunset","The day I knew","Two chais, one table","That rainy evening","Road trip, no plan","My favourite view","Us, always"] },
+    letters: {
+      partner: [
+        ["Romantic", "{to},", "I still remember the first time you laughed at my terrible joke, and I knew I'd spend my life trying to hear it again.", "You make the ordinary feel like a song. Mondays, traffic, burnt toast, all of it is better with you.", "I don't say it enough, so I wrote it down, where it can't get lost."],
+        ["Playful", "{to},", "This is an official love letter. Please read it in your most dramatic voice.", "You steal my blanket, my fries and my heart, in that order, every single day.", "I wouldn't change a thing. Okay, maybe the blanket part."],
+        ["Deep", "{to},", "Some days I can't believe I get to love you out loud.", "You saw all of me, the messy parts too, and stayed.", "If I wrote a letter for every reason I love you, we'd need a much bigger house.", "This one will have to do, for now."],
+        ["Short", "{to},", "No reason. No occasion. Just a reminder.", "I love you. More than I say, more than I show, more than this letter can hold."]
+      ]
+    },
+    asks: {
+      partner: [["Will you be my Valentine, every single year?", "Then this is the first of many letters."], ["Dinner date this Saturday, just us?", "8 pm. Wear the thing I like."], ["Will you keep reading my letters forever?", "Good. I've already started the next one."], ["Can I take you somewhere special this weekend?", "Pack light. It's a surprise."]]
+    }
+  },
+
   apology: {
     reasons: {
       partner: ["I'm sorry I didn't listen","I'm sorry I made you feel small","I'm sorry I picked my phone over you","I'm sorry I said things I didn't mean","I'm sorry I wasn't there","I'm sorry I got so defensive","I'm sorry I took you for granted","I'm sorry. No excuses."],

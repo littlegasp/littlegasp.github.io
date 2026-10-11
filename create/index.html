@@ -232,7 +232,7 @@ textarea{min-height:170px;resize:vertical}
   </div>
 </div>
 
-<script src="ideas.js?v=1"></script>
+<script src="ideas.js?v=2"></script>
 <script>
 /* ================= SETTINGS ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";   // same /exec URL as in the birthday template
@@ -322,6 +322,30 @@ const DESIGNS = {
     ],
     letterHint: "Ananya,\n\nI've been replaying it all day, and you were right...",
     questionHint: "e.g. Coffee tomorrow, my treat, and I'll listen this time?", yesHint: "e.g. Thank you. I'll be there at 6, with your favourite."
+  },
+  "love-letter": {
+    occasion: "love", forWho: ["wife","husband","girlfriend","boyfriend"],   // writing ideas (create/ideas.js)
+    name: "Sealed with Love",
+    path: "/love-letter/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    song: "A soft romantic tune already plays on this design.",
+    numberLabel: "Years together", numberHint: "e.g. 3",
+    reasonsTitle: "Little notes hidden in the folds of your letter",
+    reasonsExamples: ["The way you laugh at my worst jokes","You hold my hand in crowds","Your 2 a.m. chai","You make ordinary days feel like a song","You believe in me, loudly","Just… you"],
+    extras: [
+      { key: "memories", type: "list", count: 6, max: 80, label: "Letters through the years (optional)",
+        hint: "A keepsake box of dated letters. They pull each one out to read a memory. Start with the date, then a colon. Leave empty to skip the box.",
+        examples: ["14 Feb 2023: The day you said yes to coffee","Jun 2023: Our first road trip, zero plans","Diwali 2023: You met my family and stole the show","Mar 2024: You stayed up all night when I was sick","Our first home: Boxes everywhere, and you","Today: Still choosing you"] },
+      { key: "ps", type: "text", max: 120, label: "A secret P.S. in invisible ink (optional)",
+        hint: "They warm the paper with a candle to read it. Leave empty to skip.", example: "e.g. Check under your pillow tonight 😉" },
+      { key: "scent", type: "text", max: 30, label: "What your letter smells like (optional)",
+        hint: "They spritz the perfume bottle and this appears: \"smells like …\". Leave empty for \"us\".", example: "e.g. jasmine & you" }
+    ],
+    letterHint: "Riya,\n\nI still remember the first time you laughed at my terrible joke...",
+    questionHint: "e.g. Will you be my Valentine, every single year?", yesHint: "e.g. Then this is the first of many letters."
   },
   "garba-circle": {
     occasion: "garba", forWho: ["wife","husband","girlfriend","boyfriend","bestie"],   // writing ideas (create/ideas.js)
