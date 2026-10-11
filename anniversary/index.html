@@ -184,8 +184,12 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .lane.moving .start{opacity:0}
 
 /* 7. toll */
-.tollart{position:relative;width:min(92vw,460px);height:min(44dvh,420px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4%}
-.tollart::before{content:"";position:absolute;left:4%;right:-10%;bottom:2%;height:9%;border-radius:50%;background:radial-gradient(closest-side,rgba(40,15,20,.38),transparent)}
+/* the toll stands ON the painted road: words on top, booth + barrier at the very bottom of the screen */
+.scene[data-scene="toll"]{justify-content:space-between;padding-bottom:0}
+.scene[data-scene="toll"]>.words{order:-1}
+.scene[data-scene="toll"]>.art{margin-top:auto}
+.tollart{position:relative;width:min(92vw,460px);height:min(40dvh,400px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:1.5%}
+.tollart::before{content:"";position:absolute;left:0;right:-20%;bottom:0;height:8%;border-radius:50%;background:radial-gradient(closest-side,rgba(40,15,20,.42),transparent)}
 .booth{position:relative;height:82%;width:auto;flex:none;z-index:1}
 .arm{position:relative;height:40%;aspect-ratio:982/683;flex:none;margin-left:-3%;margin-right:-34%;border:0;padding:0;background:none;cursor:pointer;appearance:none;z-index:2}
 .arm img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
@@ -269,12 +273,15 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .scene.two[hidden]{display:none}
   .scene.two>.art{grid-column:1}
   .scene.two>.words{grid-column:2;width:100%;max-width:470px;justify-self:center}
+  .scene.two[data-scene="toll"]{align-items:end;padding-bottom:0;grid-template-rows:100%}
+  .scene.two[data-scene="toll"]>*{grid-row:1}
+  .scene.two[data-scene="toll"]>.words{align-self:center;margin-bottom:12dvh}
   .stand{width:min(24vw,62dvh*.693)}
   .scoot{width:min(32vw,62dvh*1.04)}
   .mapbtn{width:min(34vw,60dvh*1.5)}
   .pump{height:min(62dvh,560px)}
   .lane{height:min(74dvh,760px)}
-  .tollart{width:min(34vw,560px);height:min(56dvh,520px)}
+  .tollart{width:min(34vw,600px);height:min(66dvh,640px)}
   .parked{width:min(28vw,64dvh*.815)}
   .lockart{width:min(26vw,56dvh)}
   .ridefin{width:min(30vw,62dvh*.815)}
