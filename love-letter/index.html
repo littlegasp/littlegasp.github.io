@@ -124,11 +124,11 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .ecard i{width:30px;height:27px;background:var(--berry);clip-path:path("M15 26C5 18 0 12.5 0 7.6 0 3.4 3.2 0 7.3 0 10.3 0 13 1.8 15 4.5 17 1.8 19.7 0 22.7 0 26.8 0 30 3.4 30 7.6 30 12.5 25 18 15 26Z")}
 .ecard span{font:700 1.15rem var(--hand);color:var(--muted)}
 @keyframes tremble{25%{transform:translate(-1px,1px) rotate(-.4deg)}75%{transform:translate(1px,-1px) rotate(.4deg)}}
-.seal{position:absolute;left:49.35%;top:50.46%;width:26.3%;aspect-ratio:1;transform:translate(-50%,-50%);border:0;padding:0;border-radius:50%;cursor:pointer;
+.seal{position:absolute;z-index:6;left:49.35%;top:50.46%;width:26.3%;aspect-ratio:1;transform:translate(-50%,-50%);border:0;padding:0;border-radius:50%;cursor:pointer;
   background:url(img/seal.webp) center/100% 100%;appearance:none;filter:drop-shadow(0 0 calc(var(--p,0) * 26px) rgba(255,170,90,calc(var(--p,0) * .95))) brightness(calc(1 + var(--p,0) * .35))}
 .env.shake .seal{animation-name:tremble2}
 @keyframes tremble2{25%{transform:translate(-51%,-49%)}75%{transform:translate(-49%,-51%)}}
-.ring{position:absolute;left:49.35%;top:50.46%;width:38%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(-90deg);pointer-events:none;overflow:visible}
+.ring{position:absolute;z-index:6;left:49.35%;top:50.46%;width:38%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(-90deg);pointer-events:none;overflow:visible}
 .ring circle{fill:none;stroke:var(--gold-hi);stroke-width:4;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:calc(283 - 283 * var(--p,0));filter:drop-shadow(0 0 4px #FFC857)}
 .ring .bgc{stroke:rgba(255,231,200,.35);stroke-dashoffset:0;filter:none}
 .half{position:absolute;left:49.35%;top:50.46%;width:26.3%;aspect-ratio:1;background:url(img/seal.webp) center/100% 100%;pointer-events:none;
