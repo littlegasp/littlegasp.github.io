@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Little Gasp – interactive surprise websites</title>
+<link>https://littlegasp.com/</link>
+<atom:link href="https://littlegasp.com/pins.xml" rel="self" type="application/rss+xml"/>
+<description>Little Gasp (littlegasp.com) makes interactive surprise websites for birthdays, love letters, apologies and Indian festivals.</description>
+<language>en-in</language>
+<item>
+<title>Love letter surprise website for your partner</title>
+<link>https://littlegasp.com/love-letter/</link>
+<guid isPermaLink="false">littlegasp-pin-love-letter-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>A love letter they open on their phone: a dove delivers it, they crack the wax seal, unfold your notes and watch a quill write every word. Add your photos and words, preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/love-letter.jpg" length="152271" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/love-letter.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+<item>
+<title>Sorry surprise website to apologise to your partner</title>
+<link>https://littlegasp.com/apology/</link>
+<guid isPermaLink="false">littlegasp-pin-apology-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>Say sorry properly: they mend a broken heart with gold, open a jar of your promises and tell you honestly how mad they still are. Add your words and photos, preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/apology.jpg" length="124165" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/apology.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+<item>
+<title>Diwali surprise website for partner, family or Bhai Dooj</title>
+<link>https://littlegasp.com/diwali/</link>
+<guid isPermaLink="false">littlegasp-pin-diwali-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>Light up their Diwali: trace a glowing rangoli, write wishes in the sky with a sparkler and hide your real gift under gold foil. Preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/diwali.jpg" length="119240" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/diwali.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+<item>
+<title>Karwa Chauth surprise website for your wife</title>
+<link>https://littlegasp.com/karwa-chauth/</link>
+<guid isPermaLink="false">littlegasp-pin-karwa-chauth-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>A moon of their own: raise the channi, light the diyas and pass the puja thali around for seven promises, with your photos and words. Preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/karwa-chauth.jpg" length="148382" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/karwa-chauth.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+<item>
+<title>Teddy bear birthday surprise website</title>
+<link>https://littlegasp.com/birthday-wish/</link>
+<guid isPermaLink="false">littlegasp-pin-birthday-wish-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>A teddy bear's birthday party they play: light the candles, blow out a wish, pop balloons, unwrap your photos and cut the cake. Pink or blue. Preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/birthday-wish.jpg" length="146042" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/birthday-wish.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+<item>
+<title>Birthday surprise website with photos and wishes</title>
+<link>https://littlegasp.com/birthday-cake/</link>
+<guid isPermaLink="false">littlegasp-pin-birthday-cake-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>A birthday they can play: candles, a wish, your photos and little notes, ending with a birthday selfie with a crown. Preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/birthday-cake.jpg" length="109332" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/birthday-cake.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+<item>
+<title>Navratri Garba surprise website for your partner</title>
+<link>https://littlegasp.com/garba-circle/</link>
+<guid isPermaLink="false">littlegasp-pin-garba-circle-1</guid>
+<pubDate>Sun, 11 Oct 2026 14:00:00 GMT</pubDate>
+<description>Light all nine Navratri nights by tapping the dancing couple, each one opening a photo or a reason, then play a dandiya round to the beat. Preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/garba-circle.jpg" length="132477" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/garba-circle.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
+</channel>
+</rss>
