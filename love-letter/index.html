@@ -71,7 +71,7 @@ p{margin:0}
 .btn[hidden]{display:none}
 .linkish{appearance:none;border:0;background:none;font:600 .92rem var(--body);color:var(--accent-dark);text-decoration:underline;cursor:pointer;padding:4px}
 .linkish[hidden]{display:none}
-:is(.btn,.linkish,.icon-btn,.tap,.seal,.flower,.tab,.bulb,.wax,.lip,.candle,.rib):focus-visible{outline:3px solid var(--gold);outline-offset:4px}
+:is(.btn,.linkish,.icon-btn,.tap,.seal,.flower,.tab,.wax,.lip,.candle,.rib):focus-visible{outline:3px solid var(--gold);outline-offset:4px}
 .pop-in{animation:popin .5s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes popin{from{transform:scale(.85);opacity:0}}
 .bob{animation:bob 3.2s ease-in-out infinite}
@@ -209,7 +209,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .done #shoot{animation:shoot 1.4s ease-out 1.2s both}
 @keyframes shoot{0%{opacity:0;transform:translate(0,0)}15%{opacity:1}100%{opacity:0;transform:translate(70px,38px)}}
 
-/* 8. secret P.S. + perfume */
+/* 8. secret P.S. */
 .pscard{position:relative;width:min(86vw,380px);aspect-ratio:5/3.3;flex:none;background:var(--paper);border-radius:6px;box-shadow:0 16px 34px rgba(20,8,20,.4);overflow:hidden;
   background-image:radial-gradient(120% 90% at 50% 120%,rgba(160,110,60,.12),transparent 60%)}
 .pscard canvas{position:absolute;inset:0;width:100%;height:100%}
@@ -217,12 +217,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .candle{position:absolute;left:50%;bottom:0;width:86px;height:auto;border:0;padding:0;background:none;appearance:none;cursor:grab;touch-action:none;transform:translateX(-50%);z-index:3}
 .candle img{width:100%;height:auto;display:block;pointer-events:none;filter:drop-shadow(0 8px 10px rgba(20,8,20,.4))}
 .candle::after{content:"";position:absolute;left:50%;top:-30%;width:120%;height:90%;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(255,190,90,.55),transparent);pointer-events:none;animation:flicker 1.6s ease-in-out infinite}
-.bottle{position:relative;width:min(62vw,34dvh,300px);aspect-ratio:478/571;flex:none}
-.bottle img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 16px 20px rgba(20,8,20,.45));pointer-events:none;transition:transform .15s}
-.bulb{position:absolute;inset:0;border:0;padding:0;background:none;appearance:none;cursor:pointer;border-radius:30%}
-.bottle.squeeze img{transform:scale(.97,1.02)}
-.scent{font:700 clamp(2rem,9vw,2.6rem)/1 var(--hand);color:var(--accent);min-height:1.1em;text-shadow:0 0 18px rgba(232,69,122,.35)}
-.scent span{display:inline-block;opacity:0;animation:popin .5s ease forwards}
 
 /* 9. the last letter, tied with a ribbon */
 .bundle{position:relative;width:min(80vw,40dvh,380px);aspect-ratio:583/578;flex:none;touch-action:none}
@@ -289,7 +283,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .keep{width:min(28vw,66dvh)}
   .skywin{width:min(27vw,64dvh)}
   .pscard{width:min(32vw,500px)}
-  .bottle{width:min(24vw,58dvh)}
   .bundle{width:min(30vw,64dvh)}
   .reply{width:min(32vw,480px)}
   .frame{width:min(28vw,68dvh*.8)}
@@ -462,20 +455,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
   </section>
 
-  <!-- 8b. A spritz of perfume -->
-  <section class="scene two" data-scene="perfume" hidden>
-    <div class="art">
-      <div class="bottle" id="bottle"><img src="img/perfume.webp" alt="A pink glass perfume bottle with a tasselled bulb" width="478" height="571"><button class="bulb" id="bulb" type="button" aria-label="Squeeze the perfume bottle"></button></div>
-    </div>
-    <div class="words">
-      <h2 tabindex="-1">One last touch</h2>
-      <p class="sub" id="perfSub">A good letter should smell like the person who wrote it. Squeeze the bottle.</p>
-      <p class="scent" id="scent" aria-live="polite"></p>
-      <p class="count" id="perfCount"></p>
-      <button class="btn" data-next id="afterPerf" hidden><span class="lbl"></span></button>
-    </div>
-  </section>
-
   <!-- 9. The last letter: pull the ribbon, then the question -->
   <section class="scene two" data-scene="ask" hidden>
     <div class="art">
@@ -561,7 +540,6 @@ const DEMO = {
   yesReply: "Then this is the first of many letters.",
   extra: {
     ps: "Check under your pillow tonight 😉",
-    scent: "jasmine & you",
     memories: ["14 Feb 2023: The day you said yes to coffee","Jun 2023: Our first road trip, zero plans","Diwali 2023: You met my family and stole the show","Mar 2024: You stayed up all night when I was sick","Today: Still choosing you"]
   }
 };
@@ -574,7 +552,7 @@ const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const LABELS = { seal:"Open your letter", unfold:"Unfold it", letter:"Read the letter", flowers:"Between the pages", box:"Letters through the years", sky:"Look outside",
-  ps:"A secret P.S.", perfume:"One last touch", ask:"The last letter", reply:"Write back", end:"Finish" };
+  ps:"A secret P.S.", ask:"The last letter", reply:"Write back", end:"Finish" };
 let C, seq = [], current = 0;
 
 /* ---------- load ---------- */
@@ -617,7 +595,6 @@ function build(d){
     question: t(d.question), yesReply: t(d.yesReply) };
   const x = d.extra && typeof d.extra === "object" ? d.extra : {};
   C.ps = t(x.ps).slice(0, 120);
-  C.scent = t(x.scent).slice(0, 30) || "us";
   C.memories = (Array.isArray(x.memories) ? x.memories : []).map(v => t(v).slice(0, 90)).filter(Boolean).slice(0, 6).map(parseMemory);
   if (id) C.photos = C.photos.filter(p => p.src);
   document.title = "A letter for " + C.to;
@@ -632,7 +609,6 @@ function build(d){
   if (C.memories.length) seq.push("box");
   seq.push("sky");
   if (C.ps) seq.push("ps");
-  seq.push("perfume");
   if (C.question) seq.push("ask");
   seq.push("reply", "end");
   $$("[data-scene]").forEach(sc => {
@@ -643,7 +619,7 @@ function build(d){
 
   $("#riseTo").textContent = "For " + C.to;
   $("#lastTo").textContent = C.to + ",";
-  buildFolds(); buildLetter(); buildFlowers(); buildBox(); buildSky(); buildPerfume(); buildReply();
+  buildFolds(); buildLetter(); buildFlowers(); buildBox(); buildSky(); buildReply();
   $("#question").textContent = C.question;
   $("#endPre").textContent = C.question ? "You said yes." : "";
   $("#endTitle").textContent = "Sealed with love";
@@ -718,7 +694,7 @@ function bell(f, t, vol = .16, len = 1.8){
     o.type = "sine"; o.frequency.value = f * m; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .012);
     g.gain.exponentialRampToValueAtTime(0.0001, t + len / m); o.connect(g); g.connect(master); o.start(t); o.stop(t + len / m + .05); });
 }
-function noise(len = .2, f = 2000, vol = .12, q = 1){   // paper, wax and perfume sounds
+function noise(len = .2, f = 2000, vol = .12, q = 1){   // paper, wax and ribbon sounds
   if (!ctx) return; const n = Math.floor(ctx.sampleRate * len), b = ctx.createBuffer(1, n, ctx.sampleRate), a = b.getChannelData(0);
   for (let i = 0; i < n; i++) a[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
   const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -1077,20 +1053,6 @@ async function warmForMe(){
   flame = null; psReveal();
 }
 
-/* ---------- 8b. perfume: squeeze, sparkles, and a scent word ---------- */
-let sprays = 0;
-function buildPerfume(){ $("#bulb").addEventListener("click", spritz); }
-function spritz(){
-  ensureAudio(); const b = $("#bottle"), r = b.getBoundingClientRect();
-  b.classList.add("squeeze"); setTimeout(() => b.classList.remove("squeeze"), 160);
-  mist(r.left + r.width * .3, r.top + r.height * .15);
-  if (ctx) noise(.45, 6500, .1, .6);
-  sprays++;
-  if (sprays === 1){ const s = $("#scent"); s.innerHTML = ""; [...("smells like " + C.scent)].forEach((ch, i) => { const sp = document.createElement("span"); sp.textContent = ch; sp.style.animationDelay = (i * .05) + "s"; s.appendChild(sp); }); $("#perfSub").textContent = "Again. One spritz is never enough."; }
-  $("#perfCount").textContent = sprays < 3 ? `${sprays} of 3 spritzes` : "";
-  if (sprays === 3){ $("#perfSub").textContent = `Now every page smells like ${C.scent}.`; chimeUp(); showNext($("#afterPerf")); }
-}
-
 /* ---------- 9. pull the ribbon, then the question ---------- */
 let untied = false;
 (() => {
@@ -1186,7 +1148,7 @@ function reply(kind, text){   // only real, paid links send anything
     .then(r => r.json()).then(j => !!(j && j.ok)).catch(() => false);
 }
 
-/* ---------- petals, hearts, sparkles, perfume mist ---------- */
+/* ---------- petals, hearts, sparkles ---------- */
 function rnd(seed){ let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
 const fx = $("#fx"), fg = fx.getContext("2d");
 let parts = [], running = false, petalRain = false;
@@ -1206,12 +1168,6 @@ function sparkle(x, y){
   if (reduce) return;
   for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
     parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#E2B04A","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
-  run();
-}
-function mist(x, y){
-  if (reduce) return;
-  for (let i = 0; i < 60; i++){ const a = Math.PI * (1.05 + Math.random() * .35), v = 2 + Math.random() * 6;
-    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: -.005, drag: .96, s: 1.5 + Math.random() * 3, c: ["#FFD1DF","#FFE7A8","#FFFFFF","#F49AB6"][i % 4], w: 0, life: 50 + Math.random() * 40, soft: true }); }
   run();
 }
 function run(){ if (!running){ running = true; requestAnimationFrame(loop); } }
@@ -1240,7 +1196,6 @@ async function runAutoplay(){
   if (seq.includes("flowers")){ go("flowers"); await sleep(800); for (let i = 0; i < Math.min(2, C.photos.length); i++){ $$(".flower")[i].click(); await sleep(2100); } }
   if (seq.includes("box")){ go("box"); await sleep(800); for (let i = 0; i < Math.min(2, C.memories.length); i++){ pullOut(i, $$(".tab")[i]); await sleep(1700); } }
   go("sky"); await sleep(700); for (let i = 0; i < 13; i++){ join(); await sleep(170); } await sleep(2600);
-  go("perfume"); await sleep(800); for (let i = 0; i < 3; i++){ spritz(); await sleep(900); } await sleep(1000);
   if (seq.includes("ask")){ go("ask"); await sleep(900); untie(); await sleep(2600); sayYes(); await sleep(400); }
   go("end"); await sleep(4200);
   if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
