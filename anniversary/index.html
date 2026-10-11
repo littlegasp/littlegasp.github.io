@@ -72,7 +72,7 @@ p{margin:0}
 .btn[hidden]{display:none}
 .linkish{appearance:none;border:0;background:none;font:600 .92rem var(--body);color:var(--accent-dark);text-decoration:underline;cursor:pointer;padding:4px}
 .linkish[hidden]{display:none}
-:is(.btn,.linkish,.icon-btn,.helmet,.kickpad,.mapbtn,.nozzle,.lane,.postbox,.arm,.chai,.lockbtn,.key):focus-visible{outline:3px solid var(--butter);outline-offset:4px}
+:is(.btn,.linkish,.icon-btn,.helmet,.kickpad,.mapbtn,.nozzle,.lane,.arm,.lockbtn,.key):focus-visible{outline:3px solid var(--butter);outline-offset:4px}
 .pop-in{animation:popin .5s cubic-bezier(.2,1.5,.4,1) both}
 @keyframes popin{from{transform:scale(.85);opacity:0}}
 .bob{animation:bob 3.2s ease-in-out infinite}
@@ -97,7 +97,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 /* 1. helmets */
 .stand{position:relative;width:min(70vw,40dvh*.693,340px);aspect-ratio:720/1039}
 .stand>img{width:100%;height:100%;display:block}
-.helmet{position:absolute;width:30%;border:0;padding:0;background:none;cursor:pointer;appearance:none;transition:left .9s cubic-bezier(.5,-.3,.4,1.3),top .9s cubic-bezier(.5,-.3,.4,1.3),width .9s,transform .9s}
+.helmet{position:absolute;width:26%;border:0;padding:0;background:none;cursor:pointer;appearance:none;transition:left .9s cubic-bezier(.5,-.3,.4,1.3),top .9s cubic-bezier(.5,-.3,.4,1.3),width .9s,transform .9s}
 .helmet img{width:100%;height:auto;display:block;pointer-events:none;transition:opacity .25s .75s}
 .helmet img.worn{position:absolute;left:0;top:0;opacity:0}
 .helmet.on img{opacity:0}
@@ -105,10 +105,10 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .helmet span{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);white-space:nowrap;font:700 1.2rem/1 var(--hand);color:#fff;background:var(--ink);padding:4px 10px 5px;border-radius:999px;transition:opacity .3s}
 .helmet.on span{opacity:0}
 .helmet.on{cursor:default}
-#hPink{left:-14%;top:-12%;transform:rotate(-12deg)}
-#hYellow{left:84%;top:-16%;transform:rotate(10deg)}
-#hPink.on{left:15.5%;top:4%;width:23%;transform:none}
-#hYellow.on{left:36.5%;top:-4.5%;width:24.5%;transform:none}
+#hPink{left:-16%;top:-10%;width:25%;transform:rotate(-14deg)}
+#hYellow{left:86%;top:-14%;width:27.6%;transform:rotate(12deg)}
+#hPink.on{left:17.6%;top:5.4%;width:25%;transform:rotate(-9deg)}
+#hYellow.on{left:33.2%;top:-1.2%;width:27.6%;transform:rotate(7deg)}
 .helmet:not(.on){animation:bob 2.6s ease-in-out infinite}
 
 /* 2. kick-start */
@@ -167,10 +167,14 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 #holdFuel{touch-action:none}
 
 /* 5. memory lane */
-.lane{position:relative;height:min(60dvh,620px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 0 0 6px #FFF6E6,0 18px 36px rgba(30,10,20,.45);background:url(img/road.webp) center/cover;touch-action:none;cursor:grab;flex:none}
+.lane{position:relative;height:min(52dvh,620px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 0 0 6px #FFF6E6,0 18px 36px rgba(30,10,20,.45);background:url(img/road.webp) center/cover;touch-action:none;cursor:grab;flex:none}
 .lane svg{position:absolute;inset:0;width:100%;height:100%}
 .stone{position:absolute;width:9%;transform:translate(-50%,-92%);pointer-events:none;transition:transform .4s cubic-bezier(.2,1.6,.4,1)}
 .stone img{width:100%;height:auto;display:block;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35))}
+.many .stone{width:6.5%}
+.many .stone b{font-size:clamp(.42rem,1.1dvh,.6rem)}
+.note .thumb{width:min(150px,40vw);aspect-ratio:4/3;object-fit:cover;display:block;border:5px solid #fff;border-bottom-width:14px;border-radius:3px;background:#EEE4D4;box-shadow:0 6px 14px rgba(40,10,30,.25);transform:rotate(-3deg);margin:2px 0 6px}
+.note .thumb[hidden]{display:none}
 .stone b{position:absolute;left:0;right:0;top:44%;font:700 clamp(.5rem,1.4dvh,.75rem)/1 var(--body);color:var(--ink);text-align:center}
 .stone.hit{transform:translate(-50%,-92%) scale(1.35)}
 .rider{position:absolute;width:19%;transform:translate(-50%,-88%);pointer-events:none;transition:filter .3s}
@@ -179,45 +183,40 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .lane .start{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font:700 1.25rem/1 var(--hand);color:#fff;background:rgba(42,31,92,.8);padding:5px 12px 6px;border-radius:999px;pointer-events:none;transition:opacity .4s;white-space:nowrap}
 .lane.moving .start{opacity:0}
 
-/* 6. post box */
-.postart{position:relative;width:min(92vw,430px);height:min(48dvh,440px)}
-.postbox{position:absolute;left:0;bottom:0;height:100%;aspect-ratio:360/931;border:0;padding:0;background:none;cursor:pointer;appearance:none}
-.postbox img{height:100%;width:100%;display:block}
-.postbox:active img{transform:scale(.98)}
-.postbox::after{content:"";position:absolute;left:18%;top:21%;width:64%;height:5%;border-radius:4px;box-shadow:0 0 0 3px rgba(255,200,87,.9);animation:pulse 1.6s ease-in-out infinite}
-.postbox.done::after{display:none}
-.card{position:absolute;right:0;top:4%;width:min(68%,300px);aspect-ratio:620/560;perspective:900px;transform-origin:10% 40%;transform:translate(-55%,10%) scale(.15) rotate(-20deg);opacity:0;transition:transform .8s cubic-bezier(.3,1.3,.5,1),opacity .3s}
-.card.show{transform:rotate(5deg);opacity:1}
-.card.gone{transform:translate(30%,90%) scale(.4) rotate(25deg);opacity:0;transition:transform .7s ease-in,opacity .6s}
-.flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.4,.1,.3,1)}
-.card.photo .flip{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:6px}
-.back{background:url(img/postcard.webp) center/100% 100% no-repeat;display:flex;align-items:center;justify-content:center;padding:18% 14% 14%}
-.back p{font:700 clamp(1.2rem,4.4vw,1.6rem)/1.05 var(--hand);color:#3B2348;transform:rotate(-3deg)}
-.front{transform:rotateY(180deg);background:#FFFDF8;padding:5%;box-shadow:0 10px 24px rgba(30,10,20,.35)}
-.front img{width:100%;height:100%;object-fit:cover;display:block;border-radius:2px;background:#EEE4D4}
-.front .cap{position:absolute;left:8%;right:8%;bottom:6%;font:700 1.1rem/1 var(--hand);color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);text-align:left}
-
 /* 7. toll */
-.tollart{position:relative;width:min(92vw,460px);height:min(44dvh,420px)}
-.booth{position:absolute;left:0;bottom:0;height:82%;width:auto}
-.arm{position:absolute;left:50%;bottom:3%;width:50%;aspect-ratio:620/431;border:0;padding:0;background:none;cursor:pointer;appearance:none}
-.arm img{width:100%;height:100%;display:block}
-.arm .bar{position:absolute;inset:0;background:url(img/barrier.webp) center/100% 100% no-repeat;clip-path:inset(0 0 0 14%);transform-origin:9% 26%;transition:transform .7s cubic-bezier(.4,1.4,.5,1)}
-.arm .post{position:absolute;inset:0;background:url(img/barrier.webp) center/100% 100% no-repeat;clip-path:inset(0 86% 0 0)}
-.arm.up .bar{transform:rotate(-72deg)}
-.arm:not(.up):not(.done)::after{content:"";position:absolute;left:10%;top:12%;width:88%;height:28%;border-radius:12px;box-shadow:0 0 0 3px rgba(255,200,87,.9);animation:pulse 1.6s ease-in-out infinite}
-.zoom{position:absolute;bottom:3%;width:30%;left:-34%;pointer-events:none;opacity:0;transition:left 1.6s cubic-bezier(.5,0,.6,1),opacity .2s}
-.zoom img{width:100%;height:auto;display:block}
-.zoom.go{left:110%;opacity:1}
+.tollart{position:relative;width:min(92vw,460px);height:min(44dvh,420px);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4%}
+.tollart::before{content:"";position:absolute;left:4%;right:-10%;bottom:2%;height:9%;border-radius:50%;background:radial-gradient(closest-side,rgba(40,15,20,.38),transparent)}
+.booth{position:relative;height:82%;width:auto;flex:none;z-index:1}
+.arm{position:relative;height:40%;aspect-ratio:982/683;flex:none;margin-left:-3%;margin-right:-34%;border:0;padding:0;background:none;cursor:pointer;appearance:none;z-index:2}
+.arm img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.arm .bar{transform-origin:14.77% 25.62%;transition:transform .8s cubic-bezier(.45,1.5,.5,1)}
+.arm.up .bar{transform:rotate(-80deg)}
+.arm:not(.up):not(.done)::after{content:"";position:absolute;left:24%;top:12%;width:76%;height:24%;border-radius:12px;box-shadow:0 0 0 3px rgba(255,200,87,.9);animation:pulse 1.6s ease-in-out infinite}
+.away{position:fixed;left:0;top:0;z-index:7;pointer-events:none;transform-origin:50% 100%}
+.away img{width:100%;height:auto;display:block;animation:rumble .12s linear infinite}
 
 /* 8. chai tapri */
-.chai{border:0;padding:0;background:none;cursor:pointer;appearance:none;width:min(52vw,26dvh,260px);position:relative}
-.chai img{width:100%;height:auto;display:block}
-.chai.clink img{animation:clink .6s ease}
+.parked{width:min(72vw,40dvh*.815,330px);position:relative}
+.parked img{width:100%;height:auto;display:block;filter:drop-shadow(0 14px 16px rgba(20,8,10,.45))}
+.parked::after{content:"";position:absolute;left:8%;right:4%;bottom:-2%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(20,8,10,.45),transparent);z-index:-1}
+.clinkov[hidden]{display:none}
+.clinkov{position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(60% 50% at 50% 50%,rgba(255,200,120,.25),rgba(25,10,15,.62));opacity:0;transition:opacity .35s}
+.clinkov.show{opacity:1}
+.gl{position:absolute;top:50%;height:min(48dvh,560px,90vw);aspect-ratio:360/815;transition:transform .85s cubic-bezier(.3,1.1,.45,1)}
+.gl img{width:100%;height:100%;display:block;filter:drop-shadow(0 18px 24px rgba(0,0,0,.4))}
+.gl.l{right:50%;transform:translate(-110vw,-50%) rotate(-38deg);transform-origin:50% 100%}
+.gl.r{left:50%;transform:translate(110vw,-50%) scaleX(-1) rotate(-38deg);transform-origin:50% 100%}
+.clinkov.come .gl.l{transform:translate(-16%,-50%) rotate(-16deg)}
+.clinkov.come .gl.r{transform:translate(16%,-50%) scaleX(-1) rotate(-16deg)}
+.clinkov.hit .gl{transition:transform .16s cubic-bezier(.5,0,.7,1.6)}
+.clinkov.hit .gl.l{transform:translate(1%,-50%) rotate(0deg)}
+.clinkov.hit .gl.r{transform:translate(-1%,-50%) scaleX(-1) rotate(0deg)}
+.clinkov.bye .gl{transition:transform .7s ease-in}
+.clinkov.bye .gl.l{transform:translate(-14%,-38%) rotate(-6deg) scale(.6)}
+.clinkov.bye .gl.r{transform:translate(14%,-38%) scaleX(-1) rotate(-6deg) scale(.6)}
+.chaicard[hidden]{display:none}
+@media not ((min-width:760px) and (min-aspect-ratio:1/1)){ .boarded>.art{display:none} }
 @keyframes clink{30%{transform:rotate(-6deg) scale(1.04)}60%{transform:rotate(4deg)}}
-.chai::after{content:"";position:absolute;left:10%;right:10%;bottom:4%;height:58%;border-radius:30px;box-shadow:0 0 0 3px rgba(255,200,87,.9);animation:pulse 1.6s ease-in-out infinite}
-.chai.done::after{display:none}
 .words.board{background:var(--board);border:10px solid #8A5A32;border-radius:14px;box-shadow:inset 0 0 40px rgba(0,0,0,.45),0 14px 30px rgba(20,8,10,.5);-webkit-backdrop-filter:none;backdrop-filter:none}
 .board h2{color:var(--chalk);font-family:var(--hand);font-size:2.4rem;font-weight:700}
 .board .sub{color:#CFE0D6}
@@ -230,22 +229,26 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 
 /* 9. love lock */
 .lockart{position:relative;width:min(80vw,40dvh,360px);aspect-ratio:1/1.05}
-.rail{position:absolute;left:-8%;right:-8%;top:58%;height:14%}
+.rail{position:absolute;left:-10%;right:-10%;top:33%;height:10%}
 .rail svg{width:100%;height:100%;display:block;overflow:visible}
-.lockbtn{position:absolute;left:24%;top:-2%;width:52%;border:0;padding:0;background:none;cursor:pointer;appearance:none;transition:top .7s cubic-bezier(.5,-.2,.4,1.3),transform .3s}
+.lockbtn{position:absolute;left:24%;top:2%;width:52%;border:0;padding:0;background:none;cursor:pointer;appearance:none;transition:top .7s cubic-bezier(.5,-.2,.4,1.3),transform .3s}
 .lockbtn img{width:100%;height:auto;display:block;pointer-events:none}
 .lockbtn .ini{position:absolute;left:1%;top:50%;width:34%;transform:rotate(-14deg);font:700 clamp(.9rem,2.2dvh,1.15rem)/1 var(--hand);color:#7A1F3D;text-align:center;pointer-events:none}
 .lockbtn:not(.locked){animation:sway 2.6s ease-in-out infinite}
 @keyframes sway{50%{transform:rotate(3deg) translateY(-6px)}}
 .lockbtn.locked{top:30%;cursor:default}
 .lockbtn.clicked{animation:snap .35s ease}
-@keyframes snap{40%{transform:scale(1.06) translateY(4px)}}
-.key{position:absolute;right:-6%;top:62%;width:28%;border:0;padding:0;background:none;cursor:pointer;appearance:none;opacity:0;pointer-events:none;transform:rotate(-30deg) scale(.6);transition:opacity .4s,transform .5s cubic-bezier(.2,1.5,.4,1);touch-action:none}
-.key img{width:100%;height:auto;display:block;pointer-events:none}
-.key.show{opacity:1;pointer-events:auto;transform:rotate(-20deg)}
-.key.show:not(.thrown){animation:wiggle 1.4s ease-in-out infinite}
-@keyframes wiggle{50%{transform:rotate(-8deg) translateY(-6px)}}
-.key.thrown{transition:transform 1.3s cubic-bezier(.3,.6,.6,1),opacity 1.3s;opacity:0;transform:translate(-120%,260%) rotate(540deg) scale(.4)}
+@keyframes snap{40%{transform:scale(1.05) translateY(3px)}}
+.key{position:absolute;left:51.5%;top:38.1%;width:40%;border:0;padding:0;background:none;appearance:none;transform-origin:3.3% 83%;opacity:0;pointer-events:none;
+  transform:translate(70%,-75%) rotate(10deg);transition:opacity .4s,transform .9s cubic-bezier(.3,.9,.4,1);touch-action:none;z-index:3}
+.key img{width:100%;height:auto;display:block;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.4))}
+.key.in{opacity:1;transform:none}
+.key.turn{transform:rotate(-22deg);transition:transform .3s ease-in-out}
+.key.out{opacity:1;transform:translate(34%,-62%) scale(1.25);cursor:pointer;pointer-events:auto;transition:transform .8s cubic-bezier(.3,1.4,.5,1)}
+.key.out.wig{animation:wiggle 1.4s ease-in-out infinite}
+@keyframes wiggle{0%,100%{rotate:0deg}50%{rotate:-8deg}}
+.ripple{position:fixed;z-index:7;width:30px;height:10px;margin:-5px 0 0 -15px;border:2px solid rgba(220,240,255,.9);border-radius:50%;pointer-events:none;animation:ripple 1.6s ease-out forwards}
+@keyframes ripple{to{transform:scale(7);opacity:0}}
 .question{font-family:var(--display);font-size:clamp(1.5rem,6vw,2rem);line-height:1.1;color:var(--ink)}
 .coax{font:700 1.6rem/1.1 var(--hand);color:var(--accent-dark)}
 .coax:empty{display:none}
@@ -271,9 +274,8 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .mapbtn{width:min(34vw,60dvh*1.5)}
   .pump{height:min(62dvh,560px)}
   .lane{height:min(74dvh,760px)}
-  .postart{width:min(32vw,520px);height:min(62dvh,560px)}
   .tollart{width:min(34vw,560px);height:min(56dvh,520px)}
-  .chai{width:min(22vw,40dvh)}
+  .parked{width:min(28vw,64dvh*.815)}
   .lockart{width:min(26vw,56dvh)}
   .ridefin{width:min(30vw,62dvh*.815)}
   h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
@@ -290,6 +292,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 <nav class="dots" id="dots" aria-label="Progress" hidden></nav>
 <button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
 <canvas id="fx" aria-hidden="true"></canvas>
+<div class="clinkov" id="clinkov" aria-hidden="true" hidden><div class="gl l"><img src="img/chai-glass.webp" alt="" width="360" height="815"></div><div class="gl r"><img src="img/chai-glass.webp" alt="" width="360" height="815"></div></div>
 <div class="loader" id="loader"><p id="loaderText">Warming up the scooter…</p></div>
 
 <main hidden>
@@ -298,8 +301,8 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="art">
       <div class="stand">
         <img src="img/couple.webp" alt="A couple holding hands beside a mint-green vintage scooter" width="720" height="1039">
-        <button class="helmet" id="hPink" type="button" aria-label="Put the pink helmet on her"><img src="img/helmet-pink.webp" alt="" width="300" height="406"><img class="worn" src="img/helmet-pink-on.webp" alt="" width="300" height="406"><span data-hn="0"></span></button>
-        <button class="helmet" id="hYellow" type="button" aria-label="Put the yellow helmet on him"><img src="img/helmet-yellow.webp" alt="" width="300" height="406"><img class="worn" src="img/helmet-yellow-on.webp" alt="" width="300" height="406"><span data-hn="1"></span></button>
+        <button class="helmet" id="hPink" type="button" aria-label="Put the pink helmet on her"><img src="img/helmet-pink.webp" alt="" width="300" height="344"><img class="worn" src="img/helmet-pink-on.webp" alt="" width="300" height="344"><span data-hn="0"></span></button>
+        <button class="helmet" id="hYellow" type="button" aria-label="Put the yellow helmet on him"><img src="img/helmet-yellow.webp" alt="" width="300" height="344"><img class="worn" src="img/helmet-yellow-on.webp" alt="" width="300" height="344"><span data-hn="1"></span></button>
       </div>
     </div>
     <div class="words">
@@ -403,31 +406,10 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
     <div class="words">
       <h2 tabindex="-1">Memory Lane</h2>
-      <div class="note" id="laneNote" aria-live="polite"><span class="tag" id="laneTag"></span><span class="big" id="laneText"></span><span class="hint" id="laneHint">Drag the scooter up the road. Every milestone is a year of us.</span></div>
+      <div class="note" id="laneNote" aria-live="polite"><img class="thumb pop-in" id="laneImg" alt="" hidden><span class="tag" id="laneTag"></span><span class="big" id="laneText"></span><span class="hint" id="laneHint">Drag the scooter up the road. Every milestone is a year of us.</span></div>
       <p class="count" id="laneCount"></p>
       <button class="linkish" id="driveForMe" hidden>Drive for me</button>
       <button class="btn" data-next id="afterLane" hidden><span class="lbl"></span></button>
-    </div>
-  </section>
-
-  <!-- 6. Post box = photos -->
-  <section class="scene two" data-scene="post" hidden>
-    <div class="art">
-      <div class="postart">
-        <button class="postbox" id="postbox" type="button" aria-label="Tap the post box for a postcard"><img src="img/postbox.webp" alt="A red Indian post box" width="360" height="931"></button>
-        <div class="card" id="card" aria-live="polite">
-          <div class="flip">
-            <div class="face back"><p id="cardBack"></p></div>
-            <div class="face front"><img id="cardImg" alt=""><span class="cap" id="cardCap"></span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="words">
-      <h2 tabindex="-1">Postcards from the road</h2>
-      <p class="sub">Every town we passed sent a postcard. Tap the post box.</p>
-      <p class="count" id="postCount"></p>
-      <button class="btn" data-next id="afterPost" hidden><span class="lbl"></span></button>
     </div>
   </section>
 
@@ -436,8 +418,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="art">
       <div class="tollart">
         <img class="booth" src="img/toll.webp" alt="A colourful toll booth" width="600" height="870">
-        <button class="arm" id="arm" type="button" aria-label="Lift the barrier"><span class="post"></span><span class="bar"></span></button>
-        <div class="zoom" id="zoom" aria-hidden="true"><img src="img/ride.webp" alt="" width="760" height="932"></div>
+        <button class="arm" id="arm" type="button" aria-label="Lift the barrier"><img src="img/bar-post.webp" alt="" width="620" height="431"><img class="bar" src="img/bar-arm.webp" alt="" width="620" height="431"><img src="img/bar-hub.webp" alt="" width="620" height="431"></button>
       </div>
     </div>
     <div class="words">
@@ -450,11 +431,17 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 
   <!-- 8. Chai tapri = letter -->
   <section class="scene two" data-scene="chai" hidden>
-    <div class="art"><button class="chai" id="chai" type="button" aria-label="Clink the two cups of chai"><img src="img/chai.webp" alt="Two glasses of cutting chai clinking, with steam rising" width="520" height="658"></button></div>
-    <div class="words board">
+    <div class="art"><div class="parked"><img src="img/ride.webp" alt="The two of you sitting together on the scooter, parked at a chai tapri" width="760" height="932"></div></div>
+    <div class="words chaicard" id="chaiIntro">
+      <p class="kick">Chai break</p>
+      <h2 tabindex="-1">Two cutting, please</h2>
+      <p class="sub">Every road trip needs a chai stop. The tapri wala has two hot glasses ready for you.</p>
+      <button class="btn" id="cheersBtn"><span class="lbl">Cheers ☕</span></button>
+    </div>
+    <div class="words board chaicard pop-in" id="chaiBoard" hidden>
       <p class="kick">Chai break · today's special</p>
       <h2 tabindex="-1" id="chaiTitle">Two cutting, one letter</h2>
-      <p class="sub" id="chaiSub">Tap the chai to clink. The tapri wala wrote something on the board for you.</p>
+      <p class="sub" id="chaiSub">Cheers to us. The tapri wala wrote something on the board for you.</p>
       <div class="chalk" id="chalk"></div>
       <button class="btn ghost" id="chaiSkip" hidden><span class="lbl">Show it all</span></button>
       <button class="btn" data-next id="afterChai" hidden><span class="lbl"></span></button>
@@ -471,7 +458,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
             <path d="M0 14Q50 26 100 16T200 16 300 16 400 14" fill="none" stroke="#5B4A2E" stroke-width="1.5"/></svg>
         </div>
         <button class="lockbtn" id="lockBtn" type="button" aria-label="Lock it on the bridge to say yes"><img src="img/lock.webp" alt="A gold heart-shaped padlock with a paper tag" width="520" height="669"><span class="ini" id="initials"></span></button>
-        <button class="key" id="key" type="button" aria-label="Throw the key into the river"><img src="img/key.webp" alt="" width="300" height="275"></button>
+        <button class="key" id="key" type="button" aria-label="Throw the key into the river" tabindex="-1"><img src="img/key.webp" alt="" width="300" height="275"></button>
       </div>
     </div>
     <div class="words">
@@ -483,6 +470,8 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
         <button class="btn ghost" id="coaxBtn"><span class="lbl">Convince me 😏</span></button>
       </div>
       <p class="coax" id="coaxLine" aria-live="polite"></p>
+      <button class="btn mint" id="throwBtn" hidden><span class="lbl">Throw the key away 🗝️</span></button>
+      <button class="btn" data-next id="afterLock" hidden><span class="lbl"></span></button>
     </div>
   </section>
 
@@ -511,17 +500,19 @@ const SONG = { src: "", volume: .8, credit: "" };
 const DEMO = {
   to: "Priya", from: "Rohan", number: "7",
   photos: [
-    { src: "img/demo-1.svg", caption: "Our first trip" },
-    { src: "img/demo-2.svg", caption: "Two chais, one table" },
-    { src: "img/demo-3.svg", caption: "That rainy evening" },
-    { src: "img/demo-4.svg", caption: "Home, finally" }
+    { src: "img/demo-1.svg", caption: "2019: We met at the college fest" },
+    { src: "img/demo-2.svg", caption: "2020: Our first ride to Lonavala" },
+    { src: "img/demo-3.svg", caption: "2021: You met my family" },
+    { src: "img/demo-4.svg", caption: "2022: The proposal by the sea" },
+    { src: "img/demo-1.svg", caption: "2023: Our wedding, the best day" },
+    { src: "img/demo-2.svg", caption: "2024: Our own little home" },
+    { src: "img/demo-3.svg", caption: "2026: Still choosing you" }
   ],
   reasons: ["You laugh at my worst jokes","You hold my hand in every crowd","You remember how I take my chai","You make Mondays feel like Sundays","You believe in me, loudly","Just… you"],
   letter: ["Priya,","Seven years ago you got on the back of my scooter and never got off. Best decision we ever made.","We've had potholes, wrong turns and a lot of traffic, but I'd ride every kilometre again if you're the one holding on.","Here's to the next milestone, and every chai stop on the way."],
   question: "Will you keep riding with me, forever?",
   yesReply: "Then hold on tight. The best roads are still ahead.",
   extra: {
-    milestones: ["2019: We met at the college fest","2020: Our first ride to Lonavala","2021: You met my family","2022: The proposal by the sea","2023: Our wedding, the best day","2024: Our own little home","2026: Still choosing you"],
     promises: ["The window seat is always yours","I'll carry the umbrella every monsoon","The last bite of everything is yours","I'll never stop being your co-rider"]
   }
 };
@@ -536,7 +527,7 @@ const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const coarse = matchMedia("(pointer: coarse)").matches;
 if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const LABELS = { kick:"Kick-start our ride", map:"Check the map", fuel:"Fuel stop", lane:"Memory Lane", post:"Postcards", toll:"Promise toll",
+const LABELS = { kick:"Kick-start our ride", map:"Check the map", fuel:"Fuel stop", lane:"Memory Lane", toll:"Promise toll",
   chai:"Chai break", lock:"The last stop", end:"Finish" };
 const BG = { chai:"tapri", lock:"bridge" };
 let C, seq = [], current = 0;
@@ -574,12 +565,12 @@ setTimeout(start, 0);
 
 function parseStop(s, i, n){
   const m = s.match(/^([^:]{1,24}):\s*(.+)$/);
-  return m ? { when: m[1].trim(), text: m[2].trim() } : { when: "Stop " + (i + 1), text: s };
+  return m ? { when: m[1].trim(), text: m[2].trim() } : { when: "Milestone " + (i + 1), text: s };
 }
 function build(d){
   const t = v => String(v || "").trim();
   C = { to: t(d.to) || "you", from: t(d.from), number: t(d.number),
-    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 5),
+    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 20),
     reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
     letter: (d.letter || []).map(t).filter(Boolean),
     question: t(d.question), yesReply: t(d.yesReply) };
@@ -588,7 +579,9 @@ function build(d){
   if (id) C.photos = C.photos.filter(p => p.src);
   const n = /^\d{1,3}$/.test(C.number) ? +C.number : 0;
   C.years = n;
-  C.stops = list(x.milestones, 8, 90).map(parseStop);
+  /* every photo is a milestone (caption "2019: we met…"); older links may carry text-only milestones */
+  C.stops = C.photos.length ? C.photos.map((p, i) => ({ ...parseStop(t(p.caption) || "", i), src: p.src })).map((s, i) => s.text ? s : { ...s, text: "A moment I'll never forget" })
+                            : list(x.milestones, 20, 90).map(parseStop);
   if (!C.stops.length){
     const k = n ? Math.min(Math.max(n, 3), 6) : 4;
     C.stops = DEFAULT_STOPS.slice(0, k - 1).map((s, i) => ({ when: "Year " + (i + 1), text: s }));
@@ -606,7 +599,6 @@ function build(d){
   seq = ["open", "kick", "map"];
   if (C.reasons.length) seq.push("fuel");
   seq.push("lane");
-  if (C.photos.length) seq.push("post");
   seq.push("toll");
   if (C.letter.length) seq.push("chai");
   if (C.question) seq.push("lock");
@@ -615,10 +607,11 @@ function build(d){
     const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl");
     if (b && i > -1 && seq[i + 1]) b.textContent = LABELS[seq[i + 1]];
   });
+  $("#afterLock .lbl").textContent = "Ride into forever 🛵";
   const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
 
   $("#mapYears").textContent = n ? `${n} year${n === 1 ? "" : "s"} of road` : "our road so far";
-  buildFuel(); buildLane(); buildPost(); buildToll(); buildChai(); buildLock();
+  buildFuel(); buildLane(); buildToll(); buildChai(); buildLock();
   if (!coarse){
     $("#kickSub").textContent = "Drag the kick lever down (or click it). Old scooters sometimes need two tries.";
     $(".lane .start").textContent = "drag me up the road ↑";
@@ -839,6 +832,7 @@ function buildLane(){
   const L = laneLen[laneLen.length - 1], k = C.stops.length;
   stopAt = C.stops.map((_, i) => .1 + (i / Math.max(1, k - 1)) * .8);
   $("#stones").innerHTML = stopAt.map((f, i) => { const p = at(f); return `<div class="stone" data-stone="${i}" style="left:${p[0] / 9}%;top:${p[1] / 16}%"><img src="img/milestone.webp" alt="" width="360" height="597"><b>${i + 1}</b></div>`; }).join("");
+  if (k > 10) $("#stones").classList.add("many");
   $("#laneCount").textContent = `0 of ${k} milestones`;
   placeRider(0);
   const lane = $("#lane"); let drag = false;
@@ -873,6 +867,7 @@ function placeRider(f, prev){
 function hitStop(i){
   const s = C.stops[i], st = $(`[data-stone="${i}"]`); st.classList.add("hit"); setTimeout(() => st.classList.remove("hit"), 500);
   $("#laneTag").textContent = s.when; $("#laneText").textContent = s.text; $("#laneHint").textContent = "";
+  const im = $("#laneImg"); if (s.src){ im.hidden = false; im.src = s.src; im.alt = s.text; im.classList.remove("pop-in"); void im.offsetWidth; im.classList.add("pop-in"); } else im.hidden = true;
   $("#laneText").classList.remove("pop-in"); void $("#laneText").offsetWidth; $("#laneText").classList.add("pop-in");
   $("#laneCount").textContent = `${i + 1} of ${C.stops.length} milestones`; ding(784 + i * 90, 0, .1);
 }
@@ -881,28 +876,6 @@ function nextStop(){ const nx = stopAt.find((s, i) => i > stopHit); glideTo(nx =
 let gliding = false;
 async function glideTo(f){ if (gliding) return; gliding = true; $("#lane").classList.add("moving"); while (laneT < f - .001){ moveTo(Math.min(f, laneT + .006)); await sleep(16); } gliding = false; }
 async function driveForMe(){ $("#driveForMe").hidden = true; while (!laneDone){ await glideTo(Math.min(1, (stopAt.find((s, i) => i > stopHit) ?? 1) + .005)); await sleep(isAuto ? 700 : 1300); } }
-
-/* ---------- 6. post box: postcards become photos ---------- */
-let posted = 0, posting = false;
-function buildPost(){
-  if (!C.photos.length) return;
-  $("#postCount").textContent = `0 of ${C.photos.length} postcards`;
-  $("#postbox").addEventListener("click", postOne);
-}
-async function postOne(){
-  if (posting || posted >= C.photos.length) return; posting = true; ensureAudio();
-  const card = $("#card"), p = C.photos[posted];
-  if (card.classList.contains("show")){ card.classList.add("gone"); await sleep(reduce ? 0 : 450); }
-  card.classList.remove("show", "photo", "gone");
-  $("#cardBack").textContent = p.caption || "Wish you were here. Oh wait, you were. 💗";
-  $("#cardImg").src = p.src || ""; $("#cardImg").alt = p.caption || "A photo of us"; $("#cardCap").textContent = p.caption || "";
-  void card.offsetWidth; if (ctx){ noise(.15, 1800, .12, 1); ding(988, .1, .08); }
-  card.classList.add("show"); posted++;
-  $("#postCount").textContent = `${posted} of ${C.photos.length} postcards`;
-  await sleep(reduce ? 0 : 1500); card.classList.add("photo"); if (ctx) noise(.1, 2600, .06, 2);
-  await sleep(reduce ? 0 : 900); posting = false;
-  if (posted === C.photos.length){ $("#postbox").classList.add("done"); $("#postCount").textContent = "Every postcard delivered."; showNext($("#afterPost")); }
-}
 
 /* ---------- 7. toll naka: every lift is a promise ---------- */
 let tolls = 0, lifting = false;
@@ -918,8 +891,25 @@ async function liftOne(){
   $("#tollCount").textContent = `${i + 1} of ${C.promises.length} tolls paid`;
   const last = tolls === C.promises.length;
   await sleep(reduce ? 0 : (last ? 600 : 1500));
-  if (last){ arm.classList.add("done"); $("#zoom").classList.add("go"); horn(); $("#tollCount").textContent = "All paid. The road is open."; showNext($("#afterToll")); return; }
+  if (last){ arm.classList.add("done"); $("#tollCount").textContent = "All paid. The road is open."; await rideAway(); showNext($("#afterToll")); return; }
   arm.classList.remove("up"); await sleep(reduce ? 0 : 600); lifting = false;
+}
+
+/* the couple rides through the open toll and away down the road, getting smaller */
+const WIDE = () => matchMedia("(min-width:760px) and (min-aspect-ratio:1/1)").matches;
+async function rideAway(){
+  if (reduce){ horn(); return; }
+  const wide = WIDE(), vw = innerWidth / 100, vh = innerHeight / 100;
+  const P = wide ? [[-12,108,1],[27,99,.92],[27,99,.92],[22,84,.55],[23,74,.33],[29,67,.16],[31,65.5,.1]]
+                 : [[-30,106,1],[50,96,.9],[50,96,.9],[55,82,.56],[60,73,.37],[53,65,.22],[54,59.5,.1]];
+  const w = (wide ? 22 : 50) * vw, h = w * 932 / 760;
+  const el = document.createElement("div"); el.className = "away"; el.style.width = w + "px";
+  el.innerHTML = '<img src="img/ride.webp" alt="" width="760" height="932">'; document.body.appendChild(el);
+  const off = [0, .2, .32, .52, .7, .88, 1];
+  const frames = P.map(([x, y, k], i) => ({ transform: `translate(${x * vw - w / 2}px,${y * vh - h}px) scale(${k})`, opacity: i === P.length - 1 ? 0 : 1, offset: off[i] }));
+  engine(true); setTimeout(horn, 900); setTimeout(() => engine(true), 1600);
+  await el.animate(frames, { duration: isAuto ? 3600 : 4600, easing: "ease-in-out", fill: "forwards" }).finished.catch(() => {});
+  el.remove();
 }
 
 /* ---------- 8. chai tapri: clink, the letter appears on the chalkboard ---------- */
@@ -929,20 +919,33 @@ function buildChai(){
   const lines = [...C.letter]; if (C.from) lines.push("— " + C.from);
   $("#chalk").innerHTML = lines.map((l, i) => `<p${C.from && i === lines.length - 1 ? ' class="sign"' : ""}></p>`).join("");
   $$("#chalk p").forEach((p, i) => p.textContent = lines[i]);
-  $("#chai").addEventListener("click", clink);
+  $("#cheersBtn").addEventListener("click", clink);
   $("#chaiSkip").addEventListener("click", () => { chalkRun = false; showChalk(); });
 }
 async function clink(){
-  const c = $("#chai"); ensureAudio(); c.classList.remove("clink"); void c.offsetWidth; c.classList.add("clink");
-  if (ctx){ ding(2093, 0, .1); ding(2637, .04, .08); }
-  if (chalked) return; chalked = true; c.classList.add("done");
-  const r = c.getBoundingClientRect(); steam(r.left + r.width * .5, r.top + r.height * .15);
-  $("#chaiSub").textContent = "Cheers to us. Read the board."; $("#chaiSkip").hidden = isAuto; chalkRun = true;
+  if (chalked) return; chalked = true; ensureAudio(); $("#cheersBtn").disabled = true;
+  const ov = $("#clinkov"); ov.hidden = false; void ov.offsetWidth; ov.classList.add("show");
+  await sleep(60); ov.classList.add("come"); if (ctx) noise(.5, 700, .05, .6);          // both glasses swing in from the sides
+  await sleep(reduce ? 0 : 1050); ov.classList.add("hit");                                  // …and clink
+  await sleep(reduce ? 0 : 150);
+  if (ctx){ ding(2093, 0, .14); ding(2637, .03, .11); ding(3136, .07, .07); noise(.08, 4200, .12, 4); }
+  splashChai(innerWidth / 2, innerHeight * .47);
+  if (navigator.vibrate && !isAuto) try { navigator.vibrate(30); } catch(e){}
+  await sleep(reduce ? 0 : 1300); ov.classList.add("bye"); ov.classList.remove("show");
+  await sleep(reduce ? 0 : 700); ov.hidden = true;
+  $("#chaiIntro").hidden = true; $("#chaiBoard").hidden = false; document.querySelector('[data-scene="chai"]').classList.add("boarded"); if (!isPreview) $("#chaiTitle").focus({ preventScroll: true });
+  $("#chaiSkip").hidden = isAuto; chalkRun = true;
   const ps = $$("#chalk p");
   for (const p of ps){ if (!chalkRun) break; p.classList.add("in"); if (ctx) noise(.25, 3500, .03, .6); p.scrollIntoView && !isAuto && p.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); await sleep(reduce ? 0 : Math.min(2600, 700 + p.textContent.length * 22)); }
   showChalk();
 }
 function showChalk(){ $$("#chalk p").forEach(p => p.classList.add("in")); $("#chaiSkip").hidden = true; if ($("#afterChai").hidden) showNext($("#afterChai")); }
+function splashChai(x, y){
+  if (reduce) return;
+  for (let i = 0; i < 46; i++){ const a = -Math.PI * (.08 + Math.random() * .84), v = 2 + Math.random() * 6;
+    parts.push({ x: x + (Math.random() - .5) * 20, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, g: .2, s: 2.5 + Math.random() * 4, c: ["#C9822F","#E0A04E","#A8641E","#F2C27A"][i % 4], w: 0, life: 50 + Math.random() * 30 }); }
+  run();
+}
 function steam(x, y){
   if (reduce) return;
   for (let i = 0; i < 30; i++) parts.push({ x: x + (Math.random() - .5) * 60, y, vx: (Math.random() - .5) * .4, vy: -(.5 + Math.random() * .9), s: 6 + Math.random() * 8, grow: .18,
@@ -962,22 +965,51 @@ function buildLock(){
     if (coaxed < COAX.length){ $("#coaxLine").textContent = COAX[coaxed++]; ding(880 + coaxed * 120, 0, .08); if (coaxed === COAX.length) $("#coaxBtn .lbl").textContent = "Okay, yes! 💗"; }
     else lockIt();
   });
-  const key = $("#key"); let x0 = null, y0 = null;
-  key.addEventListener("pointerdown", e => { e.preventDefault(); x0 = e.clientX; y0 = e.clientY; key.setPointerCapture(e.pointerId); });
-  key.addEventListener("pointerup", () => { x0 = null; throwKey(); });
-  key.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " "){ e.preventDefault(); throwKey(); } });
+  $("#key").addEventListener("click", throwKey);
+  $("#throwBtn").addEventListener("click", throwKey);
 }
-function lockIt(){
+async function lockIt(){
   if (locked) return; locked = true; ensureAudio();
-  const b = $("#lockBtn"); b.classList.add("locked"); $("#askRow").hidden = true; $("#coaxLine").textContent = "";
-  setTimeout(() => { b.classList.add("clicked"); if (ctx){ noise(.06, 3000, .25, 3); noise(.05, 1800, .2, 3); } sparkleAt(b); hearts(30);
-    $("#lockSub").textContent = "Click. Locked for good. Now throw away the key, so it stays that way."; $("#key").classList.add("show"); }, reduce ? 0 : 750);
+  const b = $("#lockBtn"), k = $("#key"); $("#askRow").hidden = true; $("#coaxLine").textContent = "";
+  $("#lockSub").textContent = "Hanging it on the bridge…";
+  b.classList.add("locked"); await sleep(reduce ? 0 : 800);                       // 1. the lock drops onto the railing
+  if (ctx) noise(.1, 900, .15, 2);
+  $("#lockSub").textContent = "Turning the key…";
+  k.classList.add("in"); await sleep(reduce ? 0 : 1000);                          // 2. the key slides into the keyhole
+  k.classList.add("turn"); await sleep(reduce ? 0 : 320);                          // 3. it turns: click
+  b.classList.add("clicked"); if (ctx){ noise(.06, 3000, .3, 3); noise(.05, 1800, .22, 3); ding(1568, .05, .08); }
+  sparkleAt(b); hearts(30);
+  await sleep(reduce ? 0 : 450); k.classList.remove("turn");
+  await sleep(reduce ? 0 : 450);
+  $("#lockSub").textContent = "Click. Locked for good. 💗 Now throw the key into the river, so nobody can ever open it.";
+  k.classList.add("out"); setTimeout(() => k.classList.add("wig"), 800);           // 4. the key comes out, ready to throw
+  k.tabIndex = 0; k.setAttribute("aria-label", "Throw the key into the river");
+  showNext($("#throwBtn"));
 }
 let thrown = false;
-function throwKey(){
-  if (thrown || !locked) return; thrown = true; ensureAudio(); const k = $("#key"); k.classList.add("thrown"); if (ctx) noise(.4, 1200, .08, .5);
-  setTimeout(() => { const r = $(".lockart").getBoundingClientRect(); splash(r.left + r.width * .1, Math.min(innerHeight - 40, r.bottom + 30)); if (ctx){ noise(.5, 500, .25, .6, "lowpass"); } }, reduce ? 0 : 1100);
-  setTimeout(() => go(seq[seq.indexOf("lock") + 1] || "end"), reduce ? 300 : 2400);
+async function throwKey(){
+  if (thrown || !locked || !$("#key").classList.contains("out")) return; thrown = true; ensureAudio();
+  const k = $("#key"), art = $(".lockart").getBoundingClientRect(), kr = k.getBoundingClientRect();
+  $("#throwBtn").hidden = true; k.classList.remove("wig");
+  const tx = art.left + art.width * .2, ty = art.top + art.height * .96;               // the river, below the railing
+  const dx = tx - (kr.left + kr.width * .5), dy = ty - (kr.top + kr.height * .5);
+  const base = getComputedStyle(k).transform;
+  if (ctx) noise(.5, 1400, .08, .5);
+  const anim = k.animate([
+    { transform: base },
+    { transform: `${base} translate(${dx * .35}px, ${-art.height * .35}px) rotate(-300deg) scale(.85)`, offset: .4 },
+    { transform: `${base} translate(${dx}px, ${dy}px) rotate(-760deg) scale(.22)`, opacity: .9 }
+  ], { duration: reduce ? 10 : 1700, easing: "cubic-bezier(.4,0,.7,1)", fill: "forwards" });
+  await anim.finished.catch(() => {});
+  k.style.opacity = 0;
+  if (ctx){ noise(.6, 450, .3, .6, "lowpass"); noise(.3, 2500, .06, 1); }
+  splash(tx, ty); ripples(tx, ty);
+  $("#lockSub").textContent = "Splash! The key is gone forever. This lock is never coming off.";
+  await sleep(reduce ? 0 : 1100); showNext($("#afterLock"));
+}
+function ripples(x, y){
+  if (reduce) return;
+  [0, 320, 640].forEach(d => setTimeout(() => { const r = document.createElement("div"); r.className = "ripple"; r.style.left = x + "px"; r.style.top = y + "px"; document.body.appendChild(r); setTimeout(() => r.remove(), 1700); }, d));
 }
 function splash(x, y){
   if (reduce) return;
@@ -1028,11 +1060,10 @@ async function runAutoplay(){
   go("map"); await sleep(600); $("#mapBtn").click(); await sleep(4200);
   if (seq.includes("fuel")){ go("fuel"); await sleep(600); for (let i = 0; i < C.reasons.length; i++){ fillOne(); await sleep(650); } await sleep(1200); }
   go("lane"); await sleep(600); await driveForMe(); await sleep(1000);
-  if (seq.includes("post")){ go("post"); await sleep(600); for (let i = 0; i < Math.min(2, C.photos.length); i++){ await postOne(); await sleep(900); } }
-  go("toll"); await sleep(600); for (let i = 0; i < Math.min(2, C.promises.length); i++){ await liftOne(); await sleep(400); }
-  if (seq.includes("chai")){ go("chai"); await sleep(600); clink(); await sleep(4200); chalkRun = false; showChalk(); await sleep(1200); }
-  if (seq.includes("lock")){ go("lock"); await sleep(1400); lockIt(); await sleep(1600); throwKey(); await sleep(2700); }
-  else { go("end"); }
+  go("toll"); await sleep(600); for (let i = 0; i < C.promises.length; i++){ await liftOne(); await sleep(300); } await sleep(600);
+  if (seq.includes("chai")){ go("chai"); await sleep(600); clink(); await sleep(5200); chalkRun = false; showChalk(); await sleep(1500); }
+  if (seq.includes("lock")){ go("lock"); await sleep(1400); await lockIt(); await sleep(1300); await throwKey(); await sleep(1400); }
+  go("end");
   await sleep(4200);
   if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
   else location.reload();

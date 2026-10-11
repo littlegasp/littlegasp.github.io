@@ -154,7 +154,7 @@ window.LG_IDEAS = {
     reasons: {
       partner: ["You laugh at my worst jokes","You hold my hand in every crowd","You remember how I take my chai","You make Mondays feel like Sundays","You believe in me, loudly","You still give me butterflies","You make every road trip better","Home is wherever you are","Just… you"]
     },
-    captions: { partner: ["Our first trip","The day we said yes","Two chais, one table","That rainy evening","Our first home","Road trip, no plan","Still us"] },
+    captions: { partner: ["2019: We met at the college fest","2020: Our first ride to Lonavala","2021: You met my family","2022: The proposal by the sea","2023: Our wedding, the best day","2024: Our own little home","Today: Still choosing you"] },
     letters: {
       partner: [
         ["Romantic", "{to},", "Years ago you got on the back of my scooter and never got off. Best decision we ever made.", "We've had potholes, wrong turns and a lot of traffic, but I'd ride every kilometre again if you're the one holding on.", "Here's to the next milestone, and every chai stop on the way."],

@@ -156,6 +156,7 @@ textarea{min-height:170px;resize:vertical}
 
     <fieldset>
       <legend>Photos <span class="hint" id="photoMax">up to 5</span></legend>
+      <p class="hint" id="photosHint" style="margin:0 0 8px" hidden></p>
       <div class="ideas" id="capIdeas" hidden></div>
       <div class="photos" id="photos"></div>
       <input type="file" id="fileIn" accept="image/*" multiple hidden>
@@ -232,7 +233,7 @@ textarea{min-height:170px;resize:vertical}
   </div>
 </div>
 
-<script src="ideas.js?v=3"></script>
+<script src="ideas.js?v=4"></script>
 <script>
 /* ================= SETTINGS ================= */
 const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";   // same /exec URL as in the birthday template
@@ -332,14 +333,14 @@ const DESIGNS = {
     regularPrice: 0,
     offerLabel: "",
     offerEnds: "",
+    maxPhotos: 20, captionMax: 80,     // every photo is a milestone stone on Memory Lane (one per year)
+    photosHint: "Each photo becomes a milestone on Memory Lane, in this order. Add one for every year or moment, and write the year first, then a colon, e.g. \u201c2019: We met at the college fest\u201d.",
+    captionHint: "e.g. 2019: We met at the college fest",
     song: "A bright, happy scooter-ride tune already plays on this design.",
     numberLabel: "Years together", numberHint: "e.g. 7",
     reasonsTitle: "Reasons that fill the fuel tank (one per bar)",
     reasonsExamples: ["You laugh at my worst jokes","You hold my hand in every crowd","You remember how I take my chai","You make Mondays feel like Sundays","You believe in me, loudly","Just… you"],
     extras: [
-      { key: "milestones", type: "list", count: 8, max: 80, label: "Milestones on Memory Lane (optional)",
-        hint: "They drive the scooter up a winding road; every milestone stone is one moment. Start with the year, then a colon. Leave empty and we'll use 'Year 1, Year 2…' with gentle lines.",
-        examples: ["2019: We met at the college fest","2020: Our first ride to Lonavala","2021: You met my family","2022: The proposal by the sea","2023: Our wedding, the best day","2024: Our own little home","Today: Still choosing you"] },
       { key: "promises", type: "list", count: 5, max: 80, label: "Promises at the toll naka (optional)",
         hint: "Every time they lift the barrier, one promise appears. Leave empty and we'll use sweet ones of our own.",
         examples: ["The window seat is always yours","I'll carry the umbrella every monsoon","The last bite of everything is yours","I'll always let you choose the music","I'll never stop being your co-rider"] }
@@ -394,6 +395,7 @@ if (!D) { document.querySelector("main").innerHTML = '<p style="padding:40px 0">
 $("#title").textContent = "Make your " + D.name + " surprise";
 const MAXP = D.maxPhotos || 5, MAXR = D.maxReasons || 6;
 $("#photoMax").textContent = "up to " + MAXP;
+if (D.photosHint){ $("#photosHint").textContent = D.photosHint; $("#photosHint").hidden = false; }
 $("#reasonMax").textContent = MAXR;
 $("#numberLabel").textContent = D.numberLabel || "Special number";
 if (D.numberHint) $("#f-number").placeholder = D.numberHint;
@@ -624,7 +626,7 @@ function renderPhotos(){
   state.photos.forEach((p, i) => {
     const s = document.createElement("div"); s.className = "slot";
     const img = document.createElement("img"); img.src = p.src; img.alt = "Photo " + (i+1);
-    const cap = document.createElement("input"); cap.type = "text"; cap.maxLength = 50; cap.placeholder = "Caption (optional)"; cap.value = p.caption || "";
+    const cap = document.createElement("input"); cap.type = "text"; cap.maxLength = D.captionMax || 50; cap.placeholder = D.captionHint || "Caption (optional)"; cap.value = p.caption || "";
     cap.oninput = () => { p.caption = cap.value; changed(); };
     const rm = document.createElement("button"); rm.className = "rm"; rm.type = "button"; rm.textContent = "Remove";
     rm.onclick = () => { state.photos.splice(i, 1); renderPhotos(); changed(); };
