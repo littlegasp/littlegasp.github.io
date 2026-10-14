@@ -63,6 +63,7 @@ footer.site{margin-top:56px;padding:28px 20px 40px;text-align:center;color:var(-
 footer.site nav{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 16px;margin-bottom:8px}
 footer.site nav a{color:var(--ink);font-weight:600;text-decoration:none}
 footer.site nav a:hover{text-decoration:underline}
+footer.site nav.ideas{margin-bottom:14px}footer.site nav.ideas a{font-weight:400;color:var(--muted)}
 
 /* text pages (terms, refund, privacy, contact) */
 .page{padding-top:36px}
