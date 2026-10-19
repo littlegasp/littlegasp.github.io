@@ -390,6 +390,7 @@ const $ = s => document.querySelector(s);
 const q = new URLSearchParams(location.search);
 const designKey = q.get("d") || "birthday-cake";
 const D = DESIGNS[designKey];
+const EDIT = q.get("edit") ? { id: q.get("edit"), k: q.get("k") || "" } : null;   // buyer editing a paid website (link from their email)
 if (!D) { document.querySelector("main").innerHTML = '<p style="padding:40px 0">That design wasn\'t found. <a href="/#designs">See all designs</a>.</p>'; throw new Error("bad design"); }
 
 $("#title").textContent = "Make your " + D.name + " surprise";
@@ -413,7 +414,7 @@ let state = { to:"", from:"", number:"", photos:[], reasons:["","","","","",""],
 function payload(){
   return {
     to: state.to.trim(), from: state.from.trim(), number: state.number.trim(),
-    photos: state.photos.filter(p => p.src).map(p => ({ src: p.src, caption: (p.caption || "").trim() })),
+    photos: state.photos.filter(p => p.src).map(p => ({ src: p.src, caption: (p.caption || "").trim(), keep: p.keep })),
     reasons: state.reasons.map(r => r.trim()).filter(Boolean),
     letter: state.letter.split(/\n+/).map(l => l.trim()).filter(Boolean),
     question: state.question.trim(), yesReply: state.yesReply.trim(),
@@ -436,7 +437,7 @@ function extraPayload(){
 /* ---------- draft saved on this device (IndexedDB) ---------- */
 function idb(){ return new Promise((res, rej) => { const r = indexedDB.open("littlegasp", 1); r.onupgradeneeded = () => r.result.createObjectStore("drafts"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
 let saveT;
-function saveDraft(){ clearTimeout(saveT); saveT = setTimeout(async () => { try { const db = await idb(); db.transaction("drafts","readwrite").objectStore("drafts").put(state, designKey); } catch(e){} }, 500); }
+function saveDraft(){ if (EDIT) return; clearTimeout(saveT); saveT = setTimeout(async () => { try { const db = await idb(); db.transaction("drafts","readwrite").objectStore("drafts").put(state, designKey); } catch(e){} }, 500); }
 async function loadDraft(){ try { const db = await idb(); return await new Promise(res => { const r = db.transaction("drafts").objectStore("drafts").get(designKey); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); }); } catch(e){ return null; } }
 async function clearDraft(){ try { const db = await idb(); db.transaction("drafts","readwrite").objectStore("drafts").delete(designKey); } catch(e){} }
 
@@ -787,9 +788,10 @@ async function idbGet(k){ try { const db = await idb(); return await new Promise
 async function idbPut(k, v){ try { const db = await idb(); const st = db.transaction("drafts","readwrite").objectStore("drafts"); v === null ? st.delete(k) : st.put(v, k); } catch(e){} }
 
 const payBtn = $("#payBtn");
-function busy(on, label){ payBtn.disabled = on; payBtn.textContent = on ? label : "💌 Unlock your link"; }
+function busy(on, label){ payBtn.disabled = on; payBtn.textContent = on ? label : EDIT ? "💾 Save changes" : "💌 Unlock your link"; }
 
 payBtn.onclick = async () => {
+  if (EDIT) return saveEdit();
   const errs = check();
   if (errs.length){
     showTab("write"); toast(errs[0][1]);
@@ -878,6 +880,7 @@ $("#startOver").onclick = async () => {
   await clearDraft(); location.reload();
 };
 (async () => {
+  if (EDIT) return startEdit();
   const saved = await loadDraft();
   if (saved){ state = Object.assign(state, saved); $("#restoreBar").hidden = false; }
   bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); renderExtras(); renderFor(); renderIdeas(); fitLayout();
@@ -893,6 +896,56 @@ $("#startOver").onclick = async () => {
   }
   recoverPaid();
 })();
+
+/* ---------- editing a paid website (7 days, private link from the buyer's email) ---------- */
+async function startEdit(){
+  $("#title").textContent = "Edit your " + D.name + " surprise";
+  $("#title").nextElementSibling.textContent = "Change anything, add photos, check the preview, then tap Save changes. Same link, no new payment.";
+  $("#pricebox").innerHTML = '<span class="now" style="font-size:1.15rem">Editing</span>';
+  $(".trust").textContent = "✏️ Changes show on the same link, no new payment";
+  busy(false);
+  overlay({ spin: true, title: "Opening your website…", text: "One moment." });
+  let r;
+  try { r = await api("getEdit", EDIT); }
+  catch(e){ overlay({ title: "Can't open this edit link", text: e.message + "." }); return; }
+  if (r.design && r.design !== designKey){ q.set("d", r.design); location.replace("?" + q.toString()); return; }
+  const c = r.content || {};
+  Object.assign(state, {
+    to: c.to || "", from: c.from || "", number: c.number || "", reasons: (c.reasons || []).slice(),
+    letter: (c.letter || []).join("\n"), question: c.question || "", yesReply: c.yesReply || "",
+    email: r.email || "", theme: c.theme || "her", extra: c.extra || {}, photos: c.photos || [],
+    song: c.song ? Object.assign({ name: "Your current song" }, c.song) : null
+  });
+  EDIT.link = r.link;
+  let found = false;
+  if (!state.photos.length){                       // photos they added before paying may still be on this phone
+    const d = await loadDraft();
+    if (d && d.photos && d.photos.length){ state.photos = d.photos.slice(0, MAXP).map(p => ({ src: p.src, caption: p.caption || "" })); found = true; }
+  }
+  bindFields(); renderNotes(); renderPhotos(); renderSong(); renderTheme(); renderExtras(); renderFor(); renderIdeas(); fitLayout();
+  if (desktop()) loadPreview();
+  $("#ov").hidden = true;
+  toast(found ? "We found the photos you added on this phone. Check them, then tap Save changes." : "Make your changes, then tap Save changes.");
+}
+async function saveEdit(){
+  const errs = check();
+  if (errs.length){ showTab("write"); toast(errs[0][1]); setTimeout(() => errs[0][0].focus(), 50); return; }
+  busy(true, "Saving…");
+  overlay({ spin: true, title: "Saving your changes", text: "Uploading photos can take a few seconds, please don't close this page." });
+  try {
+    const p = payload(), content = Object.assign({}, p); delete content.photos; delete content.song;
+    const r = await api("update", Object.assign({}, EDIT, { content, photos: p.photos, song: p.song }));
+    const done = { link: r.link || EDIT.link, to: state.to.trim(), email: state.email.trim() };
+    showLink(done);
+    $("#ovTitle").textContent = "Saved ✓";
+    $("#ovText").textContent = "Your changes are live on the same link" + (r.photos ? " with " + r.photos + " photo" + (r.photos > 1 ? "s" : "") : "") + ". If " + (done.to || "they") + " already opened it, ask them to open it again.";
+    const again = [...$("#ovBody").querySelectorAll("button.linkbtn")].pop();
+    if (again){ again.textContent = "Keep editing"; again.onclick = () => { $("#ov").hidden = true; }; }
+  } catch(e){
+    overlay({ title: "Couldn't save", text: e.message + ". Nothing was changed. Try again, or email littlegasp.orders@gmail.com.", body: [] });
+    setTimeout(() => { $("#ov").hidden = true; }, 4000);
+  } finally { busy(false); }
+}
 
 /* Paid, but the page closed before the website was made (e.g. the UPI app took over).
    Ask the backend about the order we saved (or this email + design); if it's paid, finish it with these photos. */
