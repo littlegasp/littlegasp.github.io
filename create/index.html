@@ -803,6 +803,7 @@ payBtn.onclick = async () => {
     const content = payload(); delete content.photos; delete content.song;
     order = await api("createOrder", { design: designKey, email: state.email.trim(), content });
   } catch(e){ busy(false); toast("Couldn't start payment: " + e.message); return; }
+  await idbPut("order:" + designKey, { orderId: order.orderId, t: Date.now() });   // lets us finish it if the page closes after paying (UPI apps)
 
   const rzp = new Razorpay({
     key: order.keyId, order_id: order.orderId, amount: order.amount, currency: "INR",
@@ -826,7 +827,7 @@ async function finish(paid){
     const r = await api("complete", Object.assign({}, paid, { photos: payload().photos, song: payload().song }));
     const done = { link: r.link, to: state.to.trim(), email: state.email.trim() };
     await idbPut("done:" + designKey, done);
-    await setPending(null); await clearDraft();
+    await setPending(null); await idbPut("order:" + designKey, null); await clearDraft();
     showLink(done);
   } catch(e){
     const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Retry";
@@ -888,8 +889,38 @@ $("#startOver").onclick = async () => {
     const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Finish my website";
     btn.onclick = () => finish(pending);
     overlay({ title: "Welcome back", text: "Your payment went through but your website wasn't finished. Tap below to complete it. You won't be charged again.", body: [btn] });
+    return;
   }
+  recoverPaid();
 })();
+
+/* Paid, but the page closed before the website was made (e.g. the UPI app took over).
+   Ask the backend about the order we saved (or this email + design); if it's paid, finish it with these photos. */
+async function recoverPaid(){
+  const o = await idbGet("order:" + designKey);
+  const email = (state.email || "").trim();
+  if ((!o || !o.orderId) && !email) return;
+  const ask = { orderIds: o && o.orderId ? [o.orderId] : [], email, design: designKey };
+  let r;
+  try { r = await api("recover", Object.assign({ check: true }, ask)); } catch(e){ return; }
+  if (!r.paid){
+    if (o && Date.now() - o.t > 3 * 864e5) idbPut("order:" + designKey, null);
+    return;
+  }
+  overlay({ spin: true, title: "We found your payment 🎉", text: "Finishing your website" + (state.photos && state.photos.length ? " with your photos" : "") + ". This takes a few seconds, please don't close this page." });
+  try {
+    const f = await api("recover", Object.assign({ photos: payload().photos, song: payload().song }, ask));
+    if (!f.link) throw new Error("not ready yet");
+    const done = { link: f.link, to: state.to.trim(), email: email || "your email" };
+    await idbPut("done:" + designKey, done);
+    await idbPut("order:" + designKey, null); await setPending(null); await clearDraft();
+    showLink(done);
+  } catch(e){
+    const btn = document.createElement("button"); btn.className = "btn"; btn.textContent = "Retry";
+    btn.onclick = () => location.reload();
+    overlay({ title: "Almost there", text: "Your payment is safe, but we couldn't finish your website (" + e.message + "). Tap Retry. If it keeps failing, email littlegasp.orders@gmail.com.", body: [btn] });
+  }
+}
 </script>
 </body>
 </html>
