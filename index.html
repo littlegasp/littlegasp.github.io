@@ -85,22 +85,19 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 
 /* showcase stage */
 .stage{position:relative;border-radius:36px;padding:40px 10px 30px;min-height:640px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.ph{position:relative;background:#1B1640;border-radius:34px;padding:8px;box-shadow:0 20px 40px rgba(27,22,64,.3)}
-.ph .scr{position:relative;overflow:hidden;border-radius:27px;background:#1B1640}
-.ph.main{width:286px;z-index:3}
-.ph.main .scr{height:570px}
-.ph.main iframe{position:absolute;top:0;left:0;width:375px;border:0;transform-origin:0 0;pointer-events:none}
-.ph.side{width:210px;position:absolute;z-index:2}
-.ph.side .scr{height:420px;display:flex;align-items:center;justify-content:center}
-.ph.side svg{width:78%}
-.ph.side .scr img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.ph.left{left:3%;transform:rotate(-9deg) translateY(16px);animation:bobL 6s ease-in-out infinite}
-.ph.right{right:3%;transform:rotate(9deg) translateY(16px);animation:bobR 7s ease-in-out infinite}
-@keyframes bobL{50%{transform:rotate(-7deg) translateY(4px)}}
-@keyframes bobR{50%{transform:rotate(7deg) translateY(4px)}}
+/* coverflow deck: every live design is a phone; the middle one plays for real, the rest wait in 3D */
+.deck{position:absolute;inset:28px 0 34px;perspective:1100px;perspective-origin:50% 45%;touch-action:pan-y}
+.cf{--w:286px;--h:570px;position:absolute;left:50%;top:50%;width:var(--w);margin:calc((var(--h) + 16px) / -2) 0 0 calc(var(--w) / -2);background:#1B1640;border-radius:34px;padding:8px;box-shadow:0 22px 44px rgba(27,22,64,.32);transform-style:preserve-3d;transition:transform .75s cubic-bezier(.22,.8,.24,1),opacity .6s,filter .6s;cursor:pointer;will-change:transform}
+.cf .scr{position:relative;height:var(--h);overflow:hidden;border-radius:27px;background:#1B1640}
+.cf .scr img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.cf .scr svg{width:78%;margin:auto;display:block;position:relative;top:50%;transform:translateY(-50%)}
+.cf iframe{position:absolute;top:0;left:0;width:375px;border:0;transform-origin:0 0;pointer-events:none}
+.cf .num{position:absolute;z-index:2;top:16px;left:18px;font:700 .72rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.6);pointer-events:none;transition:opacity .4s}
+.cf.on{cursor:default;box-shadow:0 0 0 2px var(--berry),0 26px 56px rgba(27,22,64,.42)}
+.cf.on .num{opacity:0}
+.cf:not(.on) .scr::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(27,22,64,.45),rgba(27,22,64,.15));pointer-events:none}
+.cf:focus-visible{outline:3px solid var(--butter);outline-offset:4px}
 .chip{position:absolute;z-index:4;border-radius:999px;padding:7px 14px;font-weight:700;font-size:.82rem;color:var(--ink);white-space:nowrap}
-.chip.soon{top:12px;left:50%;transform:translateX(-50%);background:var(--butter)}
-.chip.soon.is-live{background:var(--mint)}
 .chip.live{left:16px;bottom:16px}
 .chip.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#22A06B;margin-right:8px;vertical-align:1px}
 .note{position:absolute;z-index:5;top:22px;right:18px;transform:rotate(5deg);background:#FFF6D6;padding:12px 16px 14px;border-radius:6px;box-shadow:0 8px 18px rgba(42,31,92,.15);font-family:"Nanum Pen Script",cursive;font-size:1.45rem;line-height:1.05;color:#4B3F7E}
@@ -110,9 +107,8 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 @media(max-width:999px) and (min-width:621px){.stage{min-height:600px}}
 @media(max-width:620px){
   .stage{min-height:460px}
-  .ph.main{width:204px}.ph.main .scr{height:404px}
-  .ph.side{width:132px}.ph.side .scr{height:262px}
-  .ph.left{left:-10px}.ph.right{right:-10px}
+  .cf{--w:204px;--h:404px}
+  .deck{inset:14px 0 118px}
   .note{font-size:1.2rem;top:12px;right:8px}
 }
 
@@ -159,7 +155,8 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
 .reveal.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){
   .reveal{opacity:1;transform:none;transition:none}
-  .blobs i,.ph.left,.ph.right,.float,.pill .dot{animation:none}
+  .blobs i,.float,.pill .dot{animation:none}
+  .cf{transition-duration:.01s}
 }
   @media(max-width:620px){
   .stage{min-height:580px;padding-bottom:120px}
@@ -190,9 +187,7 @@ h2{font-size:clamp(1.9rem,5vw,2.6rem);margin:0 0 10px}
       <svg class="float" style="left:12%;top:14%" width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-9.3-8.6C1 9 3 5 6.6 5c2 0 3.4 1.2 5.4 3.3C14 6.2 15.4 5 17.4 5 21 5 23 9 21.3 12.4 19 16.6 12 21 12 21z" fill="#F7A8C2"/></svg>
       <svg class="float" style="right:16%;bottom:20%;animation-delay:-2s" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z" fill="#FFC857"/></svg>
 
-      <div class="ph side left"><div class="scr" id="sideL"></div><span class="chip soon" id="chipL"></span></div>
-      <div class="ph main"><div class="scr" id="mainScr"></div></div>
-      <div class="ph side right"><div class="scr" id="sideR"></div><span class="chip soon" id="chipR"></span></div>
+      <div class="deck" id="deck"></div>
 
       <span class="chip live glass">A real website, playing on its own</span>
       <a class="try glass" id="tryLink" href="#designs" target="_blank" rel="noopener">Tap to try it ↗</a>
@@ -345,54 +340,78 @@ DESIGNS.forEach((d, i) => {
   grid.appendChild(card);
 });
 
-/* hero showcase: each live design plays once in the middle phone, then hands over to the next
-   (featured first). The side phones show coming-soon designs and the live design that ISN'T playing,
-   and the "Live now" pill names whatever is playing. */
+/* hero showcase: a coverflow of every live design (featured first). The middle phone plays its
+   design for real (?autoplay=1); when it reports "done" the deck slides on to the next one.
+   Tap or swipe the side phones to jump. The "Live now" pill names whatever is in the middle. */
 const liveDesigns = DESIGNS.filter(d => d.status === "live").sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-const soonDesigns = DESIGNS.filter(d => d.status !== "live");
-const mainScr = document.getElementById("mainScr");
-let showIdx = 0, showTimer;
-function setSide(scr, chip, d){
-  document.getElementById(scr).innerHTML = !d ? "" : d.screen ? `<img src="${d.screen}" alt="" loading="lazy">` : (ART[d.art] || "");
-  const c = document.getElementById(chip), live = !!d && d.status === "live";
-  c.hidden = !d; if (!d) return;
-  c.textContent = live ? "Live now" : "Coming soon"; c.classList.toggle("is-live", live);
+const deck = document.getElementById("deck");
+let cur = 0, showTimer, playTimer, swipedAt = 0;
+const cards = liveDesigns.map((d, i) => {
+  const c = document.createElement("div"); c.className = "cf"; c.tabIndex = 0; c.setAttribute("role", "button");
+  c.setAttribute("aria-label", "Show the " + d.name + " design");
+  c.innerHTML = `<span class="num">${String(i + 1).padStart(2, "0")}</span><div class="scr">${d.screen ? `<img src="${d.screen}" alt="" ${i > 2 ? 'loading="lazy"' : ""}>` : (ART[d.art] || "")}</div>`;
+  c.onclick = () => { if (i !== cur && Date.now() - swipedAt > 400) go(i); };
+  c.onkeydown = e => { if ((e.key === "Enter" || e.key === " ") && i !== cur){ e.preventDefault(); go(i); } };
+  deck.appendChild(c);
+  return c;
+});
+function still(c, d){ c.querySelector(".scr").innerHTML = d.screen ? `<img src="${d.screen}" alt="">` : (ART[d.art] || ""); }
+function layout(){
+  const n = cards.length, small = matchMedia("(max-width:620px)").matches;
+  const near = small ? 138 : 190, step = small ? 40 : 58, depth = small ? 170 : 210;
+  cards.forEach((c, i) => {
+    let o = i - cur;
+    if (o > n / 2) o -= n; if (o < -n / 2) o += n;          // shortest way round, so the deck loops
+    const a = Math.abs(o), s = Math.sign(o);
+    const x = a ? s * (near + (a - 1) * step) : 0;
+    c.style.transform = a ? `translateX(${x}px) translateZ(${-(60 + a * depth)}px) rotateY(${-s * 48}deg) scale(.88)` : "none";
+    c.style.zIndex = 20 - a;
+    c.style.opacity = a > 3 ? 0 : 1;
+    c.style.pointerEvents = a > 3 ? "none" : "";
+    c.classList.toggle("on", a === 0);
+    c.setAttribute("aria-current", a === 0 ? "true" : "false");
+  });
 }
 function showPill(d){
   document.getElementById("liveName").textContent = d.name;
   document.getElementById("livePill").href = "/create/?d=" + encodeURIComponent(d.key);
+  const t = document.getElementById("tryLink"); t.href = d.demo; t.setAttribute("aria-label", "Try the " + d.name + " demo");
 }
-function playShowcase(){
-  const d = liveDesigns[showIdx % liveDesigns.length];
+function go(i){
+  const prev = cards[cur];
+  if (prev && prev.querySelector("iframe")) still(prev, liveDesigns[cur]);   // stop the old one playing
+  cur = (i + cards.length) % cards.length;
+  layout(); showPill(liveDesigns[cur]);
+  clearTimeout(playTimer); clearTimeout(showTimer);
+  playTimer = setTimeout(play, 800);                        // start playing once the slide has settled
+}
+function play(){
+  const d = liveDesigns[cur], scr = cards[cur].querySelector(".scr");
   const f = document.createElement("iframe");
   f.src = d.demo + "?autoplay=1"; f.title = d.name + " playing"; f.tabIndex = -1; f.setAttribute("aria-hidden", "true");
-  f.loading = "eager";
-  mainScr.innerHTML = ""; mainScr.appendChild(f); fitShow();
-  const t = document.getElementById("tryLink"); t.href = d.demo; t.setAttribute("aria-label", "Try the " + d.name + " demo");
-  showPill(d);
-  const others = soonDesigns.concat(liveDesigns.filter(x => x !== d));   // side phones: never the one playing
-  setSide("sideL", "chipL", others[0]);
-  setSide("sideR", "chipR", others[1] || others[0]);
-  clearTimeout(showTimer); showTimer = setTimeout(nextShow, 75000);   // safety net if a design never reports "done"
+  f.loading = "eager"; f.style.opacity = 0; f.onload = () => { f.style.transition = "opacity .5s"; f.style.opacity = 1; };
+  scr.appendChild(f); fitShow();
+  showTimer = setTimeout(() => go(cur + 1), 75000);         // safety net if a design never reports "done"
 }
-function nextShow(){ showIdx++; playShowcase(); }
 addEventListener("message", e => {
-  const f = mainScr.querySelector("iframe");
-  if (e.origin === location.origin && f && e.source === f.contentWindow && e.data && e.data.type === "lg-autoplay-done") nextShow();
+  const f = cards[cur] && cards[cur].querySelector("iframe");
+  if (e.origin === location.origin && f && e.source === f.contentWindow && e.data && e.data.type === "lg-autoplay-done") go(cur + 1);
 });
 function fitShow(){
-  const f = mainScr.querySelector("iframe"); if (!f) return;
-  const k = mainScr.clientWidth / 375;
-  f.style.transform = "scale(" + k + ")"; f.style.height = (mainScr.clientHeight / k) + "px";
+  const scr = cards[cur] && cards[cur].querySelector(".scr"), f = scr && scr.querySelector("iframe"); if (!f) return;
+  const k = scr.clientWidth / 375;
+  f.style.transform = "scale(" + k + ")"; f.style.height = (scr.clientHeight / k) + "px";
 }
-addEventListener("resize", fitShow);
-if (liveDesigns.length){
-  const first = liveDesigns[0], others = soonDesigns.concat(liveDesigns.slice(1));
-  mainScr.innerHTML = ART[first.art];
-  mainScr.style.display = "flex"; mainScr.style.alignItems = "center"; mainScr.style.justifyContent = "center";
-  showPill(first); setSide("sideL", "chipL", others[0]); setSide("sideR", "chipR", others[1] || others[0]);
-  setTimeout(playShowcase, 700);
-}
+addEventListener("resize", () => { layout(); fitShow(); });
+/* swipe the deck on phones */
+let sx = null, sy = 0;
+deck.addEventListener("pointerdown", e => { sx = e.clientX; sy = e.clientY; });
+deck.addEventListener("pointerup", e => {
+  if (sx === null) return;
+  const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)){ swipedAt = Date.now(); go(cur + (dx < 0 ? 1 : -1)); }
+});
+if (cards.length){ layout(); showPill(liveDesigns[0]); playTimer = setTimeout(play, 900); }
 
 /* scroll reveal */
 const io = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
