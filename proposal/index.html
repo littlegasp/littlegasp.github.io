@@ -373,23 +373,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
   </section>
 
-  <!-- 2. Lights on -->
-  <section class="scene two" data-scene="lights" hidden>
-    <div class="art">
-      <div class="chainart">
-        <button class="plain chain" id="chain" type="button" aria-label="Pull the chain to switch on the lights"><img src="img/chain.webp" alt="A brass pull chain with a yellow tassel" width="260" height="1751"><span class="halo"></span><span class="arrow">pull ↓</span></button>
-      </div>
-    </div>
-    <div class="words">
-      <p class="kick">It's a little dark in here</p>
-      <h2 tabindex="-1">Lights, please</h2>
-      <p class="sub" id="lightsSub">Pull the chain down to switch on the lights.</p>
-      <p class="whisper" id="lightsLine"></p>
-      <button class="btn mint" id="pullBtn"><span class="lbl">Pull it 💡</span></button>
-      <button class="btn" data-next id="afterLights" hidden><span class="lbl"></span></button>
-    </div>
-  </section>
-
   <!-- 3. The clue map -->
   <section class="scene two" data-scene="map" hidden>
     <div class="art">
@@ -401,7 +384,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     </div>
     <div class="words">
       <h2 tabindex="-1">Your treasure map</h2>
-      <p class="sub" id="mapSub">Every hunt needs a map. Tap it to unroll yours.</p>
+      <p class="sub" id="mapSub">The house is dark, so you will search with a torch 🔦. First, your map: tap it to unroll it.</p>
       <p class="whisper" id="mapLine"></p>
       <button class="btn" data-next id="afterMap" hidden><span class="lbl"></span></button>
     </div>
@@ -582,7 +565,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 <script>
 /* ============ SETUP: same Apps Script URL as the other designs ============ */
 const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";
-/* Default music: our own synthesised music-box tune (SONG.src empty). It starts when the lights come on.
+/* Default music: our own synthesised music-box tune (SONG.src empty). It starts when the note under the door is read.
    A buyer's own song (d.song) plays instead, and falls back to our tune if it won't load. */
 const SONG = { src: "", volume: .8, credit: "" };
 /* ========================================================================= */
@@ -672,8 +655,8 @@ function build(d){
 
   /* the clues that have something to hide */
   clues = ["cushion", "frame", "jar", "book"];   // always four clues
-  seq = ["open", "lights", "map", ...clues, "trail", "show", "ask", "end"];
-  const label = s => clues.includes(s) ? `Find clue ${clues.indexOf(s) + 1}` : { lights:"Step inside", map:"Read the map", trail:"Follow the petals", show:"Step outside", ask:"Open the ring box", end:"Finish" }[s];
+  seq = ["open", "map", ...clues, "trail", "show", "ask", "end"];
+  const label = s => clues.includes(s) ? `Find clue ${clues.indexOf(s) + 1}` : { map:"Step inside",  trail:"Follow the petals", show:"Step outside", ask:"Open the ring box", end:"Finish" }[s];
   $$("[data-scene]").forEach(sc => {
     const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl"), k = sc.querySelector("[data-clueno]");
     if (b && i > -1 && seq[i + 1]) b.textContent = label(seq[i + 1]);
@@ -683,7 +666,7 @@ function build(d){
   const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
 
   clues.forEach(buildSearch);
-  buildOpen(); buildLights(); buildMap(); buildShow(); buildCushion(); buildTrail(); buildFrame(); buildJar(); buildBook(); buildAsk();
+  buildOpen(); buildMap(); buildShow(); buildCushion(); buildTrail(); buildFrame(); buildJar(); buildBook(); buildAsk();
   if (!coarse){
     $("#cushionSub").textContent = "Lift the cushion (drag it away, or click it).";
     $("#frameHint").textContent = "Tilt the frame on its nail (drag it, or click it).";
@@ -708,7 +691,7 @@ function build(d){
       if (song && musicOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {}));
     });
   }
-  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false; $("#string").hidden = false;
+  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false;
   go("open");
 }
 
@@ -838,30 +821,10 @@ async function ring(){
 async function readNote(){
   if (!rung || noteRead) return; noteRead = true; ensureAudio();
   const s = $("#slip"); s.classList.add("read", "done"); if (ctx) noise(.3, 3000, .08, .8);
+  startMusic();
   $("#openSub").hidden = true; $("#openLine").textContent = ""; const box = $("#openNote"); box.hidden = false; pop(box);
   await revealLines(box, () => true);
   showNext($("#openBtn"));
-}
-
-/* ---------- 2. pull the chain: the fairy lights come on ---------- */
-let lit = false;
-function buildLights(){
-  const c = $("#chain");
-  dragOrTap(c, pull, (dx, dy) => dy > 34);
-  $("#pullBtn").addEventListener("click", pull);
-}
-async function pull(){
-  if (lit) return; lit = true; ensureAudio(); unlockSong();
-  const c = $("#chain"); c.classList.add("pull", "done"); if (ctx) click();
-  setTimeout(() => c.classList.remove("pull"), 260);
-  $("#pullBtn").hidden = true;
-  await sleep(reduce ? 0 : 250);
-  document.body.classList.add("lit");
-  if (ctx) for (let i = 0; i < 12; i++) ding(hz(74 + [0,4,7,12,7,4,2,5,9,14,12,16][i]), i * .15, .05);
-  startMusic();
-  $("#lightsSub").textContent = "Only the fairy lights work… the big light is broken. You'll have to search with a torch. 🔦";
-  await sleep(reduce ? 0 : 1600); $("#lightsLine").textContent = "Good luck, detective. ✨";
-  showNext($("#afterLights"));
 }
 
 /* ---------- 3. the map: one X per clue ---------- */
@@ -1195,7 +1158,6 @@ function loop(){
 async function runAutoplay(){
   document.body.style.pointerEvents = "none";
   await sleep(1600); await ring(); await sleep(1200); await readNote(); await sleep(1400);
-  go("lights"); await sleep(900); await pull(); await sleep(1400);
   go("map"); await sleep(600); await unroll(); await sleep(1500);
   go("cushion"); await sleep(700); await autoFind("cushion"); await liftCushion(); await sleep(1600);
   go("frame"); await sleep(700); await autoFind("frame"); await tilt(); await sleep(1200); await openEnv(); await sleep(1200);
