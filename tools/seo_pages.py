@@ -6,7 +6,7 @@ Prices here must match the homepage/editor DESIGNS and Apps Script PRICES."""
 import json, html, os
 
 SITE = "https://littlegasp.com"
-CSSV = "12"   # keep in step with ?v= on style.css / site.js everywhere
+CSSV = "13"   # keep in step with ?v= on style.css / site.js everywhere
 TODAY = "2026-10-29"
 
 DESIGN = {  # key: (name, price)
@@ -14,7 +14,7 @@ DESIGN = {  # key: (name, price)
   "apology": ("Mend the Heart", 149), "love-letter": ("Sealed with Love", 149),
   "anniversary": ("Memory Lane", 149), "karwa-chauth": ("Karwa Chauth Moon", 149),
   "diwali": ("Diwali Night", 149), "garba-circle": ("Garba Circle", 149),
-  "proposal": ("Ring Hunt", 149),
+  "proposal": ("Ring Hunt", 149), "miss-you": ("Miss You", 149),
 }
 
 COMMON_FAQ = [
@@ -146,6 +146,28 @@ PAGES = [
   faq=[("Can I propose online with a website?", "Yes. Ring Hunt is a personalised proposal website: you add your photos, reasons and letter, preview it free, and send one private link. It works well on its own for long distance, or as the lead-up to a real proposal in person."),
        ("Will I know if they said yes?", "Yes. When they tap \"Yes\" on the balcony, their answer is emailed to you straight away.")],
  ),
+ dict(slug="long-distance-relationship-gift", designs=["miss-you"],
+  title="Long-Distance Relationship Gift – \"Miss You\" Surprise Website | Little Gasp",
+  desc="A long-distance gift for your girlfriend or boyfriend: a paper plane flies from your city to theirs, with your photos, the things you miss and your letter at stops on the way. It lands as a boarding pass to pick the day you meet. Free preview.",
+  h1="A long-distance gift that crosses the miles",
+  lead="<b>Miss You</b> is a personalised surprise website for a girlfriend, boyfriend, wife or husband in another city or country. A paper plane carries your message across a painted map from your city to theirs, dropping off a surprise at every stop, and lands as a boarding pass asking when you'll meet.",
+  plays_title="What happens when they open it",
+  plays=["A night map lights up both your cities, with the real distance between them.",
+         "They fly your paper plane along the dotted path. The kilometres count down as it goes.",
+         "Stop 1: a rainy window. They wipe the fog to find your photos, one by one.",
+         "Stop 2: the phone rings. They pick up, and everything you miss about them arrives as message bubbles.",
+         "Stop 3: a parcel. They tear the tape and your letter writes itself in.",
+         "At 0 km the plane unfolds into a boarding pass with both cities. They pick the day you meet, and the date comes to your email.",
+         "It ends with the two of you together on the map."],
+  ideas_title="What to write when you miss someone",
+  ideas=["Small things land hardest: \"your voice notes at 1 am\", \"stealing fries off your plate\".",
+         "Caption each photo with where you were and what you'll do there next time.",
+         "In the letter, talk about the next visit, not only the distance.",
+         "Ask a question they can answer with a date: \"When do we meet?\" or \"Which weekend can I steal you?\"",
+         "Works across countries too: type any city, or the distance yourself for a small town."],
+  faq=[("What is a good gift for a long-distance girlfriend or boyfriend?", "Something personal that arrives instantly. A Miss You surprise website carries your photos, the things you miss and your letter across a map from your city to theirs, so it feels like it travelled to them, and it ends by asking when you'll meet."),
+       ("Does it work if we live in different countries?", "Yes. Type both cities and we work out the distance. For a small town, you can type the kilometres yourself.")],
+ ),
  dict(slug="karwa-chauth-gift-for-wife", designs=["karwa-chauth"],
   title="Karwa Chauth Gift for Wife – Online Surprise Website | Little Gasp",
   desc="A personalised Karwa Chauth surprise for your wife: she raises the channi to the moon, lights diyas that show why you love her, and turns the puja thali for seven promises. Free preview, ready instantly.",
@@ -234,10 +256,11 @@ CARD_TEXT = {
  "diwali": ("diwali-surprise-website", "Rangoli, fireworks and lanterns. For a partner, family or Bhai Dooj."),
  "garba-circle": ("navratri-garba-surprise", "Light all nine nights of Navratri, then a dandiya round."),
  "proposal": ("proposal-surprise-website", "A treasure hunt with a torch, a projector film and a ring box."),
+ "miss-you": ("long-distance-relationship-gift", "A paper plane flies to them, with a surprise at every stop."),
 }
 LINK_NAME = {p["slug"]: p["h1"].replace("A ","").replace("An ","") for p in PAGES}
 SHORT = {"digital-surprise-gifts":"All digital surprises","apology-website":"Apology website","birthday-surprise-website":"Birthday surprise website",
- "digital-love-letter":"Digital love letter","anniversary-surprise-website":"Anniversary surprise","proposal-surprise-website":"Proposal surprise website","karwa-chauth-gift-for-wife":"Karwa Chauth gift for wife",
+ "digital-love-letter":"Digital love letter","anniversary-surprise-website":"Anniversary surprise","proposal-surprise-website":"Proposal surprise website","long-distance-relationship-gift":"Long-distance relationship gift","karwa-chauth-gift-for-wife":"Karwa Chauth gift for wife",
  "diwali-surprise-website":"Diwali & Bhai Dooj surprise","navratri-garba-surprise":"Navratri surprise"}
 
 def esc(s): return html.escape(s, quote=True)
