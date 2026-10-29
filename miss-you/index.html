@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Someone far away is missing you</title>
+<meta name="description" content="Someone far away is missing you. Fly the paper plane across the miles, pick up their call and open the parcel they sent.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Little Gasp">
+<meta property="og:title" content="Someone far away is missing you 💌">
+<meta property="og:description" content="Fly the paper plane across the miles, pick up the call, wipe the rainy window and open the parcel. Turn your sound on.">
+<meta property="og:image" content="https://littlegasp.com/miss-you/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="image" href="img/map.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2A1F5C; --muted:#6B5A6E; --accent:#E8457A; --accent-dark:#B42D5E; --butter:#FFC857; --mint:#8FD6BD; --mint-dark:#4E9C84;
+  --paper:#FFF6E6; --paper-line:#EEDCBF;
+  --display:"Caprasimo","Cooper Black",Georgia,serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body,button,a{touch-action:manipulation}
+html,body{height:100%;margin:0}
+body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink);background:#1E1A3A;overflow:hidden;-webkit-tap-highlight-color:transparent}
+main{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+main[hidden]{display:none}
+.loader{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font:700 2.2rem var(--hand);color:#FFF1DE}
+
+
+.scene{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:64px 16px 26px}
+.scene[hidden]{display:none}
+.art{position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+.words{width:min(100%,440px);display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 18px 20px;border-radius:26px;
+  background:rgba(255,248,238,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(20,10,40,.3)}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;color:var(--ink)}
+h1{font-size:clamp(2.2rem,9vw,3rem)}
+h2{font-size:clamp(1.6rem,6.6vw,2.1rem)}
+h1:focus,h2:focus,.question:focus{outline:none}
+p{margin:0}
+.name{color:var(--accent);font-size:clamp(2.8rem,13vw,4.2rem);overflow-wrap:anywhere}
+.kick{font:700 .8rem var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dark)}
+.sub{color:var(--muted);max-width:32ch}
+.whisper{font:700 1.75rem/1.05 var(--hand);color:var(--accent-dark)}
+.whisper:empty{display:none}
+.riddle{font:700 1.6rem/1.1 var(--hand);color:var(--ink);max-width:24ch}
+.count{font-size:.9rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.count:empty{display:none}
+.btn{appearance:none;border:0;cursor:pointer;font:700 1.05rem/1 var(--body);color:#fff;background:var(--accent);padding:16px 30px;border-radius:999px;
+  box-shadow:0 5px 0 var(--accent-dark);position:relative;transition:transform .1s,box-shadow .1s;white-space:nowrap;user-select:none;-webkit-user-select:none}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--accent-dark)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.mint{background:var(--mint-dark);box-shadow:0 5px 0 #2F6E5B}
+.btn:disabled{opacity:.6;cursor:default}
+.btn[hidden]{display:none}
+.linkish{appearance:none;border:0;background:none;font:600 .92rem var(--body);color:var(--accent-dark);text-decoration:underline;cursor:pointer;padding:4px}
+.linkish[hidden]{display:none}
+.plain{appearance:none;border:0;padding:0;background:none;cursor:pointer;display:block}
+img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
+:is(.btn,.linkish,.icon-btn,.plain):focus-visible{outline:3px solid var(--butter);outline-offset:4px}
+.pop-in{animation:popin .5s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popin{from{transform:scale(.85);opacity:0}}
+.bob{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.halo{position:absolute;inset:-8px;border-radius:24px;box-shadow:0 0 0 3px rgba(255,200,87,.9);animation:pulse 1.6s ease-in-out infinite;pointer-events:none}
+.halo.round{border-radius:50%}
+.done>.halo,.halo[hidden]{display:none}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(255,200,87,0)}}
+.dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:20}
+.dots[hidden]{display:none}
+.dots span{width:7px;height:7px;border-radius:50%;background:#FFF1DE;opacity:.4;transition:opacity .3s,width .3s}
+.dots span.on{opacity:.95;width:20px;border-radius:4px}
+.icon-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:21;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(255,248,238,.88);color:var(--ink);font-size:1.1rem;box-shadow:0 4px 14px rgba(20,10,40,.25)}
+.icon-btn[hidden]{display:none}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
+.made{font-size:.82rem;color:var(--muted)}
+.made a{color:var(--accent-dark);font-weight:700}
+.note{min-height:4.6em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;padding:12px 14px;border-radius:18px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--paper-line)}
+.note[hidden]{display:none}
+.note .tag{font:700 .78rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-dark)}
+.note .tag:empty{display:none}
+.note .big{font:700 1.65rem/1.1 var(--hand);color:var(--ink)}
+.note .hint{font-size:.9rem;color:var(--muted)}
+.note .hint:empty{display:none}
+.paper{width:100%;text-align:left;display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:6px;background:repeating-linear-gradient(180deg,#FFF9EE 0 33px,#EADCC4 33px 34px);
+  box-shadow:0 6px 16px rgba(40,10,30,.18);max-height:min(40dvh,360px);overflow-y:auto;transform:rotate(-1deg)}
+.paper p{font:600 1.5rem/1.15 var(--hand);color:var(--ink);opacity:0;transform:translateY(4px);transition:opacity .9s,transform .9s}
+.paper p.in{opacity:1;transform:none}
+.paper p.sign{text-align:right;color:var(--accent-dark)}
+.paper[hidden]{display:none}
+.drop{filter:drop-shadow(0 14px 18px rgba(20,8,30,.4))}
+
+#bg{position:fixed;inset:0;z-index:0;background:#1A1538 url(img/map.webp) center 30% / cover no-repeat;filter:blur(14px) brightness(.55) saturate(1.1);transform:scale(1.08)}
+body[data-bg="window"] #bg{background-image:url(img/window.webp);background-position:center 40%}
+body[data-bg="room"] #bg{background-image:url(img/window.webp);background-position:center 80%;filter:blur(18px) brightness(.4)}
+
+/* the map: one SVG in the painting's own pixels, so the lights, path, plane and labels always line up */
+.mapbox{position:relative;width:min(92vw,50dvh*.94,460px);aspect-ratio:1080/1150;border-radius:24px;overflow:hidden;box-shadow:0 0 0 4px rgba(255,246,230,.85),0 18px 36px rgba(10,5,30,.5);touch-action:none;background:#1A1538}
+.mapbox svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tag{font:700 44px var(--body);fill:#2A1F5C}
+.tagbg{fill:#FFF6E6;stroke:#C9A267;stroke-width:3}
+.km{font:400 64px var(--display);fill:#FFC857;paint-order:stroke;stroke:#2A1F5C;stroke-width:10px;stroke-linejoin:round}
+.glow{fill:url(#gl);transform-box:fill-box;transform-origin:center;animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{50%{transform:scale(1.18);opacity:.85}}
+.trail{fill:none;stroke:#F49AB6;stroke-width:9;stroke-linecap:round;stroke-dasharray:1 26;opacity:.0}
+.done-trail{fill:none;stroke:#FFC857;stroke-width:12;stroke-linecap:round;stroke-dasharray:1 26;filter:drop-shadow(0 0 6px #FFC857)}
+.plane{cursor:grab}
+.mapbox .hand{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);font:700 1.2rem/1 var(--hand);color:#fff;background:rgba(42,31,92,.82);padding:5px 12px 6px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+.mapbox.moving .hand{opacity:0}
+.hug{position:absolute;left:50%;top:46%;width:36%;transform:translate(-50%,-50%) scale(.6);opacity:0;transition:transform 1.2s cubic-bezier(.2,1.4,.4,1),opacity .6s;filter:drop-shadow(0 0 22px rgba(255,214,140,.7))}
+.mapbox.met .hug{transform:translate(-50%,-50%) scale(1);opacity:1}
+.hug img{width:100%;height:auto;display:block}
+
+/* the call */
+.callart{position:relative;width:min(84vw,44dvh,400px);display:flex;flex-direction:column;align-items:center;gap:10px}
+.phone{position:relative;width:78%;cursor:pointer;border:0;background:none;padding:0}
+.phone img{width:100%;height:auto;display:block;filter:drop-shadow(0 14px 18px rgba(20,8,30,.45))}
+.phone.ring img{animation:ringshake .5s linear infinite}
+@keyframes ringshake{0%,100%{transform:rotate(0)}20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(3deg)}}
+.phone .waves{position:absolute;inset:-6% -10%;pointer-events:none}
+.phone .waves i{position:absolute;top:18%;width:16%;height:40%;border:5px solid rgba(255,200,87,.9);border-radius:50%;opacity:0;animation:wave 1s ease-out infinite}
+.phone .waves i:nth-child(1){left:0;border-right:0;border-top-color:transparent;border-bottom-color:transparent}
+.phone .waves i:nth-child(2){right:0;border-left:0;border-top-color:transparent;border-bottom-color:transparent;animation-delay:.15s}
+.phone:not(.ring) .waves{display:none}
+@keyframes wave{0%{opacity:0;transform:scale(.7)}40%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+.phone .halo{inset:2% 6%;border-radius:50%}
+.callbar{display:flex;align-items:center;gap:8px;font:700 .95rem var(--body);color:#FFF1DE;background:rgba(42,31,92,.82);padding:7px 14px;border-radius:999px}
+.callbar[hidden]{display:none}
+.callbar::before{content:"";width:9px;height:9px;border-radius:50%;background:#4ED18B;box-shadow:0 0 0 4px rgba(78,209,139,.25)}
+.bubbles{display:flex;flex-direction:column;gap:8px;width:100%;max-height:min(30dvh,300px);overflow-y:auto;padding:2px}
+.bubble{align-self:flex-start;max-width:86%;background:#fff;color:var(--ink);padding:10px 14px;border-radius:18px 18px 18px 4px;font:600 1.02rem/1.3 var(--body);box-shadow:0 4px 10px rgba(20,10,40,.18);animation:popin .45s cubic-bezier(.2,1.5,.4,1) both;text-align:left}
+.bubble:nth-child(even){align-self:flex-end;background:#FFE3EC;border-radius:18px 18px 4px 18px}
+.typing{align-self:flex-start;background:#fff;padding:12px 16px;border-radius:18px 18px 18px 4px;display:flex;gap:5px}
+.typing i{width:7px;height:7px;border-radius:50%;background:#B9AFC9;animation:dot 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes dot{50%{transform:translateY(-4px);background:#E8457A}}
+
+/* the rainy window */
+.win{position:relative;height:min(58dvh,600px);aspect-ratio:900/1600;border-radius:22px;overflow:hidden;box-shadow:0 18px 36px rgba(10,5,30,.5);touch-action:none}
+.win>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.glass{position:absolute;left:22.4%;right:19.6%;top:11.4%;bottom:25.6%;overflow:hidden;border-radius:3px}
+.glass .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#2A2550}
+.glass .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.glass .ph b{font:400 2rem/1 var(--display);color:#FFE3EC;text-align:center;padding:10px}
+.glass canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.glass .drops{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(2px 4px at 20% 30%,rgba(255,255,255,.55),transparent),radial-gradient(2px 4px at 70% 10%,rgba(255,255,255,.45),transparent),radial-gradient(2px 5px at 45% 70%,rgba(255,255,255,.5),transparent),radial-gradient(2px 4px at 85% 55%,rgba(255,255,255,.45),transparent),radial-gradient(2px 4px at 10% 80%,rgba(255,255,255,.4),transparent);background-size:120px 160px;animation:rain 1.4s linear infinite}
+@keyframes rain{to{background-position:0 160px}}
+.wincap{position:absolute;left:22.4%;right:19.6%;top:calc(74.4% - 2.4em);z-index:3;text-align:center;font:700 1.35rem/1.1 var(--hand);color:#fff;text-shadow:0 1px 6px #000;opacity:0;transition:opacity .6s;pointer-events:none}
+.wincap.on{opacity:1}
+.win .hand{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font:700 1.25rem/1 var(--hand);color:#fff;background:rgba(42,31,92,.8);padding:5px 12px 6px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s;z-index:4}
+.win.moving .hand{opacity:0}
+
+/* the parcel */
+.parcelart{position:relative;width:min(80vw,40dvh,380px);aspect-ratio:1/1;touch-action:none}
+.parcel{position:absolute;inset:0;border:0;background:none;padding:0;cursor:grab}
+.parcel img{position:absolute;left:0;right:0;bottom:0;margin:auto;width:100%;height:auto;display:block;filter:drop-shadow(0 16px 20px rgba(20,8,30,.45));transition:opacity .35s,transform .6s cubic-bezier(.2,1.6,.4,1)}
+.parcel .o{opacity:0;transform:scale(.85)}
+.parcel.open .c{opacity:0}
+.parcel.open .o{opacity:1;transform:none}
+.parcel.shake .c{animation:ringshake .45s 2}
+.tape{position:absolute;left:8%;right:8%;top:40%;height:14%;pointer-events:none}
+.tape i{position:absolute;left:0;top:0;bottom:0;width:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.0) 0 10px,rgba(255,255,255,.55) 10px 14px);border-radius:6px;box-shadow:0 0 12px rgba(255,214,140,.8);transition:width .1s}
+.parcel .halo{inset:12% 8%;border-radius:50%}
+.parcel.open .tape{display:none}
+
+/* the calendar */
+.cal{width:min(88vw,360px);background:#FFF9EE;border-radius:18px;box-shadow:0 0 0 2px var(--paper-line),0 14px 28px rgba(20,8,30,.3);padding:12px 12px 14px;position:relative;transform:rotate(-1.5deg)}
+.cal::before{content:"";position:absolute;left:50%;top:-12px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE7A8,#C9962E);box-shadow:0 3px 4px rgba(0,0,0,.35)}
+.calhead{display:flex;align-items:center;justify-content:space-between;padding:4px 4px 8px;font:400 1.35rem var(--display);color:var(--ink)}
+.calhead button{border:0;background:#FFE3EC;color:var(--accent-dark);width:36px;height:36px;border-radius:50%;font:700 1.1rem var(--body);cursor:pointer}
+.calhead button:disabled{opacity:.3;cursor:default}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.grid .dw{font:700 .72rem var(--body);color:var(--muted);text-align:center;padding:2px 0}
+.grid button{aspect-ratio:1;border:0;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px #F0E2CC;font:600 .95rem var(--body);color:var(--ink);cursor:pointer;position:relative}
+.grid button:disabled{color:#CDBFAE;background:transparent;box-shadow:none;cursor:default}
+.grid button.pick{background:var(--accent);color:#fff;box-shadow:0 4px 0 var(--accent-dark)}
+.grid button.pick::after{content:"♥";position:absolute;top:-10px;right:-4px;font-size:1rem;color:var(--accent);text-shadow:0 0 2px #fff;animation:popin .4s cubic-bezier(.2,1.6,.4,1)}
+.cal[hidden]{display:none}
+.question{font-family:var(--display);font-size:clamp(1.5rem,6.4vw,2.1rem);line-height:1.1;color:var(--ink);overflow-wrap:anywhere}
+.answer{font:700 1.6rem/1.15 var(--hand);color:var(--accent-dark)}
+.answer:empty{display:none}
+
+/* laptops: full-screen, art | words */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  #bg{background-image:url(img/bg-wide.webp);filter:brightness(.62) saturate(1.05);transform:none}
+  body[data-bg="window"] #bg,body[data-bg="room"] #bg{background-image:url(img/window.webp);filter:blur(18px) brightness(.45);transform:scale(1.08)}
+  .scene.two{display:grid;grid-template-columns:34vw 34vw;column-gap:4vw;justify-content:center;align-items:center;align-content:center;padding:80px 4vw 40px}
+  .scene.two[hidden]{display:none}
+  .scene.two>.art{grid-column:1}
+  .scene.two>.words{grid-column:2;width:100%;max-width:470px;justify-self:center}
+  .mapbox{width:min(32vw,78dvh*.94)}
+  .callart{width:min(28vw,60dvh)}
+  .win{height:min(82dvh,820px)}
+  .parcelart{width:min(26vw,56dvh)}
+  h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
+  .name{font-size:clamp(3.2rem,5vw,5rem)}
+  h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body data-bg="map">
+<div id="bg" aria-hidden="true"></div>
+<nav class="dots" id="dots" aria-label="Progress" hidden></nav>
+<button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="loader" id="loader"><p id="loaderText">Crossing the miles…</p></div>
+
+<main hidden>
+  <!-- 1. Two cities, far apart -->
+  <section class="scene two" data-scene="open">
+    <div class="art"><div class="mapbox" data-map="open"></div></div>
+    <div class="words">
+      <p class="kick">Someone far away is missing</p>
+      <h1 tabindex="-1" class="name" data-to></h1>
+      <p class="whisper" id="openLine"></p>
+      <p class="sub">Turn your sound on, then tap below to begin.</p>
+      <button class="btn" data-next id="openBtn"><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 2. Fly the paper plane across -->
+  <section class="scene two" data-scene="plane" hidden>
+    <div class="art"><div class="mapbox" data-map="plane"><span class="hand">drag the plane along the path →</span></div></div>
+    <div class="words">
+      <p class="kick">Closing the distance</p>
+      <h2 tabindex="-1">Bring us closer</h2>
+      <p class="sub" id="planeSub">Drag the paper plane all the way along the dotted path.</p>
+      <p class="count" id="kmLeft"></p>
+      <button class="linkish" id="flyBtn" hidden>Fly it for me</button>
+      <button class="btn" data-next id="afterPlane" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 3. The call: every bubble is one thing I miss -->
+  <section class="scene two" data-scene="call" hidden>
+    <div class="art"><div class="callart">
+      <button class="phone ring" id="phone" type="button" aria-label="Pick up the call"><img src="img/phone.webp" alt="A ringing yellow telephone" width="526" height="414"><span class="waves"><i></i><i></i></span><span class="halo"></span></button>
+      <p class="callbar" id="callbar" hidden></p>
+    </div></div>
+    <div class="words">
+      <p class="kick" id="callKick">Incoming call</p>
+      <h2 tabindex="-1" id="callTitle"></h2>
+      <p class="sub" id="callSub">Pick up the call.</p>
+      <div class="bubbles" id="bubbles" aria-live="polite"></div>
+      <button class="btn" data-next id="afterCall" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 4. The rainy window: wipe the fog to find our photos -->
+  <section class="scene two" data-scene="window" hidden>
+    <div class="art"><div class="win" id="win"><img src="img/window.webp" alt="A rainy window at night" width="900" height="1600">
+      <div class="glass" id="glass"><div class="ph" id="ph"></div><canvas id="fog"></canvas><span class="drops"></span></div>
+      <p class="wincap" id="wincap"></p><span class="hand">wipe the fog off the glass</span></div></div>
+    <div class="words">
+      <p class="kick">Our window</p>
+      <h2 tabindex="-1">Wipe the fog</h2>
+      <p class="sub" id="winSub">It's raining here and I'm thinking of you. Wipe the fogged glass with your finger.</p>
+      <p class="count" id="photoCount"></p>
+      <button class="btn ghost" id="nextPhoto" hidden><span class="lbl">Next photo</span></button>
+      <button class="btn" data-next id="afterWindow" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 5. A parcel: tear the tape, read the letter -->
+  <section class="scene two" data-scene="parcel" hidden>
+    <div class="art"><div class="parcelart" id="parcelart">
+      <button class="parcel" id="parcel" type="button" aria-label="Tear the tape and open the parcel"><img class="c" src="img/parcel.webp" alt="A parcel tied with twine" width="508" height="490"><img class="o" src="img/parcel-open.webp" alt="The parcel open, a letter and a rose inside" width="558" height="527"><span class="tape"><i id="tapeBar"></i></span><span class="halo"></span></button>
+    </div></div>
+    <div class="words">
+      <p class="kick">Special delivery</p>
+      <h2 tabindex="-1" id="parcelTitle">A parcel for you</h2>
+      <p class="sub" id="parcelSub">Swipe across the tape to tear it open.</p>
+      <div class="paper" id="letter" hidden></div>
+      <button class="btn ghost" id="letterSkip" hidden><span class="lbl">Show it all</span></button>
+      <button class="btn" data-next id="afterParcel" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 6. When are you coming home? Pick a date -->
+  <section class="scene two" data-scene="ask" hidden>
+    <div class="art"><div class="cal" id="cal" role="group" aria-label="Pick a date">
+      <div class="calhead"><button type="button" id="prevM" aria-label="Previous month">‹</button><span id="calMonth"></span><button type="button" id="nextM" aria-label="Next month">›</button></div>
+      <div class="grid" id="grid"></div>
+    </div></div>
+    <div class="words">
+      <p class="kick">One last thing</p>
+      <p class="question" id="question" tabindex="-1"></p>
+      <p class="sub" id="askSub">Tap a date on the calendar.</p>
+      <p class="answer" id="answer" aria-live="polite"></p>
+      <button class="btn" id="lockDate" hidden><span class="lbl">That's the day 💗</span></button>
+      <button class="btn" data-next id="afterAsk" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 7. See you soon -->
+  <section class="scene two" data-scene="end" hidden>
+    <div class="art"><div class="mapbox" data-map="end"><span class="hug"><img src="img/couple-hug.webp" alt="The two of you hugging" width="464" height="752"></span></div></div>
+    <div class="words">
+      <p class="whisper" id="endPre">0 km between us 💗</p>
+      <h1 tabindex="-1" class="name" id="endTitle"></h1>
+      <p class="sub" id="endLine"></p>
+      <p class="sub" id="endFrom"></p>
+      <button class="btn ghost" id="replay"><span class="lbl">Play it again</span></button>
+      <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============ SETUP: same Apps Script URL as the other designs ============ */
+const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";
+/* Default music: our own synthesised music-box tune (SONG.src empty). It starts on the first tap.
+   A buyer's own song (d.song) plays instead, and falls back to our tune if it won't load. */
+const SONG = { src: "", volume: .8, credit: "" };
+/* ========================================================================= */
+
+const DEMO = {
+  to: "Riya", from: "Arjun", number: "",
+  photos: [
+    { src: "img/demo-1.svg", caption: "Our last sunset together" },
+    { src: "img/demo-2.svg", caption: "Two chais, one table" },
+    { src: "img/demo-3.svg", caption: "That rainy evening" }
+  ],
+  reasons: ["Your late-night chatter","The way you laugh at memes","Morning texts that make my day","Stealing fries off your plate","Just… you, next to me"],
+  letter: ["Riya,","There are a lot of miles between us, but you're still my favourite place.","Every evening I look at the same moon you're looking at and count the days.","Hold on a little longer. I'm coming home to you."],
+  question: "When are you coming home?",
+  yesReply: "Counting every single day till then. 💗",
+  extra: { fromCity: "Pune", toCity: "Bengaluru" }
+};
+const DEFAULT_REASONS = ["Your voice at the end of a long day","The way you say my name","Just… you"];
+const DEFAULT_Q = "When do I get to see you next?";
+/* cities we know, [lat, lon]: the distance between the two is worked out from these */
+const CITIES = {
+  "mumbai":[19.08,72.88],"navi mumbai":[19.03,73.03],"thane":[19.22,72.98],"pune":[18.52,73.86],"nagpur":[21.15,79.09],"nashik":[20.0,73.79],"aurangabad":[19.88,75.34],"kolhapur":[16.7,74.24],"solapur":[17.66,75.91],
+  "delhi":[28.61,77.21],"new delhi":[28.61,77.21],"noida":[28.54,77.39],"gurgaon":[28.46,77.03],"gurugram":[28.46,77.03],"faridabad":[28.41,77.32],"ghaziabad":[28.67,77.45],
+  "bengaluru":[12.97,77.59],"bangalore":[12.97,77.59],"mysuru":[12.3,76.64],"mysore":[12.3,76.64],"mangaluru":[12.91,74.86],"mangalore":[12.91,74.86],"hubli":[15.36,75.12],
+  "chennai":[13.08,80.27],"coimbatore":[11.02,76.96],"madurai":[9.93,78.12],"trichy":[10.79,78.7],"pondicherry":[11.94,79.81],
+  "hyderabad":[17.39,78.49],"secunderabad":[17.44,78.5],"visakhapatnam":[17.69,83.22],"vizag":[17.69,83.22],"vijayawada":[16.51,80.65],"warangal":[17.97,79.6],
+  "kolkata":[22.57,88.36],"howrah":[22.59,88.31],"siliguri":[26.73,88.4],"guwahati":[26.14,91.74],"shillong":[25.58,91.89],"bhubaneswar":[20.3,85.82],"patna":[25.59,85.14],"ranchi":[23.34,85.31],
+  "ahmedabad":[23.02,72.57],"surat":[21.17,72.83],"vadodara":[22.31,73.18],"rajkot":[22.3,70.8],"gandhinagar":[23.22,72.65],
+  "jaipur":[26.91,75.79],"udaipur":[24.59,73.71],"jodhpur":[26.24,73.02],"kota":[25.18,75.83],
+  "lucknow":[26.85,80.95],"kanpur":[26.45,80.33],"varanasi":[25.32,82.97],"agra":[27.18,78.01],"prayagraj":[25.44,81.85],"allahabad":[25.44,81.85],"meerut":[28.98,77.71],
+  "chandigarh":[30.73,76.78],"mohali":[30.7,76.72],"ludhiana":[30.9,75.86],"amritsar":[31.63,74.87],"jalandhar":[31.33,75.58],"dehradun":[30.32,78.03],"shimla":[31.1,77.17],
+  "bhopal":[23.26,77.41],"indore":[22.72,75.86],"gwalior":[26.22,78.18],"jabalpur":[23.18,79.99],"raipur":[21.25,81.63],
+  "kochi":[9.93,76.27],"cochin":[9.93,76.27],"thiruvananthapuram":[8.52,76.94],"trivandrum":[8.52,76.94],"kozhikode":[11.26,75.78],"calicut":[11.26,75.78],
+  "goa":[15.5,73.83],"panaji":[15.5,73.83],"srinagar":[34.08,74.8],"jammu":[32.73,74.86],
+  "dubai":[25.2,55.27],"abu dhabi":[24.45,54.38],"doha":[25.29,51.53],"muscat":[23.59,58.41],"riyadh":[24.71,46.68],"kuwait":[29.38,47.99],
+  "singapore":[1.35,103.82],"kuala lumpur":[3.14,101.69],"bangkok":[13.76,100.5],"hong kong":[22.32,114.17],"tokyo":[35.68,139.69],"sydney":[-33.87,151.21],"melbourne":[-37.81,144.96],"auckland":[-36.85,174.76],
+  "london":[51.51,-0.13],"manchester":[53.48,-2.24],"birmingham":[52.49,-1.89],"dublin":[53.35,-6.26],"paris":[48.86,2.35],"berlin":[52.52,13.4],"frankfurt":[50.11,8.68],"munich":[48.14,11.58],"amsterdam":[52.37,4.9],
+  "new york":[40.71,-74.01],"new jersey":[40.06,-74.41],"chicago":[41.88,-87.63],"san francisco":[37.77,-122.42],"seattle":[47.61,-122.33],"dallas":[32.78,-96.8],"houston":[29.76,-95.37],"boston":[42.36,-71.06],"los angeles":[34.05,-118.24],
+  "toronto":[43.65,-79.38],"vancouver":[49.28,-123.12],"calgary":[51.05,-114.07],"montreal":[45.5,-73.57],"kathmandu":[27.72,85.32],"dhaka":[23.81,90.41],"colombo":[6.93,79.86]
+};
+/* the painted map (img/map.webp, 1080x1920): the two glowing lights and the dotted path between them */
+const A = [186, 996], B = [903, 465];
+const PATH_PTS = [A, [326, 902], [461, 806], [614, 710], [691, 653], [769, 576], [826, 499], B];
+const VIEW = "0 160 1080 1150";
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const qs = new URLSearchParams(location.search);
+const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autoplay");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const coarse = matchMedia("(pointer: coarse)").matches;
+if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const BG = { window:"window", parcel:"room", ask:"room" };
+let C, seq = [], current = 0;
+
+/* ---------- load ---------- */
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "lg-data") res(e.data.data); });
+    parent.postMessage({ type: "lg-ready" }, location.origin);
+  });
+}
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(255,241,222,0.38)'>PREVIEW · Little Gasp</text></svg>";
+  const wm = document.createElement("div"); wm.setAttribute("aria-hidden", "true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(42,31,92,.9);color:#fff;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px;letter-spacing:.04em";
+  document.body.append(wm, band);
+}
+async function start(){
+  try {
+    let d = DEMO;
+    if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
+    else if (id && !isAuto){
+      const res = await fetch(API_URL + "?id=" + encodeURIComponent(id)); d = await res.json();
+      if (!d || d.error) throw new Error(d && d.error);
+    }
+    build(d);
+    if (isAuto) runAutoplay();
+  } catch (e) {
+    $("#loaderText").textContent = "This link doesn't look right. Please check it, or message @littlegasp.co on Instagram.";
+  }
+}
+setTimeout(start, 0);
+
+const norm = s => String(s || "").trim().toLowerCase().replace(/\s+/g, " ").replace(/[.,]/g, "");
+function distanceKm(a, b){
+  const p = CITIES[norm(a)], q = CITIES[norm(b)]; if (!p || !q) return 0;
+  const r = Math.PI / 180, dLa = (q[0] - p[0]) * r, dLo = (q[1] - p[1]) * r;
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(p[0] * r) * Math.cos(q[0] * r) * Math.sin(dLo / 2) ** 2;
+  return Math.round(6371 * 2 * Math.asin(Math.sqrt(h)));
+}
+const fmtKm = n => n.toLocaleString("en-IN") + " km";
+
+function build(d){
+  const t = v => String(v || "").trim();
+  C = { to: t(d.to) || "you", from: t(d.from), number: t(d.number),
+    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 5),
+    reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
+    letter: (d.letter || []).map(t).filter(Boolean),
+    question: t(d.question), yesReply: t(d.yesReply) };
+  if (id) C.photos = C.photos.filter(p => p.src);
+  const x = d.extra && typeof d.extra === "object" ? d.extra : {};
+  C.fromCity = t(x.fromCity).slice(0, 30); C.toCity = t(x.toCity).slice(0, 30);
+  const typed = parseInt(String(x.km || "").replace(/[^0-9]/g, ""), 10);
+  C.km = distanceKm(C.fromCity, C.toCity) || (typed > 0 ? typed : 0);
+  if (!C.reasons.length) C.reasons = DEFAULT_REASONS;
+  if (!C.letter.length) C.letter = [C.to + ",", "The distance is only for now.", "You're the place I keep coming back to."];
+  if (!C.question) C.question = DEFAULT_Q;
+
+  document.title = "Someone far away is missing " + C.to;
+  $$("[data-to]").forEach(e => e.textContent = C.to);
+  const n = /^\d{1,4}$/.test(C.number) ? +C.number : 0;
+  $("#openLine").textContent = (C.km ? `${fmtKm(C.km)} away` : "Miles away") + (n ? `, ${n} day${n === 1 ? "" : "s"} since our last hug` : ", and still thinking of you");
+  $("#callTitle").textContent = (C.from || "Someone special") + " is calling…";
+  $("#question").textContent = C.question;
+  $("#endTitle").textContent = C.from ? `${C.to} & ${C.from}` : `See you soon, ${C.to}`;
+  $("#endLine").textContent = C.yesReply || "Not long now. I'm counting the days.";
+  $("#endFrom").textContent = C.from ? "All my love, " + C.from : "";
+
+  seq = ["open", "plane", "call", "window", "parcel", "ask", "end"];
+  const label = { plane:"Begin 💌", call:"Answer the call", window:"Look out the window", parcel:"Open the parcel", ask:"One last thing", end:"See you soon" };
+  $$("[data-scene]").forEach(sc => {
+    const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl");
+    if (b && i > -1 && seq[i + 1]) b.textContent = label[seq[i + 1]];
+  });
+  const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
+
+  $$("[data-map]").forEach(buildMap);
+  buildPlane(); buildCall(); buildWindow(); buildParcel(); buildAsk();
+
+  if (!isAuto){
+    const own = d.song && d.song.src, src = own || SONG.src;
+    if (src){
+      song = new Audio(src); song.loop = true; song.preload = "auto"; song.volume = own ? .9 : SONG.volume;
+      song.addEventListener("error", () => {
+        if (own && SONG.src && !song.src.endsWith(SONG.src)){ song.src = SONG.src; song.volume = SONG.volume; if (musicOn) song.play().catch(() => {}); return; }
+        song = null; if (musicOn) Music.start();
+      });
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (ctx) document.hidden ? ctx.suspend() : ctx.resume();
+      if (song && musicOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {}));
+    });
+  }
+  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false;
+  go("open");
+}
+
+/* ---------- scenes ---------- */
+function go(name){
+  current = seq.indexOf(name);
+  $$("[data-scene]").forEach(s => s.hidden = s.dataset.scene !== name);
+  $$("#dots span").forEach((s, i) => s.classList.toggle("on", i === current));
+  document.body.dataset.bg = BG[name] || "map";
+  document.querySelector("main").scrollTo(0, 0);
+  const sc = document.querySelector(`[data-scene="${name}"]`), h = sc.querySelector("h1,h2,.question");
+  if (h && !isPreview) h.focus({ preventScroll: true });
+  if (name === "plane") startPlane();
+  if (name === "call") startCall();
+  if (name === "window") sizeFog();
+  if (name === "end") meet();
+}
+function nextScene(){ ensureAudio(); unlockSong(); startMusic(); const n = seq[current + 1]; if (n) go(n); }
+$$("[data-next]").forEach(b => b.addEventListener("click", nextScene));
+$("#replay").addEventListener("click", () => location.reload());
+function showNext(btn){ btn.hidden = false; if (!isAuto) setTimeout(() => btn.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 500); }
+function pop(el){ el.classList.remove("pop-in"); void el.offsetWidth; el.classList.add("pop-in"); }
+function dragOrTap(el, fn, test){
+  let p0 = null, fired = false;
+  const fire = () => { if (!fired){ fired = true; fn(); } };
+  el.addEventListener("pointerdown", e => { p0 = [e.clientX, e.clientY]; el.setPointerCapture && el.setPointerCapture(e.pointerId); });
+  el.addEventListener("pointermove", e => { if (p0 && test(e.clientX - p0[0], e.clientY - p0[1])){ p0 = null; fire(); } });
+  el.addEventListener("pointerup", e => { if (p0 && Math.hypot(e.clientX - p0[0], e.clientY - p0[1]) < 10) fire(); p0 = null; });
+  el.addEventListener("pointercancel", () => p0 = null);
+  el.addEventListener("click", e => { if (e.detail === 0) fire(); });   // keyboard Enter / Space
+  return { reset(){ fired = false; }, fire };
+}
+function writeLines(box, lines, signIdx){
+  box.innerHTML = lines.map((l, i) => `<p${i === signIdx ? ' class="sign"' : ""}></p>`).join("");
+  $$(`#${box.id} p`).forEach((p, i) => p.textContent = lines[i]);
+}
+async function revealLines(box, ok){
+  for (const p of box.querySelectorAll("p")){ if (!ok()) break; p.classList.add("in"); if (ctx) noise(.2, 3800, .02, .6);
+    if (!isAuto) p.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); await sleep(reduce ? 0 : Math.min(2600, 700 + p.textContent.length * 24)); }
+  box.querySelectorAll("p").forEach(p => p.classList.add("in"));
+}
+
+/* ---------- sound: the buyer's song, or our own music-box tune ---------- */
+let ctx, master, muted = false, song = null, musicOn = false, unlocked = false;
+function ensureAudio(){
+  if (isAuto) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!ctx){ ctx = new AC(); master = ctx.createGain(); master.gain.value = muted ? 0 : .5; master.connect(ctx.destination); }
+  if (ctx.state === "suspended") ctx.resume();
+}
+function unlockSong(){
+  if (unlocked || !song) return; unlocked = true;
+  song.muted = true; song.play().then(() => { if (!musicOn){ song.pause(); song.currentTime = 0; } song.muted = muted; }).catch(() => {});
+}
+function startMusic(){
+  if (isAuto || musicOn) return; musicOn = true; ensureAudio();
+  if (song){ song.muted = muted; song.currentTime = 0; song.play().catch(() => { song = null; Music.start(); }); }
+  else Music.start();
+  $("#muteBtn").hidden = false;
+}
+function bell(f, t, vol = .12, len = 1.6){   // music-box / celesta voice
+  if (!ctx) return;
+  [[1, vol, "sine"], [2.01, vol * .32, "sine"], [3.98, vol * .12, "sine"], [1, vol * .25, "triangle"]].forEach(([m, v, ty]) => { const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = ty; o.frequency.value = f * m; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len / Math.sqrt(m)); o.connect(g); g.connect(master); o.start(t); o.stop(t + len / Math.sqrt(m) + .05); });
+}
+function pad(fs, t, len, vol = .028){
+  if (!ctx) return;
+  fs.forEach(f => { const o = ctx.createOscillator(), g = ctx.createGain(), fl = ctx.createBiquadFilter();
+    o.type = "triangle"; o.frequency.value = f; fl.type = "lowpass"; fl.frequency.value = 900;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + .6); g.gain.linearRampToValueAtTime(0.0001, t + len);
+    o.connect(fl); fl.connect(g); g.connect(master); o.start(t); o.stop(t + len + .05); });
+}
+function noise(len = .2, f = 2000, vol = .12, q = 1, type = "bandpass"){
+  if (!ctx) return; const n = Math.floor(ctx.sampleRate * len), b = ctx.createBuffer(1, n, ctx.sampleRate), a = b.getChannelData(0);
+  for (let i = 0; i < n; i++) a[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+  const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+  s.buffer = b; fl.type = type; fl.frequency.value = f; fl.Q.value = q; g.gain.value = vol; s.connect(fl); fl.connect(g); g.connect(master); s.start();
+}
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+/* our own tender tune in D major, 4/4 at 76 bpm, over a I–V–vi–iii–IV–I–IV–V walk: [midi, beat] per bar */
+const TUNE = [
+  [[78,0],[76,1],[74,1.5],[73,2],[74,3]], [[73,0],[71,1],[69,2],[73,3]],
+  [[71,0],[73,.5],[74,1],[78,2],[76,3]], [[73,0],[69,1],[66,2],[69,3]],
+  [[67,0],[71,1],[74,2],[76,2.5],[74,3]], [[74,0],[78,1],[81,2],[78,3]],
+  [[79,0],[78,1],[76,1.5],[74,2],[71,3]], [[73,0],[74,1],[76,2],[73,3]] ];
+const CHORD = [[50,54,57],[45,49,52],[47,50,54],[42,45,49],[43,47,50],[50,54,57],[43,47,50],[45,49,52]];
+const Music = { on:false, bar:0, next:0, timer:null,
+  start(){ if (!ctx || this.on) return; this.on = true; this.bar = 0; this.next = ctx.currentTime + .15; this.tick(); this.timer = setInterval(() => this.tick(), 150); },
+  tick(){ const beat = 60 / 76; while (this.next < ctx.currentTime + .8){ this.play(this.next, this.bar, beat); this.next += 4 * beat; this.bar++; } },
+  play(t, i, beat){
+    const k = i % TUNE.length, ch = CHORD[k];
+    pad(ch.map(m => hz(m)), t, 4 * beat + .3);
+    [0, 1, 2, 3, 2, 1, 0, 1].forEach((j, s) => bell(hz(ch[j % 3] + 12), t + s * beat / 2, .035, 1));   // soft broken chord
+    if (i < 1) return;
+    TUNE[k].forEach(([m, at]) => bell(hz(m), t + at * beat, .1, 1.8));
+  }
+};
+function ding(f, d = 0, v = .12){ if (ctx) bell(f, ctx.currentTime + d, v, 1.4); }
+const chimeUp = () => [1175, 1480, 1760, 2349].forEach((f, i) => ding(f, i * .1, .1));
+function dingDong(){ if (!ctx) return; const t = ctx.currentTime; bell(659, t, .22, 2.2); bell(523, t + .55, .22, 2.6); }
+function click(){ noise(.05, 2600, .25, 3); noise(.04, 900, .18, 2); }
+$("#muteBtn").addEventListener("click", e => {
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .5; if (song) song.muted = muted;
+  e.currentTarget.setAttribute("aria-pressed", muted); e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+  e.currentTarget.textContent = muted ? "✕" : "♪";
+});
+
+
+/* ---------- the map (shared by the first, plane and last scenes) ---------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+function smoothPath(pts){   // Catmull-Rom through the points, as cubic Béziers
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++){
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
+  }
+  return d;
+}
+const PATH_D = smoothPath(PATH_PTS);
+function tagSvg(x, y, text, below){
+  const w = Math.max(120, text.length * 25 + 50), ty = below ? y + 70 : y - 110;
+  return `<g><rect class="tagbg" x="${x - w / 2}" y="${ty}" width="${w}" height="62" rx="14"/><text class="tag" x="${x}" y="${ty + 45}" text-anchor="middle"></text></g>`;
+}
+function buildMap(box){
+  const kind = box.dataset.map;
+  const fromT = C.fromCity || (C.from ? C.from : "Me"), toT = C.toCity || C.to;
+  const svg = document.createElementNS(SVGNS, "svg");
+  svg.setAttribute("viewBox", VIEW); svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  svg.setAttribute("role", "img"); svg.setAttribute("aria-label", `A painted night map: ${fromT} and ${toT}, joined by a dotted path`);
+  svg.innerHTML = `<defs><radialGradient id="gl"><stop offset="0" stop-color="#FFE7A8" stop-opacity=".95"/><stop offset=".45" stop-color="#FFC857" stop-opacity=".45"/><stop offset="1" stop-color="#FFC857" stop-opacity="0"/></radialGradient></defs>
+    <image href="img/map.webp" x="0" y="0" width="1080" height="1920"/>
+    <circle class="glow" cx="${A[0]}" cy="${A[1]}" r="90"/><circle class="glow" cx="${B[0]}" cy="${B[1]}" r="90" style="animation-delay:-1.3s"/>
+    <path class="trail" d="${PATH_D}"/><path class="done-trail" d="${PATH_D}" stroke-dashoffset="0"/>
+    ${tagSvg(A[0] + 40, A[1], fromT, true)}${tagSvg(B[0] - 60, B[1], toT, false)}
+    <text class="km" x="560" y="930" text-anchor="middle"></text>
+    <g class="plane"><image href="img/plane.webp" x="-80" y="-60" width="160" height="120"/></g>`;
+  const texts = svg.querySelectorAll(".tag"); texts[0].textContent = fromT; texts[1].textContent = toT;
+  box.prepend(svg);
+  const path = svg.querySelector(".done-trail"), len = path.getTotalLength();
+  const plane = svg.querySelector(".plane"), km = svg.querySelector(".km");
+  const M = { svg, path, len, plane, km, kind, p: kind === "end" ? 1 : 0 };
+  maps[kind] = M; setPlane(M, M.p);
+  if (kind === "open") km.textContent = C.km ? fmtKm(C.km) : "";
+  if (kind === "end"){ plane.style.display = "none"; km.textContent = ""; }
+}
+const maps = {};
+function setPlane(M, p){
+  M.p = Math.max(0, Math.min(1, p));
+  const L = M.len * M.p, a = M.path.getPointAtLength(L), b = M.path.getPointAtLength(Math.min(M.len, L + 6)), c = M.path.getPointAtLength(Math.max(0, L - 6));
+  const ang = Math.atan2(b.y - c.y, b.x - c.x) * 180 / Math.PI;
+  M.plane.setAttribute("transform", `translate(${a.x},${a.y}) rotate(${ang + 28}) scale(${1 + .15 * Math.sin(M.p * Math.PI)})`);
+  M.path.style.strokeDasharray = M.p ? dashUpTo(M.len * M.p) : "0 99999";
+  if (M.kind === "plane"){
+    const left = C.km ? Math.round(C.km * (1 - M.p)) : 0;
+    M.km.textContent = C.km ? fmtKm(left) : (M.p < 1 ? "" : "0 km");
+    $("#kmLeft").textContent = C.km ? `${fmtKm(left)} to go` : (M.p < 1 ? "Almost there…" : "");
+  }
+}
+function dashUpTo(L){   // dotted line drawn only up to length L
+  const dots = [], step = 27; let s = 0;
+  while (s + step <= L){ dots.push("1 26"); s += step; }
+  return (dots.join(" ") || "0 1") + " 0 99999";
+}
+
+/* ---------- 2. fly the plane along the dotted path ---------- */
+let planeDone = false, flyTimer = null;
+function buildPlane(){
+  const M = maps.plane, box = document.querySelector('[data-map="plane"]'), svg = M.svg;
+  const samples = []; for (let i = 0; i <= 160; i++){ const q = M.path.getPointAtLength(M.len * i / 160); samples.push([q.x, q.y]); }
+  let down = false;
+  const toSvg = e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
+  const near = e => {
+    const q = toSvg(e); let best = -1, bd = 1e9;
+    samples.forEach((s, i) => { const dd = Math.hypot(s[0] - q.x, s[1] - q.y); if (dd < bd){ bd = dd; best = i; } });
+    const p = best / 160;
+    if (bd < 170 && p > M.p && p - M.p < .35){ setPlane(M, p); whoosh(); if (p >= .985) landPlane(); }
+  };
+  box.addEventListener("pointerdown", e => { if (planeDone) return; e.preventDefault(); ensureAudio(); down = true; box.setPointerCapture(e.pointerId); box.classList.add("moving"); near(e); });
+  box.addEventListener("pointermove", e => { if (down && !planeDone) near(e); });
+  box.addEventListener("pointerup", () => down = false); box.addEventListener("pointercancel", () => down = false);
+  box.tabIndex = 0; box.setAttribute("role", "application"); box.setAttribute("aria-label", "Drag the paper plane along the path. Arrow keys or Enter also fly it.");
+  box.addEventListener("keydown", e => { if (["ArrowRight","ArrowUp","Enter"," "].includes(e.key) && !planeDone){ e.preventDefault(); setPlane(M, M.p + .08); if (M.p >= .985) landPlane(); } });
+  $("#flyBtn").addEventListener("click", flyPlane);
+}
+let lastWhoosh = 0;
+function whoosh(){ const n = performance.now(); if (ctx && n - lastWhoosh > 180){ lastWhoosh = n; noise(.18, 1400, .03, .7); } }
+function startPlane(){ if (!planeDone && !flyTimer) flyTimer = setTimeout(() => { if (!planeDone) $("#flyBtn").hidden = false; }, 8000); }
+async function flyPlane(){
+  $("#flyBtn").hidden = true; const M = maps.plane; document.querySelector('[data-map="plane"]').classList.add("moving");
+  while (M.p < 1 && !planeDone){ setPlane(M, M.p + .012); await sleep(reduce ? 0 : 30); }
+  landPlane();
+}
+function landPlane(){
+  if (planeDone) return; planeDone = true; clearTimeout(flyTimer); $("#flyBtn").hidden = true;
+  const M = maps.plane; setPlane(M, 1); chimeUp(); hearts(26);
+  $("#planeSub").textContent = C.km ? `${fmtKm(C.km)}, gone in one swipe. If only it were this easy. 💗` : "If only the real distance were this easy. 💗";
+  $("#kmLeft").textContent = "0 km to go";
+  showNext($("#afterPlane"));
+}
+
+/* ---------- 3. the call: pick up, every bubble is one thing I miss ---------- */
+let ringing = null, picked = false, callT0 = 0, callTick = null;
+function buildCall(){ $("#phone").addEventListener("click", pickUp); }
+function ringTone(){ if (!ctx) return; const t = ctx.currentTime; [0, .45].forEach(o => { bell(1318, t + o, .06, .35); bell(1046, t + o + .12, .06, .35); }); }
+function startCall(){ if (picked || ringing) return; if (!isAuto){ ringTone(); ringing = setInterval(ringTone, 1800); } }
+async function pickUp(){
+  if (picked) return; picked = true; ensureAudio(); clearInterval(ringing);
+  const ph = $("#phone"); ph.classList.remove("ring"); ph.classList.add("done"); ph.setAttribute("aria-label", "On a call");
+  if (ctx) click();
+  $("#callKick").textContent = "Connected"; $("#callSub").textContent = "Every bubble is one thing I miss about you.";
+  const bar = $("#callbar"); bar.hidden = false; callT0 = Date.now();
+  const tick = () => { const s = Math.floor((Date.now() - callT0) / 1000); bar.textContent = `${C.from || "On call"} · ${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
+  tick(); callTick = setInterval(tick, 1000);
+  const box = $("#bubbles");
+  for (const r of C.reasons){
+    const ty = document.createElement("div"); ty.className = "typing"; ty.innerHTML = "<i></i><i></i><i></i>"; box.appendChild(ty);
+    if (!isAuto) ty.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+    await sleep(reduce ? 0 : 900); ty.remove();
+    const b = document.createElement("div"); b.className = "bubble"; b.textContent = r; box.appendChild(b);
+    if (ctx) bell(1568 + Math.random() * 200, ctx.currentTime, .05, .4);
+    if (!isAuto) b.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+    await sleep(reduce ? 0 : 900);
+  }
+  const end = document.createElement("div"); end.className = "bubble"; end.textContent = "Okay, I'll let you go now… one more surprise is on its way. 💌"; box.appendChild(end);
+  showNext($("#afterCall"));
+}
+
+/* ---------- 4. the rainy window: wipe the fog to find our photos ---------- */
+let photoAt = 0, wiped = false, fogCtx, fogW = 0, fogH = 0, wipeAmt = 0;
+function buildWindow(){
+  const c = $("#fog"); fogCtx = c.getContext("2d");
+  let down = false, last = null;
+  const at = e => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * fogW / r.width, (e.clientY - r.top) * fogH / r.height]; };
+  c.addEventListener("pointerdown", e => { e.preventDefault(); ensureAudio(); down = true; c.setPointerCapture(e.pointerId); $("#win").classList.add("moving"); last = at(e); wipe(last, last); });
+  c.addEventListener("pointermove", e => { if (!down) return; const p = at(e); wipe(last, p); last = p; });
+  c.addEventListener("pointerup", () => { down = false; checkWipe(); }); c.addEventListener("pointercancel", () => down = false);
+  $("#nextPhoto").addEventListener("click", () => { photoAt++; showPhoto(); });
+  showPhoto();
+}
+function sizeFog(){
+  const c = $("#fog"), r = c.getBoundingClientRect(); if (!r.width) return;
+  if (fogW === Math.round(r.width) && fogH === Math.round(r.height)) return;
+  fogW = c.width = Math.round(r.width); fogH = c.height = Math.round(r.height); fogUp();
+}
+addEventListener("resize", () => { if (seq[current] === "window"){ fogW = 0; sizeFog(); } });
+function fogUp(){
+  if (!fogW) return; const g = fogCtx; g.globalCompositeOperation = "source-over";
+  const gr = g.createLinearGradient(0, 0, 0, fogH); gr.addColorStop(0, "rgba(206,200,226,.94)"); gr.addColorStop(1, "rgba(176,168,206,.96)");
+  g.fillStyle = gr; g.fillRect(0, 0, fogW, fogH);
+  g.fillStyle = "rgba(255,255,255,.18)"; for (let i = 0; i < 90; i++){ g.beginPath(); g.arc(Math.random() * fogW, Math.random() * fogH, 1 + Math.random() * 3, 0, 7); g.fill(); }
+  wipeAmt = 0; wiped = false;
+}
+function wipe(a, b){
+  const g = fogCtx; g.globalCompositeOperation = "destination-out"; g.lineCap = "round"; g.lineJoin = "round";
+  g.lineWidth = Math.max(26, fogW * .16); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke();
+  wipeAmt += Math.hypot(b[0] - a[0], b[1] - a[1]) + 4;
+  if (ctx && Math.random() < .25) noise(.08, 3000, .02, 1.2);
+  if (wipeAmt > fogW * 4.2) checkWipe(true);
+}
+function checkWipe(force){
+  if (wiped) return;
+  let clear = 0; if (!force){ const d = fogCtx.getImageData(0, 0, fogW, fogH).data; let n = 0; for (let i = 3; i < d.length; i += 64){ n++; if (d[i] < 40) clear++; } clear /= n; }
+  if (force || clear > .45) revealPhoto();
+}
+async function revealPhoto(){
+  wiped = true; const c = $("#fog"); c.style.transition = "opacity .9s"; c.style.opacity = 0;
+  const p = C.photos[photoAt]; const cap = $("#wincap"); cap.textContent = p ? (p.caption || "") : ""; cap.classList.toggle("on", !!cap.textContent);
+  ding(1319 + photoAt * 90, 0, .08);
+  const n = Math.max(1, C.photos.length);
+  $("#photoCount").textContent = C.photos.length ? `Photo ${photoAt + 1} of ${n}` : "";
+  await sleep(reduce ? 0 : 900);
+  if (photoAt < C.photos.length - 1){ $("#nextPhoto").hidden = false; }
+  else { $("#nextPhoto").hidden = true; $("#winSub").textContent = "Same rain, two windows. One day soon, one window. 🌧️💗"; showNext($("#afterWindow")); }
+}
+function showPhoto(){
+  const ph = $("#ph"), p = C.photos[photoAt]; ph.innerHTML = "";
+  if (p && p.src){ const im = new Image(); im.src = p.src; im.alt = p.caption || "One of our photos"; ph.appendChild(im); }
+  else { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} ♥ ${ini(C.from)}` : "♥"; ph.appendChild(b); }
+  $("#wincap").classList.remove("on"); $("#nextPhoto").hidden = true;
+  const c = $("#fog"); c.style.transition = "none"; c.style.opacity = 1; fogUp();
+}
+
+/* ---------- 5. the parcel: tear the tape, read the letter ---------- */
+let parcelOpen = false, letterRun = false;
+function buildParcel(){
+  const lines = [...C.letter]; if (C.from) lines.push("— " + C.from);
+  writeLines($("#letter"), lines, C.from ? lines.length - 1 : -1);
+  const p = $("#parcel"); let x0 = null, far = 0;
+  p.addEventListener("pointerdown", e => { if (parcelOpen) return; ensureAudio(); x0 = e.clientX; far = 0; p.setPointerCapture(e.pointerId); });
+  p.addEventListener("pointermove", e => { if (x0 === null || parcelOpen) return; far = Math.max(far, Math.abs(e.clientX - x0)); const w = p.getBoundingClientRect().width; $("#tapeBar").style.width = Math.min(100, far / (w * .55) * 100) + "%"; if (ctx && Math.random() < .3) noise(.05, 2400, .05, 2); if (far > w * .55) openParcel(); });
+  p.addEventListener("pointerup", e => { if (x0 !== null && far < 10) openParcel(); x0 = null; });
+  p.addEventListener("click", e => { if (e.detail === 0) openParcel(); });
+  $("#letterSkip").addEventListener("click", () => { letterRun = false; showLetter(); });
+}
+async function openParcel(){
+  if (parcelOpen) return; parcelOpen = true; ensureAudio();
+  const p = $("#parcel"); $("#tapeBar").style.width = "100%"; p.classList.add("shake", "done");
+  if (ctx){ noise(.35, 2600, .12, 1.4); }
+  await sleep(reduce ? 0 : 500); p.classList.remove("shake"); p.classList.add("open"); sparkleAt(p); ding(1319, 0, .08);
+  $("#parcelTitle").textContent = "A letter, and a rose"; $("#parcelSub").hidden = true;
+  await sleep(reduce ? 0 : 700);
+  const box = $("#letter"); box.hidden = false; pop(box); $("#letterSkip").hidden = isAuto; letterRun = true;
+  await revealLines(box, () => letterRun);
+  showLetter();
+}
+function showLetter(){ $$("#letter p").forEach(p => p.classList.add("in")); $("#letterSkip").hidden = true; showNext($("#afterParcel")); }
+
+/* ---------- 6. pick a date ---------- */
+let calY, calM, picked2 = null, locked = false;
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+function buildAsk(){
+  const now = new Date(); calY = now.getFullYear(); calM = now.getMonth();
+  $("#prevM").addEventListener("click", () => { calM--; if (calM < 0){ calM = 11; calY--; } drawCal(); });
+  $("#nextM").addEventListener("click", () => { calM++; if (calM > 11){ calM = 0; calY++; } drawCal(); });
+  $("#lockDate").addEventListener("click", lockDate);
+  drawCal();
+}
+function drawCal(){
+  const now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  $("#calMonth").textContent = `${MONTHS[calM]} ${calY}`;
+  $("#prevM").disabled = calY === now.getFullYear() && calM === now.getMonth();
+  const g = $("#grid"); g.innerHTML = ["M","T","W","T","F","S","S"].map(d => `<span class="dw">${d}</span>`).join("");
+  const first = (new Date(calY, calM, 1).getDay() + 6) % 7, days = new Date(calY, calM + 1, 0).getDate();
+  for (let i = 0; i < first; i++) g.appendChild(document.createElement("span"));
+  for (let d = 1; d <= days; d++){
+    const b = document.createElement("button"); b.type = "button"; b.textContent = d; const dt = new Date(calY, calM, d);
+    b.setAttribute("aria-label", dt.toDateString()); b.disabled = dt < today || locked;
+    if (picked2 && +picked2 === +dt) b.classList.add("pick");
+    b.addEventListener("click", () => pickDate(dt)); g.appendChild(b);
+  }
+}
+function pickDate(dt){
+  if (locked) return; ensureAudio(); picked2 = dt; drawCal(); ding(1175 + dt.getDate() * 12, 0, .08);
+  const days = Math.round((dt - new Date(new Date().toDateString())) / 864e5);
+  $("#answer").textContent = `${dt.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })} · ${days === 0 ? "today!" : days === 1 ? "tomorrow!" : days + " days to go"}`;
+  $("#askSub").textContent = "Happy with this date? Lock it in.";
+  $("#lockDate").hidden = false;
+}
+async function lockDate(){
+  if (locked || !picked2) return; locked = true; ensureAudio(); drawCal();
+  $("#lockDate").hidden = true; hearts(50); chimeUp();
+  if (navigator.vibrate && !isAuto) try { navigator.vibrate([30, 60, 30]); } catch(e){}
+  const when = picked2.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+  reply("date", `“${C.question}” → ${when}`);
+  $("#askSub").textContent = C.yesReply || "It's a date on the calendar now. Counting down. 💗";
+  C.when = when; $("#endPre").textContent = `See you on ${when} 💗`;
+  showNext($("#afterAsk"));
+}
+
+/* ---------- 7. finale: the two of you meet in the middle of the map ---------- */
+function meet(){
+  const box = document.querySelector('[data-map="end"]'); setTimeout(() => box.classList.add("met"), 300);
+  confetti(true); hearts(60); chimeUp();
+}
+
+/* ---------- replies: only real, paid links send anything ---------- */
+function reply(kind, text){   // only real, paid links send anything
+  if (!id || isPreview || isAuto) return Promise.resolve(true);
+  return fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reply", id, kind, text }) })
+    .then(r => r.json()).then(j => !!(j && j.ok)).catch(() => false);
+}
+
+/* ---------- confetti, hearts, sparkles ---------- */
+const fx = $("#fx"), fg = fx.getContext("2d");
+let parts = [], running = false, rain = false;
+function sizeFx(){ const r = devicePixelRatio || 1; fx.width = innerWidth * r; fx.height = innerHeight * r; fg.setTransform(r, 0, 0, r, 0, 0); }
+sizeFx(); addEventListener("resize", sizeFx);
+const CONF = ["#E8457A","#FFC857","#8FD6BD","#FFFFFF","#F08A5D","#2A1F5C"];
+function confetti(on){ rain = on && !reduce; run(); }
+function hearts(n){
+  if (reduce) return;
+  for (let i = 0; i < n; i++) parts.push({ x: Math.random() * innerWidth, y: innerHeight + 20 + Math.random() * innerHeight * .4, vx: (Math.random() - .5) * .8, vy: -(1.4 + Math.random() * 2.2),
+    s: 7 + Math.random() * 9, c: ["#E8457A","#F49AB6","#FFC857","#B42D5E","#FFFFFF"][i % 5], w: Math.random() * 6, heart: true, life: 400 });
+  run();
+}
+function sparkleXY(x, y){
+  if (reduce) return;
+  for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#FFC857","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
+  run();
+}
+function sparkleAt(el){
+  if (reduce) return; const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#FFC857","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
+  run();
+}
+function run(){ if (!running){ running = true; requestAnimationFrame(loop); } }
+function heartPath(s){ fg.beginPath(); fg.moveTo(0, s * .3); fg.bezierCurveTo(-s, -s * .4, -s * .5, -s * 1.1, 0, -s * .45); fg.bezierCurveTo(s * .5, -s * 1.1, s, -s * .4, 0, s * .3); fg.fill(); }
+function loop(){
+  fg.clearRect(0, 0, innerWidth, innerHeight);
+  if (rain && Math.random() < .35) parts.push({ x: Math.random() * innerWidth, y: -20, vx: (Math.random() - .5) * 1.2, vy: 1.2 + Math.random() * 1.4, s: 4 + Math.random() * 4, c: CONF[Math.floor(Math.random() * 6)], w: Math.random() * 6, spin: .1 + Math.random() * .1, rect: true, life: 900 });
+  parts.forEach(p => { p.w += p.spin || .04;
+    p.x += p.vx + (p.heart ? Math.sin(p.w) * .5 : p.rect ? Math.sin(p.w) * .8 : 0); p.y += p.vy; if (p.g) p.vy += p.g; p.life--;
+    fg.save(); fg.translate(p.x, p.y); fg.fillStyle = p.c; fg.globalAlpha = Math.min(1, p.life / 40);
+    if (p.heart) heartPath(p.s);
+    else if (p.rect){ fg.rotate(p.w); fg.scale(1, Math.abs(Math.sin(p.w * 2)) * .8 + .2); fg.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .66); }
+    else { fg.beginPath(); fg.arc(0, 0, p.s, 0, 7); fg.fill(); } fg.restore(); });
+  parts = parts.filter(p => p.life > 0 && p.y > -80 && p.y < innerHeight + 200);
+  if (parts.length || rain) requestAnimationFrame(loop); else { running = false; fg.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+
+/* ---------- homepage showcase (?autoplay): silent, plays itself ---------- */
+async function runAutoplay(){
+  document.body.style.pointerEvents = "none";
+  await sleep(2200); go("plane"); await sleep(900); await flyPlane(); await sleep(1800);
+  go("call"); await sleep(1100); await pickUp(); await sleep(1600);
+  go("window"); await sleep(800);
+  for (let i = 0; i < Math.max(1, C.photos.length); i++){
+    sizeFog(); const r = [[.2,.25],[.8,.35],[.2,.5],[.8,.65],[.3,.8],[.7,.15]];
+    let a = [r[0][0] * fogW, r[0][1] * fogH]; for (const q of r.slice(1)){ const b = [q[0] * fogW, q[1] * fogH]; for (let k = 1; k <= 8; k++){ const m = [a[0] + (b[0] - a[0]) * k / 8, a[1] + (b[1] - a[1]) * k / 8]; wipe(a, m); await sleep(30); } a = b; }
+    checkWipe(true); await sleep(1800); if (i < C.photos.length - 1){ photoAt++; showPhoto(); await sleep(500); }
+  }
+  await sleep(800);
+  go("parcel"); await sleep(900); { const p = openParcel(); await sleep(4200); letterRun = false; await p; } await sleep(1000);
+  go("ask"); await sleep(1100);
+  const d = new Date(); d.setDate(d.getDate() + 12); calY = d.getFullYear(); calM = d.getMonth(); drawCal(); await sleep(600); pickDate(new Date(d.getFullYear(), d.getMonth(), d.getDate())); await sleep(1400); await lockDate(); await sleep(1800);
+  go("end"); await sleep(4500);
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
+  else location.reload();
+}
+</script>
+</body>
+</html>

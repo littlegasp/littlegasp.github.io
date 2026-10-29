@@ -368,6 +368,30 @@ const DESIGNS = {
     letterHint: "Ananya,\n\nI hid my feelings so badly when we met that everyone knew except you...",
     questionHint: "e.g. Will you marry me?", yesHint: "e.g. You just made me the luckiest person alive. I love you."
   },
+  "miss-you": {
+    occasion: "love", forWho: ["wife","husband","girlfriend","boyfriend"],   // writing ideas (create/ideas.js)
+    name: "Miss You",
+    path: "/miss-you/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    song: "A soft music-box love tune already plays on this design.",
+    photosHint: "They wipe the fog off a rainy window to find each photo, in this order.",
+    numberLabel: "Days since you last met (optional)", numberHint: "e.g. 42",
+    reasonsTitle: "Things you miss about them (each one arrives as a call bubble)",
+    reasonsExamples: ["Your late-night chatter","The way you laugh at memes","Morning texts that make my day","Stealing fries off your plate","Your head on my shoulder","Just… you, next to me"],
+    extras: [
+      { key: "fromCity", type: "text", max: 30, label: "Your city",
+        hint: "Shown on the map. We work out the distance between the two cities by ourselves.", example: "e.g. Pune" },
+      { key: "toCity", type: "text", max: 30, label: "Their city",
+        hint: "Where they are right now. Abroad works too.", example: "e.g. Bengaluru" },
+      { key: "km", type: "text", max: 6, label: "Distance in km (only if we can't find your town)",
+        hint: "Leave empty for big cities: we work it out. For a small town, type the km yourself.", example: "e.g. 640" }
+    ],
+    letterHint: "Riya,\n\nThere are a lot of miles between us, but you're still my favourite place...",
+    questionHint: "e.g. When are you coming home? (they answer by picking a date)", yesHint: "e.g. Counting every single day till then."
+  },
   "love-letter": {
     occasion: "love", forWho: ["wife","husband","girlfriend","boyfriend"],   // writing ideas (create/ideas.js)
     name: "Sealed with Love",
