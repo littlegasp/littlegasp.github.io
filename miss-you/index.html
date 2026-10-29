@@ -199,10 +199,11 @@ body[data-bg="room"] #bg{background-image:url(img/window.webp);background-positi
 .tk-route{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:6px;padding:14px 16px 4px}
 .tk-route small,.tk-row small,.tk-stub small{display:block;font:700 .62rem/1 var(--body);letter-spacing:.12em;color:#A7899A;margin-bottom:4px}
 .ticket{container-type:inline-size}
-.tk-city{font:400 clamp(.8rem,5.4cqw,1.45rem)/1.05 var(--display);overflow-wrap:anywhere}
+.tk-city{display:block;font:400 22px/1.05 var(--display);white-space:nowrap}
+.tk-city.wrap{white-space:normal;overflow-wrap:anywhere}
+.tk-route>div{min-width:0;overflow:hidden}
 .tk-route .to{text-align:right}
-.tk-city.long{font-size:clamp(.72rem,4cqw,1.1rem)}
-.tk-arc{width:64px;height:30px;margin-bottom:4px}
+.tk-arc{width:clamp(36px,13cqw,64px);height:30px;margin-bottom:4px}
 .tk-row{display:flex;gap:16px;padding:10px 16px 0;align-items:flex-end}
 .tk-row b{font:600 1rem/1.1 var(--body)}
 .tk-date{flex:1;border:2px dashed #F2A5BC;border-radius:12px;padding:7px 10px;font:700 1.25rem/1.05 var(--hand);color:var(--accent-dark);min-height:2.4em;display:flex;align-items:center}
@@ -530,7 +531,6 @@ function build(d){
   $("#tkFrom").textContent = C.fromCity || C.from || "Me";
   $("#tkTo").textContent = C.toCity || C.to;
   $("#tkName").textContent = C.to;
-  ["#tkFrom", "#tkTo"].forEach(k => $(k).classList.toggle("long", $(k).textContent.length > 11));
   $("#callTitle").textContent = (C.from || "Someone special") + " is calling…";
   $("#question").textContent = C.question;
   $("#endTitle").textContent = C.from ? `${C.to} & ${C.from}` : `See you soon, ${C.to}`;
@@ -925,10 +925,18 @@ async function unfoldTicket(){
   if (unfolded) return; unfolded = true;
   const lp = $("#landplane"), tk = $("#ticket");
   if (!reduce){ lp.classList.add("go"); if (ctx) noise(.5, 900, .05, .6); await sleep(900); }
-  tk.classList.add("open"); if (ctx){ noise(.25, 3200, .04, 1.4); ding(1319, .25, .07); }
+  tk.classList.add("open"); fitCities(); if (ctx){ noise(.25, 3200, .04, 1.4); ding(1319, .25, .07); }
   await sleep(reduce ? 0 : 700); sparkleAt(tk);
   if (!locked) showNext($("#pickBtn"));
 }
+/* the city names shrink to fit their half of the ticket; only very long names wrap */
+function fitCities(){   // both cities share one size, so the ticket looks even
+  const els = ["#tkFrom", "#tkTo"].map(k => $(k)), over = () => els.some(el => el.scrollWidth > el.parentElement.clientWidth);
+  let f = 24; els.forEach(el => { el.classList.remove("wrap"); el.style.fontSize = f + "px"; });
+  while (f > 14 && over()){ f--; els.forEach(el => el.style.fontSize = f + "px"); }
+  els.forEach(el => { if (el.scrollWidth > el.parentElement.clientWidth) el.classList.add("wrap"); });
+}
+addEventListener("resize", () => { if (unfolded) fitCities(); });
 function openCal(){
   if (locked) return; ensureAudio(); if (ctx) click();
   $(".passart").classList.add("picking"); $("#pickBtn").hidden = $("#lockDate").hidden = $("#changeDate").hidden = true;
