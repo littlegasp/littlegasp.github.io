@@ -13,7 +13,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/style.css?v=11">
+<link rel="stylesheet" href="/style.css?v=12">
 <style>
 body{padding-bottom:110px}
 .ed{max-width:1100px;margin:16px auto 0;padding:0 20px;display:grid;gap:28px}
@@ -115,7 +115,7 @@ textarea{min-height:170px;resize:vertical}
 </style>
 </head>
 <body data-header="static" data-footer="none">
-<script src="/site.js?v=11"></script>
+<script src="/site.js?v=12"></script>
 
 <main class="ed" id="ed" data-tab="write">
   <div class="tabs mobile-only" role="tablist">
@@ -347,6 +347,26 @@ const DESIGNS = {
     ],
     letterHint: "Priya,\n\nSeven years ago you got on the back of my scooter and never got off...",
     questionHint: "e.g. Will you keep riding with me, forever?", yesHint: "e.g. Then hold on tight. The best roads are still ahead."
+  },
+  "proposal": {
+    occasion: "proposal", forWho: ["girlfriend","boyfriend"],   // writing ideas (create/ideas.js)
+    name: "Ring Hunt",
+    path: "/proposal/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    song: "A soft music-box love tune already plays on this design.",
+    photosHint: "Photo 1 hangs in the photo frame on the wall; the rest play as a little film on an old projector on the balcony, just before the ring box.",
+    numberLabel: "Years together", numberHint: "e.g. 4",
+    reasonsTitle: "Reasons in the envelope behind the photo frame",
+    reasonsExamples: ["You laugh at my worst jokes","You make every house feel like home","You steal my hoodies and I let you","You believe in me, loudly","You're my favourite person to do nothing with","Just… you"],
+    extras: [
+      { key: "jar", type: "text", max: 160, label: "The note in the cookie jar (optional)",
+        hint: "They twist the lid open and a rolled-up note pops out. Leave empty and we'll use a sweet one of our own.", example: "e.g. You're sweeter than every cookie in this jar. (I counted. I ate two.)" }
+    ],
+    letterHint: "Ananya,\n\nI hid my feelings so badly when we met that everyone knew except you...",
+    questionHint: "e.g. Will you marry me?", yesHint: "e.g. You just made me the luckiest person alive. I love you."
   },
   "love-letter": {
     occasion: "love", forWho: ["wife","husband","girlfriend","boyfriend"],   // writing ideas (create/ideas.js)

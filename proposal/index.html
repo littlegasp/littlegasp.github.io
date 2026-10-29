@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Someone hid something for you</title>
+<meta name="description" content="Someone hid a few things around the house for you. Ring the bell, follow the clues, find the treasure.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Little Gasp">
+<meta property="og:title" content="Someone hid something for you 💍">
+<meta property="og:description" content="Ring the bell, take the torch, follow the clue map to the treasure. Turn your sound on.">
+<meta property="og:image" content="https://littlegasp.com/proposal/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="image" href="img/door.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+@property --r{syntax:'<percentage>';inherits:true;initial-value:26%}
+:root{
+  --ink:#2A1F5C; --muted:#6B5A6E; --accent:#E8457A; --accent-dark:#B42D5E; --butter:#FFC857; --mint:#8FD6BD; --mint-dark:#4E9C84;
+  --paper:#FFF6E6; --paper-line:#EEDCBF;
+  --display:"Caprasimo","Cooper Black",Georgia,serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body,button,a{touch-action:manipulation}
+html,body{height:100%;margin:0}
+body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--ink);background:#1E1A3A;overflow:hidden;-webkit-tap-highlight-color:transparent}
+#bg{position:fixed;inset:0;z-index:0;background:#1E1A3A url(img/door.webp) center 55% / cover no-repeat;transition:filter 1.6s ease}
+#bg::before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(110% 60% at 50% 0%,rgba(255,196,110,.55),transparent 72%),radial-gradient(60% 40% at 50% 60%,rgba(255,170,90,.22),transparent 75%);mix-blend-mode:screen;opacity:0;transition:opacity 2.4s}
+#bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(25,15,40,0) 40%,rgba(25,15,40,.42))}
+body[data-bg="room"] #bg{background-image:url(img/room.webp);background-position:center 60%;filter:brightness(.4) saturate(.75)}
+body.lit[data-bg="room"] #bg{filter:brightness(.92) saturate(1.08);transition:filter 2.4s ease}
+body.lit[data-bg="room"] #bg::before{opacity:1;animation:warm 5s ease-in-out infinite}
+@keyframes warm{50%{opacity:.8}}
+body[data-bg="balcony"] #bg{background-image:url(img/balcony.webp);background-position:center 45%}
+body.ring #bg{animation:glow .9s ease 2}
+@keyframes glow{50%{filter:brightness(1.25)}}
+main{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+main[hidden]{display:none}
+.loader{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font:700 2.2rem var(--hand);color:#FFF1DE}
+
+
+.scene{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:64px 16px 26px}
+.scene[hidden]{display:none}
+.art{position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+.words{width:min(100%,440px);display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 18px 20px;border-radius:26px;
+  background:rgba(255,248,238,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(20,10,40,.3)}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1.05;color:var(--ink)}
+h1{font-size:clamp(2.2rem,9vw,3rem)}
+h2{font-size:clamp(1.6rem,6.6vw,2.1rem)}
+h1:focus,h2:focus,.question:focus{outline:none}
+p{margin:0}
+.name{color:var(--accent);font-size:clamp(2.8rem,13vw,4.2rem);overflow-wrap:anywhere}
+.kick{font:700 .8rem var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--accent-dark)}
+.sub{color:var(--muted);max-width:32ch}
+.whisper{font:700 1.75rem/1.05 var(--hand);color:var(--accent-dark)}
+.whisper:empty{display:none}
+.riddle{font:700 1.6rem/1.1 var(--hand);color:var(--ink);max-width:24ch}
+.count{font-size:.9rem;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.count:empty{display:none}
+.btn{appearance:none;border:0;cursor:pointer;font:700 1.05rem/1 var(--body);color:#fff;background:var(--accent);padding:16px 30px;border-radius:999px;
+  box-shadow:0 5px 0 var(--accent-dark);position:relative;transition:transform .1s,box-shadow .1s;white-space:nowrap;user-select:none;-webkit-user-select:none}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--accent-dark)}
+.btn.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 2px var(--ink)}
+.btn.mint{background:var(--mint-dark);box-shadow:0 5px 0 #2F6E5B}
+.btn:disabled{opacity:.6;cursor:default}
+.btn[hidden]{display:none}
+.linkish{appearance:none;border:0;background:none;font:600 .92rem var(--body);color:var(--accent-dark);text-decoration:underline;cursor:pointer;padding:4px}
+.linkish[hidden]{display:none}
+.plain{appearance:none;border:0;padding:0;background:none;cursor:pointer;display:block}
+img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
+:is(.btn,.linkish,.icon-btn,.plain):focus-visible{outline:3px solid var(--butter);outline-offset:4px}
+.pop-in{animation:popin .5s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popin{from{transform:scale(.85);opacity:0}}
+.bob{animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.halo{position:absolute;inset:-8px;border-radius:24px;box-shadow:0 0 0 3px rgba(255,200,87,.9);animation:pulse 1.6s ease-in-out infinite;pointer-events:none}
+.halo.round{border-radius:50%}
+.done>.halo,.halo[hidden]{display:none}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(255,200,87,0)}}
+.dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:20}
+.dots[hidden]{display:none}
+.dots span{width:7px;height:7px;border-radius:50%;background:#FFF1DE;opacity:.4;transition:opacity .3s,width .3s}
+.dots span.on{opacity:.95;width:20px;border-radius:4px}
+.icon-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:21;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(255,248,238,.88);color:var(--ink);font-size:1.1rem;box-shadow:0 4px 14px rgba(20,10,40,.25)}
+.icon-btn[hidden]{display:none}
+canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
+.made{font-size:.82rem;color:var(--muted)}
+.made a{color:var(--accent-dark);font-weight:700}
+.note{min-height:4.6em;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;padding:12px 14px;border-radius:18px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--paper-line)}
+.note[hidden]{display:none}
+.note .tag{font:700 .78rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-dark)}
+.note .tag:empty{display:none}
+.note .big{font:700 1.65rem/1.1 var(--hand);color:var(--ink)}
+.note .hint{font-size:.9rem;color:var(--muted)}
+.note .hint:empty{display:none}
+.paper{width:100%;text-align:left;display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:6px;background:repeating-linear-gradient(180deg,#FFF9EE 0 33px,#EADCC4 33px 34px);
+  box-shadow:0 6px 16px rgba(40,10,30,.18);max-height:min(40dvh,360px);overflow-y:auto;transform:rotate(-1deg)}
+.paper p{font:600 1.5rem/1.15 var(--hand);color:var(--ink);opacity:0;transform:translateY(4px);transition:opacity .9s,transform .9s}
+.paper p.in{opacity:1;transform:none}
+.paper p.sign{text-align:right;color:var(--accent-dark)}
+.paper[hidden]{display:none}
+.drop{filter:drop-shadow(0 14px 18px rgba(20,8,30,.4))}
+
+/* 1. the doorbell + the note under the door */
+.doorart{display:flex;flex-direction:column;align-items:center;gap:2dvh;overflow:hidden;padding:10px 24px 14px;margin:-10px -24px -14px}
+.bell{position:relative;height:min(30dvh,280px);aspect-ratio:360/662;border-radius:40px}
+.bell img{width:100%;height:100%;display:block;transition:transform .12s}
+.bell.press img{transform:scale(.95) translateY(2px)}
+.slip{position:relative;width:min(46vw,21dvh*1.24,230px);aspect-ratio:520/420;opacity:0;transform:translateY(120%) rotate(12deg);transition:transform 1.1s cubic-bezier(.25,1.2,.4,1),opacity .3s;pointer-events:none}
+.slip.in{opacity:1;transform:rotate(-6deg);pointer-events:auto}
+.slip.read{transform:rotate(-6deg) scale(.9);opacity:.5}
+.slip img{width:100%;height:100%;display:block}
+
+/* 2. the pull chain */
+.chainart{height:min(52dvh,520px);display:flex;align-items:flex-start;justify-content:center}
+.chain{position:relative;height:100%;aspect-ratio:260/1751;touch-action:none;cursor:grab}
+.chain img{width:100%;height:100%;display:block;transition:transform .35s cubic-bezier(.3,1.8,.5,1);pointer-events:none}
+.chain.pull img{transform:translateY(9%);transition:transform .12s}
+.chain .halo{left:-60%;right:-60%;top:auto;bottom:-3%;height:34%;border-radius:40px}
+.chain .arrow{position:absolute;left:130%;bottom:12%;font:700 1.6rem var(--hand);color:#FFF1DE;white-space:nowrap;animation:nudge 1.4s ease-in-out infinite;pointer-events:none}
+.chain.done .arrow{display:none}
+@keyframes nudge{50%{transform:translateY(10px)}}
+
+/* 3. the clue map */
+.mapbtn{position:relative;width:min(84vw,46dvh*.71,380px);aspect-ratio:760/1070}
+.mapbtn .sheet{position:absolute;inset:0;transform:scaleY(.1) rotate(-2deg);transform-origin:50% 8%;transition:transform 1.3s cubic-bezier(.3,1.15,.5,1);filter:drop-shadow(0 16px 22px rgba(20,8,30,.45))}
+.mapbtn.open .sheet{transform:none}
+.mapbtn .sheet img{width:100%;height:100%;display:block}
+.mapbtn .roll{position:absolute;left:4%;right:4%;top:2%;height:9%;border-radius:999px;background:linear-gradient(180deg,#E9CF9F,#C9A267 60%,#A97F45);box-shadow:0 8px 16px rgba(20,8,30,.35);transition:opacity .4s}
+.mapbtn.open .roll{opacity:0}
+.mapbtn .roll b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 1.3rem var(--hand);color:#6B4320}
+.xmark{position:absolute;width:13%;aspect-ratio:1;transform:translate(-50%,-50%) scale(0);transition:transform .45s cubic-bezier(.2,1.8,.4,1);pointer-events:none}
+.xmark.in{transform:translate(-50%,-50%) scale(1)}
+.xmark svg{width:100%;height:100%;display:block;overflow:visible}
+.xmark b{position:absolute;right:-30%;top:-34%;font:700 1.1rem/1 var(--body);color:#fff;background:var(--ink);width:1.5em;height:1.5em;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.xmark.gold svg{filter:drop-shadow(0 0 6px rgba(255,200,87,.9))}
+
+/* the search: a dark room, a torch, tap where it's hidden */
+.stage{position:relative;height:min(54dvh,560px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 0 0 5px #FFF6E6,0 18px 36px rgba(10,5,30,.5);touch-action:none;cursor:crosshair;--x:50%;--y:62%;--r:26%;background:#0E0B22}
+.stage[hidden]{display:none}
+.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;user-select:none}
+.stage .dark{filter:brightness(.2) saturate(.6)}
+.stage .lit{filter:brightness(1.15) saturate(1.1);-webkit-mask-image:radial-gradient(var(--r) calc(var(--r) * .5625) at var(--x) var(--y),#000 55%,transparent 100%);mask-image:radial-gradient(var(--r) calc(var(--r) * .5625) at var(--x) var(--y),#000 55%,transparent 100%)}
+.stage.win{--r:160%;transition:--r 1s}
+.stage.win .lit{transition:-webkit-mask-size 1s}
+.stage .glow{position:absolute;width:30%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,120,.55),transparent);opacity:0;transition:opacity .8s;pointer-events:none}
+.stage.hint .glow{opacity:1;animation:pulse2 1.4s ease-in-out infinite}
+@keyframes pulse2{50%{transform:translate(-50%,-50%) scale(1.25)}}
+.stage .ping{position:absolute;transform:translate(-50%,-50%);font:700 1.2rem/1 var(--body);color:#fff;text-shadow:0 1px 4px #000;pointer-events:none;animation:pingout 1.2s ease-out forwards}
+@keyframes pingout{to{opacity:0;transform:translate(-50%,-120%)}}
+.stage .hand{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font:700 1.2rem/1 var(--hand);color:#fff;background:rgba(42,31,92,.8);padding:5px 12px 6px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+.stage.moved .hand{opacity:0}
+.say{font:700 1.45rem/1.1 var(--hand);color:var(--accent-dark);min-height:1.1em}
+.say:empty{display:none}
+.found[hidden],.after[hidden]{display:none}
+.after{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+/* the rose petal trail */
+.trail{position:relative;height:min(56dvh,560px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 0 0 5px #FFF6E6,0 18px 36px rgba(10,5,30,.5);touch-action:none;cursor:pointer}
+.trail .room{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(1.05);pointer-events:none}
+.trail .hand{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font:700 1.2rem/1 var(--hand);color:#fff;background:rgba(42,31,92,.8);padding:5px 12px 6px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+.trail.moving .hand{opacity:0}
+.petal{position:absolute;width:6.5%;aspect-ratio:1/1.3;margin:-4% 0 0 -3.25%;border-radius:60% 10% 60% 10%;background:radial-gradient(circle at 30% 30%,#F49AB6,#B42D5E 75%);opacity:.55;transform:rotate(var(--a)) scale(.85);transition:transform .35s cubic-bezier(.2,1.8,.4,1),opacity .3s,box-shadow .3s;pointer-events:none}
+.petal.next{opacity:.9;animation:petalpulse 1.2s ease-in-out infinite}
+@keyframes petalpulse{50%{box-shadow:0 0 0 6px rgba(255,200,87,.5)}}
+.petal.on{opacity:1;transform:rotate(var(--a)) scale(1.2);box-shadow:0 0 14px 4px rgba(255,190,200,.85);animation:none}
+.doorglow{position:absolute;left:93%;top:36%;width:40%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,228,160,.95),rgba(255,200,110,.35) 50%,transparent);opacity:0;transition:opacity 1.2s;pointer-events:none}
+.trail.done .doorglow{opacity:1;animation:pulse2 1.6s ease-in-out infinite}
+
+/* the map you can open any time during the hunt */
+.mapfab{position:fixed;left:10px;top:calc(env(safe-area-inset-top,0px) + 8px);height:44px;z-index:21;display:flex;align-items:center;gap:8px;border:0;cursor:pointer;padding:10px 16px 10px 12px;border-radius:999px;
+  background:#FFF6E6;color:var(--ink);font:700 .95rem var(--body);box-shadow:0 0 0 2px #C9A267,0 6px 16px rgba(20,10,40,.35)}
+.mapfab[hidden]{display:none}
+.mapfab span{font-size:1.25rem;line-height:1}
+.mapov{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;background:rgba(20,12,36,.78);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.mapov[hidden]{display:none}
+.mapov .sheet2{position:relative;width:min(88vw,72dvh*.71,460px);aspect-ratio:760/1070;filter:drop-shadow(0 16px 22px rgba(0,0,0,.5));animation:popin .4s cubic-bezier(.2,1.5,.4,1)}
+.mapov .sheet2>img{width:100%;height:100%;display:block}
+.mapov .xmark{transform:translate(-50%,-50%) scale(1)}
+.mapov .xmark.got svg{opacity:.35}
+.mapov .xmark.got b{background:var(--mint-dark)}
+.mapov .xmark.now{animation:xpulse 1.2s ease-in-out infinite}
+@keyframes xpulse{50%{transform:translate(-50%,-50%) scale(1.25)}}
+.mapov p{color:#FFF1DE;font:700 1.4rem/1.1 var(--hand);text-align:center;max-width:30ch}
+
+/* reasons: all of them at once on one card */
+.paper.reasons p{font-size:1.35rem}
+.paper.reasons p::before{content:"♡ ";color:var(--accent)}
+
+/* the balcony projector: plays the photos by itself */
+.cinema{position:relative;width:min(86vw,46dvh*1.05,440px);display:flex;flex-direction:column;align-items:center}
+.screen{position:relative;width:100%;aspect-ratio:4/3;background:#F7EFE2;border-radius:6px;overflow:hidden;box-shadow:0 0 0 6px #EDE2CF,0 0 60px rgba(255,226,170,.55),0 18px 36px rgba(10,5,30,.5)}
+.screen .sl{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+.screen .sl.on{opacity:1}
+.screen .sl img{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.18) contrast(1.05);transform:scale(1.02)}
+.screen .sl.on img{animation:kb 4.2s ease-out forwards}
+@keyframes kb{to{transform:scale(1.12) translate(-1.5%,-1%)}}
+.screen .sl.txt{white-space:pre-line;display:flex;align-items:center;justify-content:center;padding:10%;text-align:center;font:400 clamp(1.3rem,5.4vw,2rem)/1.15 var(--display);color:var(--ink);background:linear-gradient(160deg,#FCE7C7,#F7C6D3)}
+.screen .cap{position:absolute;left:0;right:0;bottom:0;z-index:3;padding:18px 12px 10px;font:700 1.4rem/1.05 var(--hand);color:#fff;text-align:center;background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:opacity .6s}
+.screen .cap.on{opacity:1}
+.screen .grain{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 55%,rgba(40,20,10,.35));animation:flick .14s steps(2) infinite}
+.screen .countdown{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;background:#2B2622;color:#F7EFE2;font:400 4rem/1 var(--display)}
+.screen .countdown[hidden]{display:none}
+@keyframes flick{50%{opacity:.82}}
+.beam{position:relative;width:100%;height:clamp(60px,12dvh,120px);margin-top:-2px;pointer-events:none}
+.beam i{position:absolute;inset:0;clip-path:polygon(4% 0,96% 0,54% 100%,46% 100%);background:linear-gradient(0deg,rgba(255,240,200,.75),rgba(255,236,190,.12));opacity:0;transition:opacity .8s}
+.cinema.on .beam i{opacity:1;animation:flick .18s steps(2) infinite}
+.projector{width:min(34%,150px);margin-top:-6px}
+.projector svg{width:100%;height:auto;display:block;overflow:visible}
+.cinema.on .reel{animation:spin 2.2s linear infinite;transform-box:fill-box;transform-origin:center}
+
+/* clue header */
+.clue{display:flex;flex-direction:column;align-items:center;gap:4px}
+
+/* 4. under the cushion */
+.sofa{position:relative;width:min(78vw,42dvh,360px);aspect-ratio:1/1.02}
+.reelbox{position:absolute;left:50%;top:44%;width:52%;z-index:1;transform:translate(-50%,-30%) scale(.6);opacity:0;transition:transform .8s cubic-bezier(.2,1.5,.4,1),opacity .4s}
+.reelbox.up{transform:translate(-50%,-62%) rotate(-6deg);opacity:1}
+.reelbox svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 10px 14px rgba(20,8,30,.45))}
+.reelbox.up .spin{animation:spin 6s linear infinite;transform-box:fill-box;transform-origin:center}
+.cushion{position:absolute;left:0;right:0;bottom:0;margin:auto;width:100%;z-index:3;touch-action:none;cursor:grab;transition:transform .9s cubic-bezier(.4,-.2,.5,1),opacity .5s .5s}
+.cushion img{width:100%;height:auto;display:block;pointer-events:none}
+.cushion.off{transform:translate(70%,-85%) rotate(32deg) scale(.7);opacity:0;pointer-events:none}
+.cushion .halo{inset:6% 4%}
+
+/* 5. behind the photo frame */
+.wall{position:relative;width:min(62vw,40dvh*.734,300px);aspect-ratio:640/872;margin:18px 0 14%}
+.wall::before{content:"";position:absolute;left:50%;top:-16px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#E8D6A8,#8C6A2E);z-index:4;box-shadow:0 2px 3px rgba(0,0,0,.4)}
+.frame{position:absolute;inset:0;z-index:3;transform-origin:50% -2%;transition:transform 1s cubic-bezier(.3,1.6,.5,1);touch-action:none;cursor:grab}
+.frame::before,.frame::after{content:"";position:absolute;top:-10px;width:44%;height:2px;background:#5B4A2E;z-index:-1}
+.frame::before{left:8%;transform:rotate(-16deg);transform-origin:right}
+.frame::after{right:8%;transform:rotate(16deg);transform-origin:left}
+.frame.tilt{transform:rotate(-15deg)}
+.frame>img{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+.frame .win{pointer-events:none;position:absolute;left:21%;right:20.6%;top:22.7%;bottom:16.4%;overflow:hidden;background:linear-gradient(160deg,#F7C6D3,#FCE7C7);display:flex;align-items:center;justify-content:center}
+.frame .win img{width:100%;height:100%;object-fit:cover;display:block}
+.frame .win b{font:400 clamp(1.4rem,6vw,2.2rem)/1 var(--display);color:var(--accent-dark);text-align:center}
+.env{position:absolute;left:18%;width:64%;top:52%;z-index:1;opacity:0;transform:translateY(0);transition:transform 1s cubic-bezier(.4,0,.5,1.4),opacity .2s;cursor:pointer}
+.env img{width:100%;height:auto;display:block;pointer-events:none}
+.env.out{opacity:1;z-index:5;transform:translateY(62%) rotate(7deg)}
+.env.bump{animation:bump .35s}
+@keyframes bump{40%{scale:1.07}}
+
+/* 6. the cookie jar */
+.jar{position:relative;width:min(56vw,38dvh*.8,290px);aspect-ratio:620/774}
+.jar .body{position:absolute;inset:0;width:100%;height:100%;display:block;clip-path:inset(23.3% 0 0 0)}
+.jar .lid{position:absolute;left:15%;width:70%;bottom:72.1%;z-index:3;touch-action:none;cursor:grab;transform-origin:50% 90%}
+.jar .lid img{width:100%;height:auto;display:block;pointer-events:none}
+.jar .lid .halo{border-radius:50%}
+.jar .lid.twist{animation:twist .9s ease-in-out}
+@keyframes twist{20%{transform:rotate(-9deg)}45%{transform:rotate(8deg)}70%{transform:rotate(-6deg)}}
+.jar .lid.off{transform:translate(78%,-70%) rotate(28deg);transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.scroll{position:absolute;left:41%;width:18%;height:34%;top:30%;z-index:2;border-radius:10px;background:linear-gradient(90deg,#E7D6B4,#FFF6E2 40%,#E2CEA8);box-shadow:0 4px 10px rgba(0,0,0,.25);opacity:0;transition:transform 1s cubic-bezier(.3,1.4,.5,1),opacity .2s}
+.scroll::after{content:"";position:absolute;left:-12%;right:-12%;top:44%;height:12%;background:var(--accent);border-radius:3px}
+.scroll.up{opacity:1;transform:translateY(-95%) rotate(-8deg)}
+
+/* 7. inside a book */
+.book{position:relative;width:min(84vw,46dvh*1.37,440px);aspect-ratio:900/658;perspective:1400px}
+.book .closed{position:absolute;left:24%;top:-4%;height:108%;width:auto;transform-origin:0 50%;transition:transform 1s cubic-bezier(.5,0,.6,1),opacity .3s .7s;cursor:pointer}
+.book.open .closed{transform:rotateY(-100deg);opacity:0;pointer-events:none}
+.book .opened{position:absolute;inset:0;width:100%;height:100%;opacity:0;transform:scale(.7);transition:opacity .5s .55s,transform .7s .55s cubic-bezier(.3,1.4,.5,1)}
+.book.open .opened{opacity:1;transform:none}
+.book .halo{left:-3%;right:-3%;top:-6%;bottom:-6%}
+
+/* 8. the balcony ring box */
+.boxart{position:relative;width:min(70vw,36dvh,320px);aspect-ratio:1}
+.rays{position:absolute;inset:-35%;border-radius:50%;background:repeating-conic-gradient(rgba(255,226,150,.55) 0 7deg,transparent 7deg 22deg);
+  -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 100%);mask-image:radial-gradient(closest-side,#000 30%,transparent 100%);opacity:0;transition:opacity 1s;animation:spin 24s linear infinite}
+.boxart.open .rays{opacity:1}
+@keyframes spin{to{transform:rotate(1turn)}}
+.ringbox{position:absolute;inset:0;cursor:pointer}
+.ringbox img{position:absolute;left:0;right:0;bottom:0;margin:auto;width:84%;height:auto;display:block;pointer-events:none;transition:opacity .3s,transform .6s cubic-bezier(.2,1.6,.4,1)}
+.ringbox .o{width:96%;opacity:0;transform:scale(.8)}
+.boxart.open .ringbox .c{opacity:0}
+.boxart.open .ringbox .o{opacity:1;transform:none}
+.ringbox.shake .c{animation:shake .5s}
+@keyframes shake{20%{transform:rotate(-6deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+.boxart.open .ringbox{cursor:default}
+.question{font-family:var(--display);font-size:clamp(1.6rem,6.6vw,2.2rem);line-height:1.1;color:var(--ink);overflow-wrap:anywhere}
+.question:empty,.question[hidden]{display:none}
+.coax{font:700 1.6rem/1.1 var(--hand);color:var(--accent-dark)}
+.coax:empty{display:none}
+.askrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.askrow[hidden]{display:none}
+
+/* 9. finale */
+.hug{width:min(56vw,44dvh*.42,240px)}
+.hug img{width:100%;height:auto;display:block}
+#endTitle{font-size:clamp(2rem,9vw,2.8rem)}
+
+/* laptops: full-screen, art | words */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  body[data-bg="room"] #bg{background-image:url(img/bg-wide.webp),url(img/room.webp);background-position:center}
+  body[data-bg="door"] #bg{background-position:center 62%}
+  .scene.two{display:grid;grid-template-columns:34vw 34vw;column-gap:4vw;justify-content:center;align-items:center;align-content:center;padding:80px 4vw 40px}
+  .scene.two[hidden]{display:none}
+  .scene.two>.art{grid-column:1}
+  .scene.two>.words{grid-column:2;width:100%;max-width:470px;justify-self:center}
+  .bell{height:min(36dvh,320px)}
+  .slip{width:min(16vw,26dvh*1.24)}
+  .chainart{height:min(66dvh,640px)}
+  .mapbtn{width:min(28vw,70dvh*.71)}
+  .sofa{width:min(28vw,58dvh)}
+  .wall{width:min(24vw,56dvh*.734)}
+  .jar{width:min(22vw,58dvh*.8)}
+  .book{width:min(34vw,60dvh*1.37)}
+  .boxart{width:min(26vw,50dvh)}
+  .cinema{width:min(32vw,62dvh)}
+  .stage,.trail{height:min(80dvh,780px)}
+  .hug{width:min(20vw,62dvh*.42)}
+  h1{font-size:clamp(2.6rem,3.4vw,3.6rem)}
+  .name{font-size:clamp(3.2rem,5vw,5rem)}
+  #endTitle{font-size:clamp(2.4rem,3.2vw,3.6rem)}
+  h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body data-bg="door">
+<div id="bg" aria-hidden="true"></div>
+<nav class="dots" id="dots" aria-label="Progress" hidden></nav>
+<button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
+<button class="mapfab" id="mapFab" type="button" hidden aria-haspopup="dialog"><span aria-hidden="true">🗺️</span>Map</button>
+<div class="mapov" id="mapOv" role="dialog" aria-modal="true" aria-label="Your treasure map" hidden>
+  <div class="sheet2"><img src="img/map.webp" alt="The treasure map" width="760" height="1070"><span id="xs2"></span></div>
+  <p id="mapOvLine"></p>
+  <button class="btn ghost" id="mapClose" type="button"><span class="lbl">Back to the hunt</span></button>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="loader" id="loader"><p id="loaderText">Hiding a few things…</p></div>
+
+<main hidden>
+  <!-- 1. Ring the doorbell, a note slides under the door -->
+  <section class="scene two" data-scene="open">
+    <div class="art">
+      <div class="doorart">
+        <button class="plain bell" id="bell" type="button" aria-label="Ring the doorbell"><img src="img/doorbell.webp" alt="A brass doorbell" width="360" height="662"><span class="halo"></span></button>
+        <button class="plain slip" id="slip" type="button" aria-label="Open the note" tabindex="-1"><img src="img/note.webp" alt="A folded note tied with a ribbon" width="520" height="420"><span class="halo"></span></button>
+      </div>
+    </div>
+    <div class="words">
+      <p class="kick">Someone's at the door for</p>
+      <h1 tabindex="-1" class="name" data-to></h1>
+      <p class="whisper" id="openLine"></p>
+      <p class="sub" id="openSub">Turn your sound on, then ring the doorbell.</p>
+      <div class="paper" id="openNote" hidden></div>
+      <button class="btn" data-next id="openBtn" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 3. The clue map -->
+  <section class="scene two" data-scene="map" hidden>
+    <div class="art">
+      <button class="plain mapbtn" id="mapBtn" type="button" aria-label="Unroll the treasure map">
+        <span class="sheet"><img src="img/map.webp" alt="A hand-drawn treasure map of the house" width="760" height="1070"></span>
+        <span id="xs"></span>
+        <span class="roll"><b>tap to unroll</b></span>
+      </button>
+    </div>
+    <div class="words">
+      <h2 tabindex="-1">Your treasure map</h2>
+      <p class="sub" id="mapSub">The house is dark, so you will search with a torch 🔦. First, your map: tap it to unroll it.</p>
+      <p class="whisper" id="mapLine"></p>
+      <button class="btn" data-next id="afterMap" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 4. Clue: under the cushion (photos) -->
+  <section class="scene two" data-scene="cushion" hidden>
+    <div class="art">
+      <div class="stage" data-stage="cushion"></div>
+      <div class="found" hidden><div class="sofa">
+        <div class="reelbox" id="reelbox" aria-hidden="true"><svg viewBox="0 0 220 200">
+          <g class="spin"><circle cx="100" cy="100" r="88" fill="#2A1F5C" stroke="#C9A24A" stroke-width="6"/><circle cx="100" cy="100" r="16" fill="#C9A24A"/>
+          <circle cx="100" cy="48" r="20" fill="#14102A"/><circle cx="145" cy="126" r="20" fill="#14102A"/><circle cx="55" cy="126" r="20" fill="#14102A"/>
+          <circle cx="100" cy="100" r="62" fill="none" stroke="#4B3F7E" stroke-width="3"/></g>
+          <path d="M170 120 L214 150 L206 172 L160 142Z" fill="#3B2F22"/>
+          <g transform="rotate(-10 150 40)"><rect x="118" y="18" width="98" height="46" rx="6" fill="#FFF6E6" stroke="#C9A267" stroke-width="2"/>
+          <circle cx="128" cy="41" r="4" fill="#C9A267"/><text x="170" y="37" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#B42D5E">play me on</text>
+          <text x="170" y="55" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#B42D5E">the balcony ♡</text></g></svg></div>
+        <button class="plain cushion" id="cushion" type="button" aria-label="Lift the cushion"><img src="img/cushion.webp" alt="A pink embroidered sofa cushion" width="620" height="559"><span class="halo"></span></button>
+      </div></div>
+    </div>
+    <div class="words">
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" data-found="Under the cushion!"></h2></div>
+      <p class="riddle">Where we fight over the remote every night… something is hiding there.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
+      <p class="sub" id="cushionSub">Lift the cushion (drag it away, or tap it).</p>
+      </div>
+      <button class="btn" data-next id="afterCushion" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 5. Clue: behind the photo frame (reasons) -->
+  <section class="scene two" data-scene="frame" hidden>
+    <div class="art">
+      <div class="stage" data-stage="frame"></div>
+      <div class="found" hidden><div class="wall">
+        <button class="plain frame" id="frame" type="button" aria-label="Tilt the photo frame"><span class="win" id="win"></span><img src="img/frame.webp" alt="A carved wooden photo frame" width="640" height="872"><span class="halo"></span></button>
+        <button class="plain env" id="env" type="button" aria-label="Open the envelope" tabindex="-1"><img src="img/envelope.webp" alt="A sealed envelope" width="520" height="372"></button>
+      </div></div>
+    </div>
+    <div class="words">
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" data-found="Behind the photo frame!"></h2></div>
+      <p class="riddle" id="frameRiddle">We smile at it every day. It hangs on the wall.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
+      <div class="note" id="frameNote" aria-live="polite"><span class="tag" id="frameTag"></span><span class="big" id="frameText"></span><span class="hint" id="frameHint">Tilt the frame on its nail (drag it, or tap it).</span></div>
+      <div class="paper reasons" id="reasonList" hidden></div>
+      <p class="count" id="frameCount"></p>
+      </div>
+      <button class="btn" data-next id="afterFrame" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 6. Clue: in the cookie jar (a sweet note) -->
+  <section class="scene two" data-scene="jar" hidden>
+    <div class="art">
+      <div class="stage" data-stage="jar"></div>
+      <div class="found" hidden><div class="jar">
+        <span class="scroll" id="scroll"></span>
+        <img class="body" src="img/jar.webp" alt="A glass cookie jar full of cookies" width="620" height="774">
+        <button class="plain lid" id="lid" type="button" aria-label="Twist the lid open"><img src="img/lid.webp" alt="" width="620" height="276"><span class="halo"></span></button>
+      </div></div>
+    </div>
+    <div class="words">
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" data-found="In the cookie jar!"></h2></div>
+      <p class="riddle">Something sweet, kept just for you, up on the kitchen shelf.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
+      <p class="sub" id="jarSub">Twist the lid open (drag it up, or tap it).</p>
+      <div class="paper" id="jarNote" hidden></div>
+      <button class="btn mint" id="twistBtn"><span class="lbl">Twist it open 🍪</span></button>
+      </div>
+      <button class="btn" data-next id="afterJar" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 7. Clue: inside a book (the letter) -->
+  <section class="scene two" data-scene="book" hidden>
+    <div class="art">
+      <div class="stage" data-stage="book"></div>
+      <div class="found" hidden><div class="book" id="book">
+        <img class="opened" src="img/book-open.webp" alt="The book lying open, a pressed rose between its pages" width="900" height="658">
+        <button class="plain closed" id="bookBtn" type="button" aria-label="Open the book"><img src="img/book.webp" alt="A pink cloth-bound book" width="560" height="852" style="height:100%;width:auto;display:block"><span class="halo"></span></button>
+      </div></div>
+    </div>
+    <div class="words">
+      <div class="clue"><p class="kick" data-clueno></p><h2 tabindex="-1" id="bookTitle" data-found="Inside a book!"></h2></div>
+      <p class="riddle" id="bookRiddle">Our story is my favourite one. It sits on the shelf with all the others.</p>
+      <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
+      <div class="after" hidden>
+      <p class="sub" id="bookSub">Open the book.</p>
+      <div class="paper" id="letter" hidden></div>
+      <button class="btn ghost" id="letterSkip" hidden><span class="lbl">Show it all</span></button>
+      </div>
+      <button class="btn" data-next id="afterBook" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 7b. The rose petal trail to the balcony -->
+  <section class="scene two" data-scene="trail" hidden>
+    <div class="art">
+      <div class="trail" id="trail" tabindex="0" role="application" aria-label="Swipe along the rose petals to the balcony door. Arrow keys or Enter also walk the trail.">
+        <img src="img/room.webp" alt="" class="room">
+        <span class="doorglow" id="doorGlow"></span>
+        <div id="petals"></div>
+        <span class="hand">swipe along the petals →</span>
+      </div>
+    </div>
+    <div class="words">
+      <p class="kick">All four clues found</p>
+      <h2 tabindex="-1">Follow the petals</h2>
+      <p class="sub" id="trailSub">Someone left a trail of rose petals. Swipe along it, petal by petal, and see where it leads.</p>
+      <p class="count" id="trailCount"></p>
+      <button class="linkish" id="walkBtn" hidden>Walk me there</button>
+      <button class="btn" data-next id="afterTrail" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 7c. The balcony: an old projector plays the photos by itself -->
+  <section class="scene two" data-scene="show" hidden>
+    <div class="art">
+      <div class="cinema" id="cinema">
+        <div class="screen" id="screen" aria-live="polite"><div class="countdown" id="countdown">3</div><span class="grain"></span><p class="cap" id="showCap"></p></div>
+        <div class="beam"><i></i></div>
+        <div class="projector" aria-hidden="true"><svg viewBox="0 0 200 150">
+          <g class="reel"><circle cx="58" cy="42" r="34" fill="#3A2E4F" stroke="#C9A24A" stroke-width="4"/><circle cx="58" cy="42" r="6" fill="#C9A24A"/><circle cx="58" cy="22" r="7" fill="#1E1A3A"/><circle cx="41" cy="52" r="7" fill="#1E1A3A"/><circle cx="75" cy="52" r="7" fill="#1E1A3A"/></g>
+          <g class="reel"><circle cx="142" cy="42" r="30" fill="#3A2E4F" stroke="#C9A24A" stroke-width="4"/><circle cx="142" cy="42" r="6" fill="#C9A24A"/><circle cx="142" cy="24" r="6" fill="#1E1A3A"/><circle cx="127" cy="51" r="6" fill="#1E1A3A"/><circle cx="157" cy="51" r="6" fill="#1E1A3A"/></g>
+          <rect x="30" y="76" width="140" height="56" rx="10" fill="#B42D5E"/><rect x="30" y="76" width="140" height="14" rx="7" fill="#E8457A"/>
+          <rect x="88" y="62" width="24" height="18" rx="4" fill="#2A1F5C"/><circle cx="100" cy="104" r="15" fill="#2A1F5C"/><circle cx="100" cy="104" r="8" fill="#FFF0C8"/>
+          <rect x="46" y="132" width="12" height="12" rx="3" fill="#2A1F5C"/><rect x="142" y="132" width="12" height="12" rx="3" fill="#2A1F5C"/></svg></div>
+      </div>
+    </div>
+    <div class="words">
+      <p class="kick">Out on the balcony</p>
+      <h2 tabindex="-1" id="showTitle">Someone set up a little film</h2>
+      <p class="sub" id="showSub">The film reel from under the cushion fits the old projector. Sit back, it plays by itself.</p>
+      <button class="btn" data-next id="afterShow" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 8. The balcony: the ring box (question) -->
+  <section class="scene two" data-scene="ask" hidden>
+    <div class="art">
+      <div class="boxart" id="boxart">
+        <span class="rays"></span>
+        <button class="plain ringbox" id="ringbox" type="button" aria-label="Open the little box"><img class="c" src="img/box.webp" alt="A small red velvet ring box" width="520" height="504"><img class="o" src="img/box-open.webp" alt="The box open, a diamond ring inside" width="620" height="833"><span class="halo round" id="boxHalo"></span></button>
+      </div>
+    </div>
+    <div class="words">
+      <p class="kick">The final secret</p>
+      <h2 tabindex="-1" id="askTitle">Under the stars</h2>
+      <p class="sub" id="askSub">One last thing is waiting for you out here. Tap the little box.</p>
+      <p class="question" id="question" tabindex="-1"></p>
+      <div class="askrow" id="askRow" hidden>
+        <button class="btn" id="yesBtn"><span class="lbl">Yes! 💍</span></button>
+        <button class="btn ghost" id="coaxBtn"><span class="lbl">Convince me 😏</span></button>
+      </div>
+      <p class="coax" id="coaxLine" aria-live="polite"></p>
+      <button class="btn" data-next id="afterAsk" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 9. Finale -->
+  <section class="scene two" data-scene="end" hidden>
+    <div class="art"><div class="hug bob"><img src="img/couple-hug.webp" alt="The two of you hugging, a ring on her finger" width="490" height="1167"></div></div>
+    <div class="words">
+      <p class="whisper" id="endPre"></p>
+      <h1 tabindex="-1" class="name" id="endTitle"></h1>
+      <p class="sub" id="endLine"></p>
+      <p class="sub" id="endFrom"></p>
+      <button class="btn ghost" id="replay"><span class="lbl">Play the hunt again</span></button>
+      <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============ SETUP: same Apps Script URL as the other designs ============ */
+const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";
+/* Default music: our own synthesised music-box tune (SONG.src empty). It starts when the note under the door is read.
+   A buyer's own song (d.song) plays instead, and falls back to our tune if it won't load. */
+const SONG = { src: "", volume: .8, credit: "" };
+/* ========================================================================= */
+
+const DEMO = {
+  to: "Ananya", from: "Kabir", number: "4",
+  photos: [
+    { src: "img/demo-1.svg", caption: "Our first sunset" },
+    { src: "img/demo-2.svg", caption: "Two chais, one table" },
+    { src: "img/demo-3.svg", caption: "That rainy evening" },
+    { src: "img/demo-4.svg", caption: "Road trip, no plan" }
+  ],
+  reasons: ["You laugh at my worst jokes","You make every house feel like home","You steal my hoodies and I let you","You believe in me, loudly","You're my favourite person to do nothing with","Just… you"],
+  letter: ["Ananya,","Four years ago I hid my feelings so badly that everyone knew except you.","Tonight I hid a few things around the house instead, and I hope I did a better job.","You are my favourite place, my calmest morning and my best adventure. I don't want to find anything else.","So here's the last clue. Turn around, and look at me."],
+  question: "Will you marry me?",
+  yesReply: "You just made me the luckiest person alive. I love you.",
+  extra: { jar: "You're sweeter than every cookie in this jar. (I counted. I ate two.) Keep going, you're close." }
+};
+const DEFAULT_REASONS = ["You make every day feel like home","You believe in me, loudly","You still give me butterflies","Just… you"];
+/* where each clue hides in the dark room painting (room.webp): x, y as fractions, r as a fraction of the width */
+const SPOT = { cushion:[.47,.53,.13], frame:[.45,.19,.1], jar:[.73,.41,.09], book:[.44,.35,.09] };
+const NOPE = { cushion:"Not here. Somewhere we sit together?", frame:"Not here. Look higher, on the wall.", jar:"Not here. Think kitchen.", book:"Not here. Where do the books live?" };
+const DEFAULT_JAR = "You're sweeter than every cookie in this jar. Keep going, you're getting close.";
+const COAX = ["I'll let you have the last bite. Always.", "Lifetime supply of cookies. From that very jar.", "I'll never hog the blanket again. Mostly."];
+/* the X's on the painted map (fractions of the map picture) */
+const XS = { cushion:[.236,.388], frame:[.236,.729], jar:[.809,.459], book:[.211,.271], treasure:[.684,.206] };
+const CLUE_NAME = { cushion:"the cushion", frame:"the photo frame", jar:"the cookie jar", book:"the book" };
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const qs = new URLSearchParams(location.search);
+const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autoplay");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const coarse = matchMedia("(pointer: coarse)").matches;
+if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const BG = { open:"door", show:"balcony", ask:"balcony", end:"balcony" };
+let C, seq = [], clues = [], current = 0;
+
+/* ---------- load ---------- */
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "lg-data") res(e.data.data); });
+    parent.postMessage({ type: "lg-ready" }, location.origin);
+  });
+}
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(255,241,222,0.38)'>PREVIEW · Little Gasp</text></svg>";
+  const wm = document.createElement("div"); wm.setAttribute("aria-hidden", "true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(42,31,92,.9);color:#fff;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px;letter-spacing:.04em";
+  document.body.append(wm, band);
+}
+async function start(){
+  try {
+    let d = DEMO;
+    if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
+    else if (id && !isAuto){
+      const res = await fetch(API_URL + "?id=" + encodeURIComponent(id)); d = await res.json();
+      if (!d || d.error) throw new Error(d && d.error);
+    }
+    build(d);
+    if (isAuto) runAutoplay();
+  } catch (e) {
+    $("#loaderText").textContent = "This link doesn't look right. Please check it, or message @littlegasp.co on Instagram.";
+  }
+}
+setTimeout(start, 0);
+
+function build(d){
+  const t = v => String(v || "").trim();
+  C = { to: t(d.to) || "you", from: t(d.from), number: t(d.number),
+    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 5),
+    reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
+    letter: (d.letter || []).map(t).filter(Boolean),
+    question: t(d.question), yesReply: t(d.yesReply) };
+  const x = d.extra && typeof d.extra === "object" ? d.extra : {};
+  if (id) C.photos = C.photos.filter(p => p.src);
+  C.jar = t(x.jar).slice(0, 160) || DEFAULT_JAR;
+  if (!C.reasons.length) C.reasons = DEFAULT_REASONS;
+  if (!C.letter.length) C.letter = [C.to + ",", "Every clue tonight led to the same answer.", "It's you. It was always going to be you."];
+  const n = /^\d{1,3}$/.test(C.number) ? +C.number : 0; C.years = n;
+
+  document.title = "Someone hid something for " + C.to;
+  $$("[data-to]").forEach(e => e.textContent = C.to);
+  $("#openLine").textContent = n ? `${n} year${n === 1 ? "" : "s"} of us, and one more surprise` : "";
+
+  /* the clues that have something to hide */
+  clues = ["cushion", "frame", "jar", "book"];   // always four clues
+  seq = ["open", "map", ...clues, "trail", "show", "ask", "end"];
+  const label = s => clues.includes(s) ? `Find clue ${clues.indexOf(s) + 1}` : { map:"Step inside",  trail:"Follow the petals", show:"Step outside", ask:"Open the ring box", end:"Finish" }[s];
+  $$("[data-scene]").forEach(sc => {
+    const i = seq.indexOf(sc.dataset.scene), b = sc.querySelector("[data-next] .lbl"), k = sc.querySelector("[data-clueno]");
+    if (b && i > -1 && seq[i + 1]) b.textContent = label(seq[i + 1]);
+    if (k) k.textContent = `Clue ${clues.indexOf(sc.dataset.scene) + 1} of ${clues.length}`;
+    const h = sc.querySelector("[data-found]"); if (h) h.textContent = "Find it in the dark";
+  });
+  const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
+
+  clues.forEach(buildSearch);
+  buildOpen(); buildMap(); buildShow(); buildCushion(); buildTrail(); buildFrame(); buildJar(); buildBook(); buildAsk();
+  if (!coarse){
+    $("#cushionSub").textContent = "Lift the cushion (drag it away, or click it).";
+    $("#frameHint").textContent = "Tilt the frame on its nail (drag it, or click it).";
+    $("#jarSub").textContent = "Twist the lid open (drag it up, or click it).";
+  }
+  $("#endPre").textContent = C.question ? "You said yes! 💍" : "Treasure found 💍";
+  $("#endTitle").textContent = C.from ? `${C.to} & ${C.from}` : `Forever, ${C.to}`;
+  $("#endLine").textContent = (C.question && C.yesReply) || "This is just the beginning of us.";
+  $("#endFrom").textContent = C.from ? "All my love, " + C.from : "";
+
+  if (!isAuto){
+    const own = d.song && d.song.src, src = own || SONG.src;
+    if (src){
+      song = new Audio(src); song.loop = true; song.preload = "auto"; song.volume = own ? .9 : SONG.volume;
+      song.addEventListener("error", () => {
+        if (own && SONG.src && !song.src.endsWith(SONG.src)){ song.src = SONG.src; song.volume = SONG.volume; if (musicOn) song.play().catch(() => {}); return; }
+        song = null; if (musicOn) Music.start();
+      });
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (ctx) document.hidden ? ctx.suspend() : ctx.resume();
+      if (song && musicOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {}));
+    });
+  }
+  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false;
+  go("open");
+}
+
+/* ---------- scenes ---------- */
+function go(name){
+  current = seq.indexOf(name);
+  $$("[data-scene]").forEach(s => s.hidden = s.dataset.scene !== name);
+  $$("#dots span").forEach((s, i) => s.classList.toggle("on", i === current));
+  document.body.dataset.bg = BG[name] || "room";
+  document.querySelector("main").scrollTo(0, 0);
+  const sc = document.querySelector(`[data-scene="${name}"]`), h = sc.querySelector("h1,h2");
+  if (h && !isPreview) h.focus({ preventScroll: true });
+  if (name === "end"){ confetti(true); hearts(60); chimeUp(); }
+  if (name === "trail") startTrail();
+  if (name === "show") playShow();
+  updateMapFab();
+}
+function nextScene(){ ensureAudio(); unlockSong(); const n = seq[current + 1]; if (n) go(n); }
+$$("[data-next]").forEach(b => b.addEventListener("click", nextScene));
+$("#replay").addEventListener("click", () => location.reload());
+function showNext(btn){ btn.hidden = false; if (!isAuto) setTimeout(() => btn.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }), 500); }
+function pop(el){ el.classList.remove("pop-in"); void el.offsetWidth; el.classList.add("pop-in"); }
+/* drag-or-tap: calls fn once the pointer travels far enough in the wanted direction, or on a plain tap/click/Enter */
+function dragOrTap(el, fn, test){
+  let p0 = null, fired = false;
+  const fire = () => { if (!fired){ fired = true; fn(); } };
+  el.addEventListener("pointerdown", e => { p0 = [e.clientX, e.clientY]; el.setPointerCapture && el.setPointerCapture(e.pointerId); });
+  el.addEventListener("pointermove", e => { if (p0 && test(e.clientX - p0[0], e.clientY - p0[1])){ p0 = null; fire(); } });
+  el.addEventListener("pointerup", e => { if (p0 && Math.hypot(e.clientX - p0[0], e.clientY - p0[1]) < 10) fire(); p0 = null; });
+  el.addEventListener("pointercancel", () => p0 = null);
+  el.addEventListener("click", e => { if (e.detail === 0) fire(); });   // keyboard Enter / Space
+  return { reset(){ fired = false; }, fire };
+}
+function writeLines(box, lines, signIdx){
+  box.innerHTML = lines.map((l, i) => `<p${i === signIdx ? ' class="sign"' : ""}></p>`).join("");
+  $$(`#${box.id} p`).forEach((p, i) => p.textContent = lines[i]);
+}
+async function revealLines(box, ok){
+  for (const p of box.querySelectorAll("p")){ if (!ok()) break; p.classList.add("in"); if (ctx) noise(.2, 3800, .02, .6);
+    if (!isAuto) p.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); await sleep(reduce ? 0 : Math.min(2600, 700 + p.textContent.length * 24)); }
+  box.querySelectorAll("p").forEach(p => p.classList.add("in"));
+}
+
+/* ---------- sound: the buyer's song, or our own music-box tune ---------- */
+let ctx, master, muted = false, song = null, musicOn = false, unlocked = false;
+function ensureAudio(){
+  if (isAuto) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!ctx){ ctx = new AC(); master = ctx.createGain(); master.gain.value = muted ? 0 : .5; master.connect(ctx.destination); }
+  if (ctx.state === "suspended") ctx.resume();
+}
+function unlockSong(){
+  if (unlocked || !song) return; unlocked = true;
+  song.muted = true; song.play().then(() => { if (!musicOn){ song.pause(); song.currentTime = 0; } song.muted = muted; }).catch(() => {});
+}
+function startMusic(){
+  if (isAuto || musicOn) return; musicOn = true; ensureAudio();
+  if (song){ song.muted = muted; song.currentTime = 0; song.play().catch(() => { song = null; Music.start(); }); }
+  else Music.start();
+  $("#muteBtn").hidden = false;
+}
+function bell(f, t, vol = .12, len = 1.6){   // music-box / celesta voice
+  if (!ctx) return;
+  [[1, vol, "sine"], [2.01, vol * .32, "sine"], [3.98, vol * .12, "sine"], [1, vol * .25, "triangle"]].forEach(([m, v, ty]) => { const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = ty; o.frequency.value = f * m; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len / Math.sqrt(m)); o.connect(g); g.connect(master); o.start(t); o.stop(t + len / Math.sqrt(m) + .05); });
+}
+function pad(fs, t, len, vol = .028){
+  if (!ctx) return;
+  fs.forEach(f => { const o = ctx.createOscillator(), g = ctx.createGain(), fl = ctx.createBiquadFilter();
+    o.type = "triangle"; o.frequency.value = f; fl.type = "lowpass"; fl.frequency.value = 900;
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(vol, t + .6); g.gain.linearRampToValueAtTime(0.0001, t + len);
+    o.connect(fl); fl.connect(g); g.connect(master); o.start(t); o.stop(t + len + .05); });
+}
+function noise(len = .2, f = 2000, vol = .12, q = 1, type = "bandpass"){
+  if (!ctx) return; const n = Math.floor(ctx.sampleRate * len), b = ctx.createBuffer(1, n, ctx.sampleRate), a = b.getChannelData(0);
+  for (let i = 0; i < n; i++) a[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+  const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+  s.buffer = b; fl.type = type; fl.frequency.value = f; fl.Q.value = q; g.gain.value = vol; s.connect(fl); fl.connect(g); g.connect(master); s.start();
+}
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+/* our own tender tune in D major, 4/4 at 76 bpm, over a I–V–vi–iii–IV–I–IV–V walk: [midi, beat] per bar */
+const TUNE = [
+  [[78,0],[76,1],[74,1.5],[73,2],[74,3]], [[73,0],[71,1],[69,2],[73,3]],
+  [[71,0],[73,.5],[74,1],[78,2],[76,3]], [[73,0],[69,1],[66,2],[69,3]],
+  [[67,0],[71,1],[74,2],[76,2.5],[74,3]], [[74,0],[78,1],[81,2],[78,3]],
+  [[79,0],[78,1],[76,1.5],[74,2],[71,3]], [[73,0],[74,1],[76,2],[73,3]] ];
+const CHORD = [[50,54,57],[45,49,52],[47,50,54],[42,45,49],[43,47,50],[50,54,57],[43,47,50],[45,49,52]];
+const Music = { on:false, bar:0, next:0, timer:null,
+  start(){ if (!ctx || this.on) return; this.on = true; this.bar = 0; this.next = ctx.currentTime + .15; this.tick(); this.timer = setInterval(() => this.tick(), 150); },
+  tick(){ const beat = 60 / 76; while (this.next < ctx.currentTime + .8){ this.play(this.next, this.bar, beat); this.next += 4 * beat; this.bar++; } },
+  play(t, i, beat){
+    const k = i % TUNE.length, ch = CHORD[k];
+    pad(ch.map(m => hz(m)), t, 4 * beat + .3);
+    [0, 1, 2, 3, 2, 1, 0, 1].forEach((j, s) => bell(hz(ch[j % 3] + 12), t + s * beat / 2, .035, 1));   // soft broken chord
+    if (i < 1) return;
+    TUNE[k].forEach(([m, at]) => bell(hz(m), t + at * beat, .1, 1.8));
+  }
+};
+function ding(f, d = 0, v = .12){ if (ctx) bell(f, ctx.currentTime + d, v, 1.4); }
+const chimeUp = () => [1175, 1480, 1760, 2349].forEach((f, i) => ding(f, i * .1, .1));
+function dingDong(){ if (!ctx) return; const t = ctx.currentTime; bell(659, t, .22, 2.2); bell(523, t + .55, .22, 2.6); }
+function click(){ noise(.05, 2600, .25, 3); noise(.04, 900, .18, 2); }
+$("#muteBtn").addEventListener("click", e => {
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .5; if (song) song.muted = muted;
+  e.currentTarget.setAttribute("aria-pressed", muted); e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+  e.currentTarget.textContent = muted ? "✕" : "♪";
+});
+
+/* ---------- 1. ring the bell, a note slides under the door ---------- */
+let rung = false, noteRead = false;
+function buildOpen(){
+  const lines = [`${C.to},`, "I hid a few things around the house for you.", "Find them all. 💗"]; if (C.from) lines.push("— " + C.from);
+  writeLines($("#openNote"), lines, C.from ? lines.length - 1 : -1);
+  $("#bell").addEventListener("click", ring);
+  $("#slip").addEventListener("click", readNote);
+}
+async function ring(){
+  if (rung) return; rung = true; ensureAudio(); unlockSong();
+  const b = $("#bell"); b.classList.add("press", "done"); setTimeout(() => b.classList.remove("press"), 220);
+  dingDong(); document.body.classList.add("ring"); setTimeout(() => document.body.classList.remove("ring"), 1900);
+  $("#openSub").textContent = "Ding-dong… nobody answers. But something is sliding out from under the door.";
+  await sleep(reduce ? 0 : 1100);
+  const s = $("#slip"); s.classList.add("in"); s.tabIndex = 0; if (ctx) noise(.6, 1800, .06, .5);
+  await sleep(reduce ? 0 : 900); $("#openSub").textContent = "A note! Tap it to read.";
+}
+async function readNote(){
+  if (!rung || noteRead) return; noteRead = true; ensureAudio();
+  const s = $("#slip"); s.classList.add("read", "done"); if (ctx) noise(.3, 3000, .08, .8);
+  startMusic();
+  $("#openSub").hidden = true; $("#openLine").textContent = ""; const box = $("#openNote"); box.hidden = false; pop(box);
+  await revealLines(box, () => true);
+  showNext($("#openBtn"));
+}
+
+/* ---------- 3. the map: one X per clue ---------- */
+let mapOpen = false;
+const HEART_SVG = '<svg viewBox="0 0 40 40"><path d="M20 35C8 26 3 19 3 12 3 6 8 3 13 3c3 0 6 2 7 5 1-3 4-5 7-5 5 0 10 3 10 9 0 7-5 14-17 23Z" fill="#FFC857" stroke="#B42D5E" stroke-width="3"/></svg>';
+const X_SVG = '<svg viewBox="0 0 40 40"><path d="M8 7C16 16 24 25 33 34M33 8C25 15 16 24 7 33" fill="none" stroke="#C2334F" stroke-width="6" stroke-linecap="round"/></svg>';
+function buildMap(){
+  $("#xs").innerHTML = clues.map((c, i) => `<span class="xmark" data-x="${c}" style="left:${XS[c][0] * 100}%;top:${XS[c][1] * 100}%">${X_SVG}<b>${i + 1}</b></span>`).join("")
+    + `<span class="xmark gold" style="left:${XS.treasure[0] * 100}%;top:${XS.treasure[1] * 100}%">${HEART_SVG}</span>`;
+  $("#mapBtn").addEventListener("click", unroll);
+}
+async function unroll(){
+  if (mapOpen) return; mapOpen = true; ensureAudio();
+  $("#mapBtn").classList.add("open"); $("#mapBtn").setAttribute("aria-label", `The treasure map, with ${clues.length} clues marked`);
+  if (ctx){ noise(.5, 2600, .1, .7); }
+  $("#mapSub").textContent = `${clues.length} clues. One treasure at the very end. Follow the X's in order.`;
+  await sleep(reduce ? 0 : 1300);
+  for (const x of $$(".xmark")){ x.classList.add("in"); ding(1175 + Math.random() * 200, 0, .06); await sleep(reduce ? 0 : 380); }
+  $("#mapLine").textContent = C.years ? `${C.years} year${C.years === 1 ? "" : "s"} of us. Let's go hunting.` : "Ready? Let's go hunting.";
+  showNext($("#afterMap"));
+}
+const found = new Set();
+/* the map stays one tap away until every clue is found */
+function updateMapFab(){ $("#mapFab").hidden = isAuto || !(mapOpen && clues.includes(seq[current]) && found.size < clues.length); }
+function openMapOv(){
+  ensureAudio(); if (ctx) noise(.4, 2600, .08, .7);
+  const now = seq[current];
+  $("#xs2").innerHTML = clues.map((c, i) => `<span class="xmark${found.has(c) ? " got" : ""}${c === now && !found.has(c) ? " now" : ""}" style="left:${XS[c][0] * 100}%;top:${XS[c][1] * 100}%">${X_SVG}<b>${found.has(c) ? "✓" : i + 1}</b></span>`).join("")
+    + `<span class="xmark gold" style="left:${XS.treasure[0] * 100}%;top:${XS.treasure[1] * 100}%">${HEART_SVG}</span>`;
+  const left = clues.length - found.size;
+  $("#mapOvLine").textContent = clues.includes(now) && !found.has(now) ? `You're on clue ${clues.indexOf(now) + 1}: ${CLUE_NAME[now]}. ${left} to go.` : `${left} clue${left === 1 ? "" : "s"} to go.`;
+  $("#mapOv").hidden = false; $("#mapClose").focus({ preventScroll: true });
+}
+function closeMapOv(){ $("#mapOv").hidden = true; $("#mapFab").focus({ preventScroll: true }); }
+$("#mapFab").addEventListener("click", openMapOv);
+$("#mapClose").addEventListener("click", closeMapOv);
+$("#mapOv").addEventListener("click", e => { if (e.target.id === "mapOv") closeMapOv(); });
+addEventListener("keydown", e => { if (e.key === "Escape" && !$("#mapOv").hidden) closeMapOv(); });
+
+/* ---------- the search: a dark room, a torch, tap where you think it's hidden ---------- */
+const searching = {};
+function buildSearch(clue){
+  const st = document.querySelector(`[data-stage="${clue}"]`), [sx, sy] = SPOT[clue];
+  st.innerHTML = `<img class="dark" src="img/room.webp" alt=""><img class="lit" src="img/room.webp" alt=""><span class="glow" style="left:${sx * 100}%;top:${sy * 100}%"></span><span class="hand">${coarse ? "drag the torch · tap to search" : "move the torch · click to search"}</span>`;
+  st.tabIndex = 0; st.setAttribute("role", "application"); st.setAttribute("aria-label", "A dark room. Move the torch and tap where you think the clue is hidden. Arrow keys move the torch, Enter searches.");
+  const S = searching[clue] = { misses: 0, done: false, x: .5, y: .62 };
+  const at = (e) => { const r = st.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]; };
+  const put = (x, y) => { S.x = Math.max(0, Math.min(1, x)); S.y = Math.max(0, Math.min(1, y)); st.style.setProperty("--x", S.x * 100 + "%"); st.style.setProperty("--y", S.y * 100 + "%"); };
+  let p0 = null;
+  st.addEventListener("pointerdown", e => { if (S.done) return; e.preventDefault(); ensureAudio(); p0 = [e.clientX, e.clientY]; st.setPointerCapture(e.pointerId); put(...at(e)); });
+  st.addEventListener("pointermove", e => { if (S.done) return; if (p0 || !coarse) put(...at(e)); if (p0 && Math.hypot(e.clientX - p0[0], e.clientY - p0[1]) > 12) st.classList.add("moved"); });
+  st.addEventListener("pointerup", e => { if (S.done || !p0) return; const tap = Math.hypot(e.clientX - p0[0], e.clientY - p0[1]) < 12; p0 = null; if (tap) guess(clue, ...at(e)); });
+  st.addEventListener("pointercancel", () => p0 = null);
+  st.addEventListener("keydown", e => {
+    const k = { ArrowLeft:[-.05,0], ArrowRight:[.05,0], ArrowUp:[0,-.04], ArrowDown:[0,.04] }[e.key];
+    if (k){ e.preventDefault(); put(S.x + k[0], S.y + k[1]); st.classList.add("moved"); }
+    if (e.key === "Enter" || e.key === " "){ e.preventDefault(); guess(clue, S.x, S.y); }
+  });
+  S.put = put;
+}
+function guess(clue, x, y){
+  const S = searching[clue]; if (S.done) return;
+  const st = document.querySelector(`[data-stage="${clue}"]`), say = document.querySelector(`[data-scene="${clue}"] [data-say]`);
+  const [sx, sy, r] = SPOT[clue], w = st.clientWidth, h = st.clientHeight;
+  const d = Math.hypot((x - sx) * w, (y - sy) * h) / w;
+  S.put(x, y);
+  if (d <= r){ return foundIt(clue); }
+  S.misses++;
+  const other = clues.find(c => c !== clue && Math.hypot((x - SPOT[c][0]) * w, (y - SPOT[c][1]) * h) / w <= SPOT[c][2]);
+  const line = other ? "Ooh, something's there… but that's for another clue." : d < r * 2 ? "So warm! You're really close. 🔥" : d < r * 3.6 ? "Warmer…" : S.misses > 2 ? NOPE[clue] : ["Cold. Nothing here. ❄️", "Brrr, cold.", "Nope, just dust."][S.misses % 3];
+  say.textContent = line; pop(say);
+  const pg = document.createElement("span"); pg.className = "ping"; pg.textContent = d < r * 2 ? "🔥" : d < r * 3.6 ? "♨" : "❄"; pg.style.left = x * 100 + "%"; pg.style.top = y * 100 + "%";
+  st.appendChild(pg); setTimeout(() => pg.remove(), 1300);
+  if (ctx) ding(d < r * 2 ? 988 : d < r * 3.6 ? 784 : 392, 0, .06);
+  if (S.misses >= 3 && !st.classList.contains("hint")){ st.classList.add("hint"); setTimeout(() => { say.textContent = "Psst… see that soft glow? 👀"; pop(say); }, 1400); }
+}
+async function foundIt(clue){
+  const S = searching[clue]; S.done = true; ensureAudio();
+  const sc = document.querySelector(`[data-scene="${clue}"]`), st = sc.querySelector("[data-stage]"), say = sc.querySelector("[data-say]");
+  st.classList.add("win"); say.textContent = "Found it! 🎉"; pop(say);
+  if (ctx){ [1175, 1480, 1760].forEach((f, i) => ding(f, i * .08, .09)); }
+  const r = st.getBoundingClientRect(); sparkleXY(r.left + SPOT[clue][0] * r.width, r.top + SPOT[clue][1] * r.height);
+  await sleep(reduce ? 0 : 1300);
+  st.hidden = true; const f = sc.querySelector(".found"); f.hidden = false; pop(f);
+  const h = sc.querySelector("[data-found]"); h.textContent = h.dataset.found;
+  sc.querySelector(".riddle").hidden = true; say.textContent = "";
+  sc.querySelector(".after").hidden = false;
+}
+function finishClue(clue){
+  if (found.has(clue)) return; found.add(clue);
+  const sc = document.querySelector(`[data-scene="${clue}"]`);
+  if (ctx) ding(1568, .1, .1);
+  updateMapFab();
+  showNext(sc.querySelector("[data-next]"));
+}
+async function autoFind(clue){   // homepage showcase: sweep the torch, one miss, then the right spot
+  const S = searching[clue], [sx, sy] = SPOT[clue], wx = sx > .5 ? .2 : .78, wy = .75;
+  const glide = async (x, y) => { const x0 = S.x, y0 = S.y; for (let k = 1; k <= 20; k++){ S.put(x0 + (x - x0) * k / 20, y0 + (y - y0) * k / 20); await sleep(40); } };
+  document.querySelector(`[data-stage="${clue}"]`).classList.add("moved");
+  await glide(wx, wy); guess(clue, wx, wy); await sleep(1100); await glide(sx, sy); await sleep(300); guess(clue, sx, sy); await sleep(1500);
+}
+
+/* ---------- 4. under the cushion: a little film reel for the balcony projector ---------- */
+let cushionOff = false;
+const NO_PHOTO = "data:,";
+function buildCushion(){
+  dragOrTap($("#cushion"), liftCushion, (dx, dy) => Math.hypot(dx, dy) > 40);
+}
+async function liftCushion(){
+  if (cushionOff) return; cushionOff = true; ensureAudio();
+  $("#cushion").classList.add("off", "done"); if (ctx) noise(.35, 500, .2, .8);
+  await sleep(reduce ? 0 : 500);
+  $("#reelbox").classList.add("up"); sparkleAt($("#reelbox")); if (ctx) ding(1319, 0, .09);
+  $("#cushionSub").textContent = "A little film reel! Its tag says: “play me on the balcony.” Keep it safe. 🎬";
+  await sleep(reduce ? 0 : 900);
+  finishClue("cushion");
+}
+
+/* ---------- 5. behind the frame: the envelope of reasons ---------- */
+let tilted = false, reasonAt = 0;
+function buildFrame(){
+  const w = $("#win");
+  const p = C.photos.find(x => x.src);   // the first photo hangs in the frame; the rest play on the projector
+  if (p){ const im = new Image(); im.src = p.src; im.alt = p.caption || "Our photo"; w.appendChild(im); }
+  else { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} + ${ini(C.from)}` : "us"; w.appendChild(b); }
+  dragOrTap($("#frame"), tilt, (dx, dy) => Math.abs(dx) > 30);
+  $("#env").addEventListener("click", openEnv);
+  writeLines($("#reasonList"), C.reasons, -1);
+}
+async function tilt(){
+  if (tilted) return; tilted = true; ensureAudio();
+  $("#frame").classList.add("tilt", "done"); if (ctx) noise(.25, 700, .14, 1.4);
+  await sleep(reduce ? 0 : 350);
+  const e = $("#env"); e.classList.add("out"); e.tabIndex = 0; if (ctx) setTimeout(() => noise(.12, 400, .2, 1), 700);
+  $("#frameHint").textContent = "Something fell out from behind it… an envelope!";
+  await sleep(reduce ? 0 : 1300); openEnv();
+}
+let envOpen = false;
+async function openEnv(){   // every reason at once, on one card
+  if (!tilted || envOpen) return; envOpen = true; ensureAudio();
+  const e = $("#env"); e.classList.remove("bump"); void e.offsetWidth; e.classList.add("bump"); if (ctx) noise(.25, 3200, .06, .8);
+  $("#frameNote").hidden = true;
+  const box = $("#reasonList"); box.hidden = false; pop(box);
+  await revealLines(box, () => true);
+  $("#frameCount").textContent = "That's why I love you."; chimeUp(); finishClue("frame");
+}
+
+/* ---------- 6. the cookie jar: twist the lid, a rolled note pops out ---------- */
+let jarOpen = false;
+function buildJar(){
+  writeLines($("#jarNote"), [C.jar], -1);
+  dragOrTap($("#lid"), openJar, (dx, dy) => dy < -30 || Math.abs(dx) > 40);
+  $("#twistBtn").addEventListener("click", openJar);
+}
+async function openJar(){
+  if (jarOpen) return; jarOpen = true; ensureAudio();
+  const l = $("#lid"); l.classList.add("twist", "done"); $("#twistBtn").hidden = true;
+  if (ctx){ noise(.25, 1600, .08, 2); setTimeout(() => noise(.25, 1500, .08, 2), 300); }
+  await sleep(reduce ? 0 : 900);
+  l.classList.remove("twist"); l.classList.add("off"); if (ctx) ding(1568, 0, .08);
+  await sleep(reduce ? 0 : 400);
+  $("#scroll").classList.add("up"); sparkleAt($("#scroll")); if (ctx) noise(.2, 3000, .06, 1);
+  await sleep(reduce ? 0 : 900);
+  $("#jarSub").hidden = true; const box = $("#jarNote"); box.hidden = false; pop(box);
+  await revealLines(box, () => true);
+  finishClue("jar");
+}
+
+/* ---------- 7. inside a book: the letter ---------- */
+let bookOpen = false, letterRun = false;
+function buildBook(){
+  const lines = [...C.letter]; if (C.from) lines.push("— " + C.from);
+  writeLines($("#letter"), lines, C.from ? lines.length - 1 : -1);
+  dragOrTap($("#bookBtn"), openBook, (dx, dy) => Math.abs(dx) > 30);
+  $("#letterSkip").addEventListener("click", () => { letterRun = false; showLetter(); });
+}
+async function openBook(){
+  if (bookOpen) return; bookOpen = true; ensureAudio();
+  $("#bookSub").hidden = true; $("#book").classList.add("open"); $("#bookBtn").classList.add("done"); if (ctx){ noise(.4, 1200, .08, .7); setTimeout(() => noise(.3, 2600, .05, .7), 500); }
+  await sleep(reduce ? 0 : 1100); sparkleAt($("#book")); ding(1319, 0, .08);
+  $("#bookTitle").textContent = "A pressed rose, and a letter"; $("#bookRiddle").hidden = true;
+  const box = $("#letter"); box.hidden = false; pop(box); $("#letterSkip").hidden = isAuto; letterRun = true;
+  await revealLines(box, () => letterRun);
+  showLetter();
+}
+function showLetter(){ $$("#letter p").forEach(p => p.classList.add("in")); $("#letterSkip").hidden = true; finishClue("book"); }
+
+/* ---------- 7b. the rose petal trail: swipe petal by petal to the balcony door ---------- */
+const TRAIL = [[.2,.96],[.3,.925],[.4,.895],[.5,.875],[.6,.865],[.7,.855],[.8,.835],[.88,.795],[.935,.73],[.955,.65],[.955,.57],[.94,.49],[.93,.42]];
+let petalAt = 0, trailDone = false, walkTimer = null;
+function buildTrail(){
+  $("#petals").innerHTML = TRAIL.map(([x, y], i) => `<span class="petal" style="left:${x * 100}%;top:${y * 100}%;--a:${(i * 47) % 360}deg"></span>`).join("");
+  $$(".petal")[0].classList.add("next");
+  $("#trailCount").textContent = `0 of ${TRAIL.length} petals`;
+  const t = $("#trail"); let down = false;
+  const near = e => { const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    while (petalAt < TRAIL.length && Math.hypot((x - TRAIL[petalAt][0]) * r.width, (y - TRAIL[petalAt][1]) * r.height) < r.width * .11) lightPetal(); };
+  t.addEventListener("pointerdown", e => { e.preventDefault(); ensureAudio(); down = true; t.setPointerCapture(e.pointerId); t.classList.add("moving"); near(e); });
+  t.addEventListener("pointermove", e => { if (down) near(e); });
+  t.addEventListener("pointerup", () => down = false); t.addEventListener("pointercancel", () => down = false);
+  t.addEventListener("keydown", e => { if (["ArrowRight","ArrowUp","Enter"," "].includes(e.key)){ e.preventDefault(); t.classList.add("moving"); lightPetal(); } });
+  $("#walkBtn").addEventListener("click", walkTrail);
+}
+function startTrail(){ if (!trailDone && !walkTimer) walkTimer = setTimeout(() => { if (!trailDone) $("#walkBtn").hidden = false; }, 10000); }
+function lightPetal(){
+  if (petalAt >= TRAIL.length) return; const ps = $$(".petal"), i = petalAt++;
+  ps[i].classList.remove("next"); ps[i].classList.add("on"); if (ps[i + 1]) ps[i + 1].classList.add("next");
+  ding(hz(74 + [0,2,4,7,9,12,14,16,19,21,24,26,28][i % 13]), 0, .07);
+  $("#trailCount").textContent = `${petalAt} of ${TRAIL.length} petals`;
+  if (petalAt === TRAIL.length) endTrail();
+}
+async function walkTrail(){ $("#walkBtn").hidden = true; $("#trail").classList.add("moving"); while (petalAt < TRAIL.length){ lightPetal(); await sleep(reduce ? 0 : 230); } }
+function endTrail(){
+  if (trailDone) return; trailDone = true; clearTimeout(walkTimer); $("#walkBtn").hidden = true;
+  $("#trail").classList.add("done"); chimeUp(); if (ctx) noise(.8, 1200, .05, .5);
+  $("#trailSub").textContent = "The petals stop at the balcony door… and it's open. Something is waiting outside. 💫";
+  $("#trailCount").textContent = "";
+  showNext($("#afterTrail"));
+}
+
+/* ---------- 7c. the balcony projector: the photos play by themselves ---------- */
+let showRun = null;
+function buildShow(){
+  const all = C.photos.filter(p => p.src && p.src !== NO_PHOTO), real = all.length > 1 ? all.slice(1) : all;   // photo 1 is already in the frame
+  const slides = real.length ? real.map(p => ({ img: p.src, cap: p.caption || "" })) : C.reasons.slice(0, 4).map(r => ({ txt: r }));
+  slides.push({ txt: C.from ? `${C.to} & ${C.from}\n— to be continued —` : "To be continued…" });
+  const sc = $("#screen");
+  slides.forEach(s => { const d = document.createElement("div"); d.className = "sl" + (s.txt ? " txt" : "");
+    if (s.img){ const im = new Image(); im.src = s.img; im.alt = s.cap || "One of our photos"; d.appendChild(im); } else d.textContent = s.txt;
+    d.dataset.cap = s.cap || ""; sc.insertBefore(d, sc.querySelector(".grain")); });
+}
+function playShow(){ if (!showRun) showRun = runShow(); return showRun; }
+async function runShow(){
+  ensureAudio(); const cin = $("#cinema"), cd = $("#countdown"), cap = $("#showCap"), sl = $$("#screen .sl");
+  cin.classList.add("on"); let tick = null;
+  if (ctx) tick = setInterval(() => noise(.025, 1800, .05, 3), 140);   // the projector's soft clatter
+  for (const n of [3, 2, 1]){ cd.textContent = n; if (ctx) ding(660, 0, .04); await sleep(reduce ? 0 : 750); }
+  cd.hidden = true;
+  for (let i = 0; i < sl.length; i++){
+    sl.forEach((x, k) => x.classList.toggle("on", k === i));
+    const c = sl[i].dataset.cap; cap.textContent = c; cap.classList.toggle("on", !!c);
+    if (i === sl.length - 1){ $("#showSub").textContent = "The film's over… but our story isn't. One more thing is waiting. 💍"; }
+    await sleep(reduce ? 400 : (i === sl.length - 1 ? 2600 : 3400));
+  }
+  if (tick) clearInterval(tick);
+  cin.classList.remove("on");
+  showNext($("#afterShow"));
+}
+
+/* ---------- 8. the balcony: open the ring box, the question ---------- */
+let boxOpen = false, coaxed = 0, said = false;
+function buildAsk(){
+  $("#question").textContent = C.question; $("#question").hidden = true;
+  $("#ringbox").addEventListener("click", openBox);
+  $("#yesBtn").addEventListener("click", sayYes);
+  $("#coaxBtn").addEventListener("click", () => {
+    if (coaxed < COAX.length){ $("#coaxLine").textContent = COAX[coaxed++]; pop($("#coaxLine")); ding(880 + coaxed * 120, 0, .08); if (coaxed === COAX.length) $("#coaxBtn .lbl").textContent = "Okay, yes! 💍"; }
+    else sayYes();
+  });
+}
+async function openBox(){
+  if (boxOpen) return; boxOpen = true; ensureAudio();
+  const r = $("#ringbox"); r.classList.add("shake", "done"); if (ctx) noise(.3, 900, .1, 2);
+  await sleep(reduce ? 0 : 520); r.classList.remove("shake");
+  $("#boxart").classList.add("open"); if (ctx){ noise(.08, 2400, .2, 3); [1568, 1976, 2349, 2794, 3136].forEach((f, i) => ding(f, .1 + i * .07, .07)); }
+  sparkleAt($("#ringbox")); r.setAttribute("aria-label", "A diamond ring in an open red box");
+  await sleep(reduce ? 0 : 1200);
+  if (C.question){
+    $("#askTitle").hidden = true; $("#askSub").hidden = true;
+    const q = $("#question"); q.hidden = false; pop(q); if (!isPreview) q.focus({ preventScroll: true });
+    $("#askRow").hidden = false; pop($("#askRow"));
+  } else {
+    $("#askSub").textContent = "It was always going to be you. 💍"; $("#afterAsk .lbl").textContent = "Finish"; showNext($("#afterAsk"));
+  }
+}
+async function sayYes(){
+  if (said) return; said = true; ensureAudio();
+  $("#askRow").hidden = true; $("#coaxLine").textContent = "";
+  hearts(50); sparkleAt($("#ringbox")); chimeUp();
+  if (navigator.vibrate && !isAuto) try { navigator.vibrate([30, 60, 30]); } catch(e){}
+  reply("yes", `“${C.question}” → YES 💍`);
+  $("#afterAsk .lbl").textContent = "Forever starts now 💍"; showNext($("#afterAsk"));
+}
+function reply(kind, text){   // only real, paid links send anything
+  if (!id || isPreview || isAuto) return Promise.resolve(true);
+  return fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reply", id, kind, text }) })
+    .then(r => r.json()).then(j => !!(j && j.ok)).catch(() => false);
+}
+
+/* ---------- confetti, hearts, sparkles ---------- */
+const fx = $("#fx"), fg = fx.getContext("2d");
+let parts = [], running = false, rain = false;
+function sizeFx(){ const r = devicePixelRatio || 1; fx.width = innerWidth * r; fx.height = innerHeight * r; fg.setTransform(r, 0, 0, r, 0, 0); }
+sizeFx(); addEventListener("resize", sizeFx);
+const CONF = ["#E8457A","#FFC857","#8FD6BD","#FFFFFF","#F08A5D","#2A1F5C"];
+function confetti(on){ rain = on && !reduce; run(); }
+function hearts(n){
+  if (reduce) return;
+  for (let i = 0; i < n; i++) parts.push({ x: Math.random() * innerWidth, y: innerHeight + 20 + Math.random() * innerHeight * .4, vx: (Math.random() - .5) * .8, vy: -(1.4 + Math.random() * 2.2),
+    s: 7 + Math.random() * 9, c: ["#E8457A","#F49AB6","#FFC857","#B42D5E","#FFFFFF"][i % 5], w: Math.random() * 6, heart: true, life: 400 });
+  run();
+}
+function sparkleXY(x, y){
+  if (reduce) return;
+  for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#FFC857","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
+  run();
+}
+function sparkleAt(el){
+  if (reduce) return; const r = el.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  for (let i = 0; i < 46; i++){ const a = Math.random() * Math.PI * 2, v = 1.5 + Math.random() * 4.5;
+    parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 1, g: .08, s: 2 + Math.random() * 3, c: ["#FFE7A8","#FFC857","#FFF6DC"][i % 3], w: 0, life: 60 + Math.random() * 30 }); }
+  run();
+}
+function run(){ if (!running){ running = true; requestAnimationFrame(loop); } }
+function heartPath(s){ fg.beginPath(); fg.moveTo(0, s * .3); fg.bezierCurveTo(-s, -s * .4, -s * .5, -s * 1.1, 0, -s * .45); fg.bezierCurveTo(s * .5, -s * 1.1, s, -s * .4, 0, s * .3); fg.fill(); }
+function loop(){
+  fg.clearRect(0, 0, innerWidth, innerHeight);
+  if (rain && Math.random() < .35) parts.push({ x: Math.random() * innerWidth, y: -20, vx: (Math.random() - .5) * 1.2, vy: 1.2 + Math.random() * 1.4, s: 4 + Math.random() * 4, c: CONF[Math.floor(Math.random() * 6)], w: Math.random() * 6, spin: .1 + Math.random() * .1, rect: true, life: 900 });
+  parts.forEach(p => { p.w += p.spin || .04;
+    p.x += p.vx + (p.heart ? Math.sin(p.w) * .5 : p.rect ? Math.sin(p.w) * .8 : 0); p.y += p.vy; if (p.g) p.vy += p.g; p.life--;
+    fg.save(); fg.translate(p.x, p.y); fg.fillStyle = p.c; fg.globalAlpha = Math.min(1, p.life / 40);
+    if (p.heart) heartPath(p.s);
+    else if (p.rect){ fg.rotate(p.w); fg.scale(1, Math.abs(Math.sin(p.w * 2)) * .8 + .2); fg.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .66); }
+    else { fg.beginPath(); fg.arc(0, 0, p.s, 0, 7); fg.fill(); } fg.restore(); });
+  parts = parts.filter(p => p.life > 0 && p.y > -80 && p.y < innerHeight + 200);
+  if (parts.length || rain) requestAnimationFrame(loop); else { running = false; fg.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+/* ---------- homepage showcase (?autoplay): silent, plays itself ---------- */
+async function runAutoplay(){
+  document.body.style.pointerEvents = "none";
+  await sleep(1600); await ring(); await sleep(1200); await readNote(); await sleep(1400);
+  go("map"); await sleep(600); await unroll(); await sleep(1500);
+  go("cushion"); await sleep(700); await autoFind("cushion"); await liftCushion(); await sleep(1600);
+  go("frame"); await sleep(700); await autoFind("frame"); await tilt(); await sleep(1200); await openEnv(); await sleep(1200);
+  go("jar"); await sleep(700); await autoFind("jar"); await openJar(); await sleep(1300);
+  go("book"); await sleep(700); await autoFind("book"); { const p = openBook(); await sleep(3600); letterRun = false; await p; } showLetter(); await sleep(1300);
+  go("trail"); await sleep(800); await walkTrail(); await sleep(1500);
+  go("show"); await playShow(); await sleep(800);
+  go("ask"); await sleep(1000);
+  await openBox(); await sleep(1800); if (C.question){ await sayYes(); await sleep(1600); }
+  go("end");
+  await sleep(4200);
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
+  else location.reload();
+}
+</script>
+</body>
+</html>

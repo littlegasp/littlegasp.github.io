@@ -6,14 +6,15 @@ Prices here must match the homepage/editor DESIGNS and Apps Script PRICES."""
 import json, html, os
 
 SITE = "https://littlegasp.com"
-CSSV = "11"   # keep in step with ?v= on style.css / site.js everywhere
-TODAY = "2026-10-14"
+CSSV = "12"   # keep in step with ?v= on style.css / site.js everywhere
+TODAY = "2026-10-29"
 
 DESIGN = {  # key: (name, price)
   "birthday-cake": ("Birthday Cake", 99), "birthday-wish": ("Make a Wish", 149),
   "apology": ("Mend the Heart", 149), "love-letter": ("Sealed with Love", 149),
   "anniversary": ("Memory Lane", 149), "karwa-chauth": ("Karwa Chauth Moon", 149),
   "diwali": ("Diwali Night", 149), "garba-circle": ("Garba Circle", 149),
+  "proposal": ("Ring Hunt", 149),
 }
 
 COMMON_FAQ = [
@@ -123,6 +124,28 @@ PAGES = [
   faq=[("What is a good anniversary gift for my wife online?", "A personalised anniversary website is a thoughtful option because it is made from your own photos and memories, arrives instantly and can be opened again every year."),
        ("How many photos can I add?", "Memory Lane takes up to 20 photos, each with a short caption like \"2019: our first trip\".")],
  ),
+ dict(slug="proposal-surprise-website", designs=["proposal"],
+  title="Proposal Surprise Website – Propose With a Treasure Hunt Online | Little Gasp",
+  desc="Propose with a personalised treasure hunt website: they search a dark house with a torch for clues, watch your photos play on an old projector, then open a ring box on the balcony. Their yes comes to your email. Free preview.",
+  h1="A proposal surprise they hunt for",
+  lead="<b>Ring Hunt</b> turns your proposal into a little treasure hunt on their phone. They follow a clue map through a dark house with a torch, find your reasons, a sweet note and your letter, watch your photos on an old projector, and open the ring box on the balcony to your question.",
+  plays_title="What happens when they open it",
+  plays=["They ring the doorbell and a note slides out from under the door.",
+         "They unroll a treasure map with four clues marked on it. The map stays one tap away for the whole hunt.",
+         "The house is dark, so they search each room with a torch. Warm and cold hints help, and a soft glow appears if they get stuck.",
+         "Behind the photo frame: all your reasons. In the cookie jar: a sweet note. Inside a book: your letter. Under the cushion: a film reel.",
+         "They follow a trail of rose petals to the balcony door.",
+         "An old projector plays your photos as a little film, all by itself.",
+         "They tap the ring box, it opens, and your question appears. Their yes is emailed to you."],
+  ideas_title="Ideas for a proposal letter",
+  ideas=["Start with the first moment you knew, in one plain sentence.",
+         "Name small, real things you love: \"how you hum while making chai\".",
+         "Use photo captions as tiny chapters of your story, in order.",
+         "Keep the question short and in your own words: \"Will you marry me?\" or \"Will you be mine, always?\"",
+         "Plan where you'll be when they open it. Many people send the link and wait in the next room with the real ring."],
+  faq=[("Can I propose online with a website?", "Yes. Ring Hunt is a personalised proposal website: you add your photos, reasons and letter, preview it free, and send one private link. It works well on its own for long distance, or as the lead-up to a real proposal in person."),
+       ("Will I know if they said yes?", "Yes. When they tap \"Yes\" on the balcony, their answer is emailed to you straight away.")],
+ ),
  dict(slug="karwa-chauth-gift-for-wife", designs=["karwa-chauth"],
   title="Karwa Chauth Gift for Wife – Online Surprise Website | Little Gasp",
   desc="A personalised Karwa Chauth surprise for your wife: she raises the channi to the moon, lights diyas that show why you love her, and turns the puja thali for seven promises. Free preview, ready instantly.",
@@ -210,10 +233,11 @@ CARD_TEXT = {
  "karwa-chauth": ("karwa-chauth-gift-for-wife", "Raise the channi to the moon and turn the thali for seven promises."),
  "diwali": ("diwali-surprise-website", "Rangoli, fireworks and lanterns. For a partner, family or Bhai Dooj."),
  "garba-circle": ("navratri-garba-surprise", "Light all nine nights of Navratri, then a dandiya round."),
+ "proposal": ("proposal-surprise-website", "A treasure hunt with a torch, a projector film and a ring box."),
 }
 LINK_NAME = {p["slug"]: p["h1"].replace("A ","").replace("An ","") for p in PAGES}
 SHORT = {"digital-surprise-gifts":"All digital surprises","apology-website":"Apology website","birthday-surprise-website":"Birthday surprise website",
- "digital-love-letter":"Digital love letter","anniversary-surprise-website":"Anniversary surprise","karwa-chauth-gift-for-wife":"Karwa Chauth gift for wife",
+ "digital-love-letter":"Digital love letter","anniversary-surprise-website":"Anniversary surprise","proposal-surprise-website":"Proposal surprise website","karwa-chauth-gift-for-wife":"Karwa Chauth gift for wife",
  "diwali-surprise-website":"Diwali & Bhai Dooj surprise","navratri-garba-surprise":"Navratri surprise"}
 
 def esc(s): return html.escape(s, quote=True)

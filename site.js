@@ -43,7 +43,7 @@
       const f = document.createElement("footer");
       f.className = "site";
       f.innerHTML =
-        '<nav class="ideas"><a href="/digital-surprise-gifts/">Digital surprises</a><a href="/birthday-surprise-website/">Birthday surprise website</a><a href="/apology-website/">Apology website</a><a href="/digital-love-letter/">Digital love letter</a><a href="/anniversary-surprise-website/">Anniversary surprise</a><a href="/karwa-chauth-gift-for-wife/">Karwa Chauth gift</a><a href="/diwali-surprise-website/">Diwali &amp; Bhai Dooj</a><a href="/navratri-garba-surprise/">Navratri surprise</a></nav>' +
+        '<nav class="ideas"><a href="/digital-surprise-gifts/">Digital surprises</a><a href="/birthday-surprise-website/">Birthday surprise website</a><a href="/apology-website/">Apology website</a><a href="/digital-love-letter/">Digital love letter</a><a href="/anniversary-surprise-website/">Anniversary surprise</a><a href="/proposal-surprise-website/">Proposal surprise</a><a href="/karwa-chauth-gift-for-wife/">Karwa Chauth gift</a><a href="/diwali-surprise-website/">Diwali &amp; Bhai Dooj</a><a href="/navratri-garba-surprise/">Navratri surprise</a></nav>' +
         '<nav><a href="/about.html">About</a><a href="/terms.html">Terms</a><a href="/refund.html">Refunds</a><a href="/privacy.html">Privacy</a><a href="/contact.html">Contact</a><a href="' + IG + '" target="_blank" rel="noopener">Instagram</a></nav>' +
         '<p>Little Gasp, operated by Aniket Nandkumar Gurav, Mumbai, India · <a href="mailto:' + EMAIL + '">' + EMAIL + '</a></p>';
       body.appendChild(f);

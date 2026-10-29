@@ -78,5 +78,14 @@
 <enclosure url="https://littlegasp.com/img/pins/anniversary.jpg" length="169609" type="image/jpeg"/>
 <media:content url="https://littlegasp.com/img/pins/anniversary.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
 </item>
+<item>
+<title>Proposal surprise website: a ring treasure hunt</title>
+<link>https://littlegasp.com/proposal/</link>
+<guid isPermaLink="false">littlegasp-pin-proposal-1</guid>
+<pubDate>Sun, 11 Oct 2026 21:30:00 GMT</pubDate>
+<description>Propose with a treasure hunt on their phone: ring the doorbell, search the dark house with a torch, follow the clue map to your reasons, a note and your letter, watch your photos on an old projector, then a ring box on the balcony. Preview free at littlegasp.com.</description>
+<enclosure url="https://littlegasp.com/img/pins/proposal.jpg" length="137354" type="image/jpeg"/>
+<media:content url="https://littlegasp.com/img/pins/proposal.jpg" medium="image" type="image/jpeg" width="1000" height="1500"/>
+</item>
 </channel>
 </rss>
