@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /create/
 Sitemap: https://littlegasp.com/sitemap.xml
+Disallow: /social/
