@@ -177,32 +177,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 .say:empty{display:none}
 .found[hidden],.after[hidden]{display:none}
 .after{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
-.digit{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--ink)}
-.digit[hidden]{display:none}
-.digit b,.dial,.num{display:inline-flex;align-items:center;justify-content:center;width:44px;height:54px;border-radius:10px;font:400 1.9rem/1 var(--display);color:var(--ink);background:#FFF9EE;box-shadow:inset 0 0 0 2px var(--paper-line),0 3px 0 #E2CFAE;transform:rotate(-3deg)}
-.lockui{display:flex;flex-direction:column;align-items:center;gap:10px}
-.lockui[hidden]{display:none}
-.dials{display:flex;gap:8px}
-.dial{border:0;cursor:pointer;transform:none;background:linear-gradient(#FFF6DC,#F1D78E 50%,#E5C46A);box-shadow:inset 0 0 0 2px #C9A24A,0 3px 0 #9C7A2A}
-.dials.bad{animation:shake .5s}
-.padlock{position:absolute;left:39%;top:58%;width:22%;aspect-ratio:1/1.15;z-index:4;transition:transform .9s cubic-bezier(.5,-.3,.6,1),opacity .4s .6s;pointer-events:none}
-.padlock .shackle{position:absolute;left:20%;right:20%;top:-28%;height:50%;border:5px solid #B8923A;border-bottom:0;border-radius:40px 40px 0 0;transition:transform .35s}
-.padlock .lbody{position:absolute;left:0;right:0;bottom:0;height:72%;border-radius:18%;background:linear-gradient(160deg,#F7E3A1,#D4AE52 55%,#9C7A2A);box-shadow:0 6px 10px rgba(0,0,0,.4)}
-.padlock .hole{position:absolute;left:50%;top:38%;width:16%;height:34%;margin-left:-8%;border-radius:50% 50% 30% 30%;background:#4A3511}
-.padlock.open .shackle{transform:translateY(-34%)}
-.padlock.gone{transform:translateY(160%) rotate(28deg);opacity:0}
-
-/* the torn photo: 3×3 pieces, tap two to swap */
-.jig{position:absolute;left:9%;right:9%;top:2%;aspect-ratio:1;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:6px;background:#fff;border-radius:4px;box-shadow:0 10px 22px rgba(20,8,30,.4);z-index:2;transform:rotate(-2deg);transition:gap .6s,padding .6s}
-.jig[hidden]{display:none}
-.jig.solved{gap:0;padding:6px}
-.pc{position:relative;overflow:hidden;border:0;padding:0;cursor:pointer;background:#EEE4D4;transition:transform .2s,box-shadow .2s}
-.pc img{position:absolute;width:300%;height:300%;max-width:none;object-fit:cover;pointer-events:none}
-.pc.sel{transform:scale(.9);box-shadow:0 0 0 3px var(--butter);z-index:2}
-.pc.swap{animation:popin .35s}
-.pc:focus-visible{outline:3px solid var(--butter);outline-offset:-3px}
-.jig.solved .pc{cursor:default;box-shadow:none;transform:none}
-
 /* the rose petal trail */
 .trail{position:relative;height:min(56dvh,560px);aspect-ratio:9/16;border-radius:22px;overflow:hidden;box-shadow:0 0 0 5px #FFF6E6,0 18px 36px rgba(10,5,30,.5);touch-action:none;cursor:pointer}
 .trail .room{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.6) saturate(1.05);pointer-events:none}
@@ -262,16 +236,14 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
 
 /* 4. under the cushion */
 .sofa{position:relative;width:min(78vw,42dvh,360px);aspect-ratio:1/1.02}
-.pols{position:absolute;inset:6% 12% 0;z-index:1}
-.pol{position:absolute;inset:0;margin:auto;width:78%;height:fit-content;padding:5% 5% 0;background:#fff;border-radius:3px;box-shadow:0 8px 18px rgba(20,8,30,.35);transition:transform .55s cubic-bezier(.3,1.1,.5,1),opacity .4s}
-.pol img{width:100%;aspect-ratio:1;object-fit:cover;display:block;background:#EEE4D4}
-.pol span{display:block;min-height:2.2em;padding:6px 2px 8px;font:700 1.25rem/1.05 var(--hand);color:var(--ink);text-align:center;overflow-wrap:anywhere}
-.pol.gone{transform:translate(-130%,-10%) rotate(-24deg)!important;opacity:0}
+.reelbox{position:absolute;left:50%;top:44%;width:52%;z-index:1;transform:translate(-50%,-30%) scale(.6);opacity:0;transition:transform .8s cubic-bezier(.2,1.5,.4,1),opacity .4s}
+.reelbox.up{transform:translate(-50%,-62%) rotate(-6deg);opacity:1}
+.reelbox svg{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 10px 14px rgba(20,8,30,.45))}
+.reelbox.up .spin{animation:spin 6s linear infinite;transform-box:fill-box;transform-origin:center}
 .cushion{position:absolute;left:0;right:0;bottom:0;margin:auto;width:100%;z-index:3;touch-action:none;cursor:grab;transition:transform .9s cubic-bezier(.4,-.2,.5,1),opacity .5s .5s}
 .cushion img{width:100%;height:auto;display:block;pointer-events:none}
 .cushion.off{transform:translate(70%,-85%) rotate(32deg) scale(.7);opacity:0;pointer-events:none}
 .cushion .halo{inset:6% 4%}
-.pols.live .pol:first-child{cursor:pointer}
 
 /* 5. behind the photo frame */
 .wall{position:relative;width:min(62vw,40dvh*.734,300px);aspect-ratio:640/872;margin:18px 0 14%}
@@ -440,8 +412,14 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="art">
       <div class="stage" data-stage="cushion"></div>
       <div class="found" hidden><div class="sofa">
-        <div class="pols" id="pols"></div>
-        <div class="jig" id="jig" hidden></div>
+        <div class="reelbox" id="reelbox" aria-hidden="true"><svg viewBox="0 0 220 200">
+          <g class="spin"><circle cx="100" cy="100" r="88" fill="#2A1F5C" stroke="#C9A24A" stroke-width="6"/><circle cx="100" cy="100" r="16" fill="#C9A24A"/>
+          <circle cx="100" cy="48" r="20" fill="#14102A"/><circle cx="145" cy="126" r="20" fill="#14102A"/><circle cx="55" cy="126" r="20" fill="#14102A"/>
+          <circle cx="100" cy="100" r="62" fill="none" stroke="#4B3F7E" stroke-width="3"/></g>
+          <path d="M170 120 L214 150 L206 172 L160 142Z" fill="#3B2F22"/>
+          <g transform="rotate(-10 150 40)"><rect x="118" y="18" width="98" height="46" rx="6" fill="#FFF6E6" stroke="#C9A267" stroke-width="2"/>
+          <circle cx="128" cy="41" r="4" fill="#C9A267"/><text x="170" y="37" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#B42D5E">play me on</text>
+          <text x="170" y="55" text-anchor="middle" font-family="Caveat,cursive" font-weight="700" font-size="17" fill="#B42D5E">the balcony ♡</text></g></svg></div>
         <button class="plain cushion" id="cushion" type="button" aria-label="Lift the cushion"><img src="img/cushion.webp" alt="A pink embroidered sofa cushion" width="620" height="559"><span class="halo"></span></button>
       </div></div>
     </div>
@@ -451,9 +429,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <p class="say" data-say aria-live="polite">Shine the torch around the dark room. Tap where you think it's hidden.</p>
       <div class="after" hidden>
       <p class="sub" id="cushionSub">Lift the cushion (drag it away, or tap it).</p>
-      <p class="count" id="polCount"></p>
-      <button class="linkish" id="solveBtn" hidden>Fix it for me</button>
-      <p class="digit" data-digit hidden></p>
       </div>
       <button class="btn" data-next id="afterCushion" hidden><span class="lbl"></span></button>
     </div>
@@ -476,7 +451,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <div class="note" id="frameNote" aria-live="polite"><span class="tag" id="frameTag"></span><span class="big" id="frameText"></span><span class="hint" id="frameHint">Tilt the frame on its nail (drag it, or tap it).</span></div>
       <div class="paper reasons" id="reasonList" hidden></div>
       <p class="count" id="frameCount"></p>
-      <p class="digit" data-digit hidden></p>
       </div>
       <button class="btn" data-next id="afterFrame" hidden><span class="lbl"></span></button>
     </div>
@@ -500,7 +474,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <p class="sub" id="jarSub">Twist the lid open (drag it up, or tap it).</p>
       <div class="paper" id="jarNote" hidden></div>
       <button class="btn mint" id="twistBtn"><span class="lbl">Twist it open 🍪</span></button>
-      <p class="digit" data-digit hidden></p>
       </div>
       <button class="btn" data-next id="afterJar" hidden><span class="lbl"></span></button>
     </div>
@@ -523,7 +496,6 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
       <p class="sub" id="bookSub">Open the book.</p>
       <div class="paper" id="letter" hidden></div>
       <button class="btn ghost" id="letterSkip" hidden><span class="lbl">Show it all</span></button>
-      <p class="digit" data-digit hidden></p>
       </div>
       <button class="btn" data-next id="afterBook" hidden><span class="lbl"></span></button>
     </div>
@@ -566,7 +538,7 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="words">
       <p class="kick">Out on the balcony</p>
       <h2 tabindex="-1" id="showTitle">Someone set up a little film</h2>
-      <p class="sub" id="showSub">Sit back. It plays by itself.</p>
+      <p class="sub" id="showSub">The film reel from under the cushion fits the old projector. Sit back, it plays by itself.</p>
       <button class="btn" data-next id="afterShow" hidden><span class="lbl"></span></button>
     </div>
   </section>
@@ -576,20 +548,13 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
     <div class="art">
       <div class="boxart" id="boxart">
         <span class="rays"></span>
-        <button class="plain ringbox" id="ringbox" type="button" aria-label="Open the little box"><img class="c" src="img/box.webp" alt="A small red velvet ring box" width="520" height="504"><img class="o" src="img/box-open.webp" alt="The box open, a diamond ring inside" width="620" height="833"><span class="halo" hidden id="boxHalo"></span></button>
-        <span class="padlock" id="padlock" aria-hidden="true"><i class="shackle"></i><i class="lbody"><i class="hole"></i></i></span>
+        <button class="plain ringbox" id="ringbox" type="button" aria-label="Open the little box"><img class="c" src="img/box.webp" alt="A small red velvet ring box" width="520" height="504"><img class="o" src="img/box-open.webp" alt="The box open, a diamond ring inside" width="620" height="833"><span class="halo round" id="boxHalo"></span></button>
       </div>
     </div>
     <div class="words">
       <p class="kick">The final secret</p>
       <h2 tabindex="-1" id="askTitle">Under the stars</h2>
-      <p class="sub" id="askSub">The last thing is waiting on the balcony, but the little box is locked. Enter the four numbers you found on your hunt.</p>
-      <div class="lockui" id="lockUi">
-        <div class="dials" id="dials" role="group" aria-label="Lock code"></div>
-        <p class="count" id="haveNums"></p>
-        <button class="btn" id="unlockBtn"><span class="lbl">Unlock 🔓</span></button>
-        <p class="say" id="lockSay" aria-live="polite"></p>
-      </div>
+      <p class="sub" id="askSub">One last thing is waiting for you out here. Tap the little box.</p>
       <p class="question" id="question" tabindex="-1"></p>
       <div class="askrow" id="askRow" hidden>
         <button class="btn" id="yesBtn"><span class="lbl">Yes! 💍</span></button>
@@ -637,7 +602,6 @@ const DEMO = {
   extra: { jar: "You're sweeter than every cookie in this jar. (I counted. I ate two.) Keep going, you're close." }
 };
 const DEFAULT_REASONS = ["You make every day feel like home","You believe in me, loudly","You still give me butterflies","Just… you"];
-const DEFAULT_CODE = "1402";
 /* where each clue hides in the dark room painting (room.webp): x, y as fractions, r as a fraction of the width */
 const SPOT = { cushion:[.47,.53,.13], frame:[.45,.19,.1], jar:[.73,.41,.09], book:[.44,.35,.09] };
 const NOPE = { cushion:"Not here. Somewhere we sit together?", frame:"Not here. Look higher, on the wall.", jar:"Not here. Think kitchen.", book:"Not here. Where do the books live?" };
@@ -698,7 +662,6 @@ function build(d){
   const x = d.extra && typeof d.extra === "object" ? d.extra : {};
   if (id) C.photos = C.photos.filter(p => p.src);
   C.jar = t(x.jar).slice(0, 160) || DEFAULT_JAR;
-  C.code = /^\d{4}$/.test(t(x.code)) ? t(x.code) : DEFAULT_CODE;
   if (!C.reasons.length) C.reasons = DEFAULT_REASONS;
   if (!C.letter.length) C.letter = [C.to + ",", "Every clue tonight led to the same answer.", "It's you. It was always going to be you."];
   const n = /^\d{1,3}$/.test(C.number) ? +C.number : 0; C.years = n;
@@ -708,7 +671,7 @@ function build(d){
   $("#openLine").textContent = n ? `${n} year${n === 1 ? "" : "s"} of us, and one more surprise` : "";
 
   /* the clues that have something to hide */
-  clues = ["cushion", "frame", "jar", "book"];   // always four clues: each one gives one number of the lock code
+  clues = ["cushion", "frame", "jar", "book"];   // always four clues
   seq = ["open", "lights", "map", ...clues, "trail", "show", "ask", "end"];
   const label = s => clues.includes(s) ? `Find clue ${clues.indexOf(s) + 1}` : { lights:"Step inside", map:"Read the map", trail:"Follow the petals", show:"Step outside", ask:"Open the ring box", end:"Finish" }[s];
   $$("[data-scene]").forEach(sc => {
@@ -759,7 +722,6 @@ function go(name){
   const sc = document.querySelector(`[data-scene="${name}"]`), h = sc.querySelector("h1,h2");
   if (h && !isPreview) h.focus({ preventScroll: true });
   if (name === "end"){ confetti(true); hearts(60); chimeUp(); }
-  if (name === "ask") resetDials();
   if (name === "trail") startTrail();
   if (name === "show") playShow();
   updateMapFab();
@@ -990,8 +952,7 @@ async function foundIt(clue){
 }
 function finishClue(clue){
   if (found.has(clue)) return; found.add(clue);
-  const sc = document.querySelector(`[data-scene="${clue}"]`), i = clues.indexOf(clue), dg = sc.querySelector("[data-digit]");
-  dg.innerHTML = `Number ${i + 1} of the lock code: <b></b>`; dg.querySelector("b").textContent = C.code[i]; dg.hidden = false; pop(dg);
+  const sc = document.querySelector(`[data-scene="${clue}"]`);
   if (ctx) ding(1568, .1, .1);
   updateMapFab();
   showNext(sc.querySelector("[data-next]"));
@@ -1003,83 +964,27 @@ async function autoFind(clue){   // homepage showcase: sweep the torch, one miss
   await glide(wx, wy); guess(clue, wx, wy); await sleep(1100); await glide(sx, sy); await sleep(300); guess(clue, sx, sy); await sleep(1500);
 }
 
-/* ---------- 4. under the cushion: the photos ---------- */
-let cushionOff = false, polSeen = 0;
-const NO_PHOTO = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'><defs><linearGradient id='g' x2='0' y2='1'><stop offset='0' stop-color='#F7C6D3'/><stop offset='1' stop-color='#FCE7C7'/></linearGradient></defs><rect width='300' height='300' fill='url(#g)'/><path d='M150 238C80 188 52 150 52 112 52 82 76 62 102 62c20 0 38 12 48 30 10-18 28-30 48-30 26 0 50 20 50 50 0 38-28 76-98 126Z' fill='#E8457A'/></svg>");
+/* ---------- 4. under the cushion: a little film reel for the balcony projector ---------- */
+let cushionOff = false;
+const NO_PHOTO = "data:,";
 function buildCushion(){
-  if (!C.photos.length) C.photos = [{ src: NO_PHOTO, caption: "The best photo of us hasn't been taken yet" }];
-  const rot = [-5, 4, -2, 6, -7];
-  $("#pols").innerHTML = C.photos.map((p, i) => `<div class="pol" style="transform:rotate(${rot[i % 5]}deg);z-index:${10 - i}"><img alt=""><span></span></div>`).join("");
-  $$("#pols .pol").forEach((el, i) => { const p = C.photos[i]; el.querySelector("img").src = p.src; el.querySelector("img").alt = p.caption || "One of our photos"; el.querySelector("span").textContent = p.caption || ""; });
   dragOrTap($("#cushion"), liftCushion, (dx, dy) => Math.hypot(dx, dy) > 40);
-  $("#pols").addEventListener("click", nextPhoto);
 }
 async function liftCushion(){
   if (cushionOff) return; cushionOff = true; ensureAudio();
   $("#cushion").classList.add("off", "done"); if (ctx) noise(.35, 500, .2, .8);
   await sleep(reduce ? 0 : 500);
-  $("#pols").hidden = true; buildJig(); $("#jig").hidden = false; pop($("#jig"));
-  $("#cushionSub").textContent = "Oh no, our photo is torn into pieces! Put it back together: tap two pieces to swap them.";
-  $("#polCount").textContent = "";
-  jigTimer = setTimeout(() => { if (!jigDone) $("#solveBtn").hidden = false; }, 25000);
+  $("#reelbox").classList.add("up"); sparkleAt($("#reelbox")); if (ctx) ding(1319, 0, .09);
+  $("#cushionSub").textContent = "A little film reel! Its tag says: “play me on the balcony.” Keep it safe. 🎬";
+  await sleep(reduce ? 0 : 900);
+  finishClue("cushion");
 }
-/* the torn photo: a 3×3 swap puzzle of the first photo */
-let jig = [], jigSel = -1, jigDone = false, jigTimer = null;
-function buildJig(){
-  const p = C.photos[0]; let o;
-  do { o = [...Array(9).keys()].sort(() => Math.random() - .5); } while (o.filter((v, i) => v === i).length > 2);
-  jig = o;
-  $("#jig").innerHTML = jig.map((v, i) => `<button class="pc" type="button" data-i="${i}" aria-label="Piece ${i + 1}"><img alt=""></button>`).join("");
-  $$("#jig .pc").forEach((b, i) => { b.querySelector("img").src = p.src; b.addEventListener("click", () => pickPiece(i)); });
-  paintJig();
-}
-function paintJig(){
-  $$("#jig .pc").forEach((b, i) => { const v = jig[i], im = b.querySelector("img"); im.style.left = -(v % 3) * 100 + "%"; im.style.top = -Math.floor(v / 3) * 100 + "%"; });
-}
-function pickPiece(i){
-  if (jigDone) return; ensureAudio(); const pcs = $$("#jig .pc");
-  if (jigSel < 0){ jigSel = i; pcs[i].classList.add("sel"); if (ctx) noise(.03, 3000, .1, 4); return; }
-  const j = jigSel; jigSel = -1; pcs[j].classList.remove("sel"); if (i === j) return;
-  [jig[i], jig[j]] = [jig[j], jig[i]]; paintJig();
-  [pcs[i], pcs[j]].forEach(b => { b.classList.remove("swap"); void b.offsetWidth; b.classList.add("swap"); });
-  if (ctx) ding(880 + jig.filter((v, k) => v === k).length * 60, 0, .06);
-  if (jig.every((v, k) => v === k)) solvedJig();
-}
-async function solveJig(){   // "Fix it for me" and the showcase: one swap at a time
-  $("#solveBtn").hidden = true;
-  for (let i = 0; i < 9 && !jigDone; i++){ if (jig[i] === i) continue; const j = jig.indexOf(i); pickPiece(i); await sleep(250); pickPiece(j); await sleep(450); }
-}
-$("#solveBtn").addEventListener("click", solveJig);
-async function solvedJig(){
-  jigDone = true; clearTimeout(jigTimer); $("#solveBtn").hidden = true;
-  $("#jig").classList.add("solved"); sparkleAt($("#jig")); chimeUp();
-  $("#cushionSub").textContent = "Good as new. " + (C.photos[0].caption ? "“" + C.photos[0].caption + "”" : "");
-  await sleep(reduce ? 0 : 1800);
-  $("#jig").hidden = true; $("#pols").hidden = false; $("#pols").classList.add("live"); polSeen = 1; ding(1319, 0, .1);
-  $("#cushionSub").textContent = C.photos.length > 1 ? "There's more under here! Tap the top photo to see the next." : "Our photo. I keep this one close.";
-  $("#polCount").textContent = `Photo 1 of ${C.photos.length}`;
-  if (C.photos.length === 1) finishCushion();
-}
-let polBusy = false;
-async function nextPhoto(){
-  if (!cushionOff || polBusy || C.photos.length < 2) return; polBusy = true;
-  const box = $("#pols"), top = box.firstElementChild; top.classList.add("gone"); if (ctx) noise(.15, 2200, .06, 1);
-  await sleep(reduce ? 0 : 450);
-  top.classList.remove("gone"); box.appendChild(top);
-  [...box.children].forEach((el, i) => el.style.zIndex = 10 - i);
-  polSeen++; const i = (polSeen - 1) % C.photos.length;
-  $("#polCount").textContent = `Photo ${i + 1} of ${C.photos.length}`; ding(1047 + i * 90, 0, .07);
-  if (polSeen === C.photos.length) finishCushion();
-  polBusy = false;
-}
-function finishCushion(){ finishClue("cushion"); }
 
 /* ---------- 5. behind the frame: the envelope of reasons ---------- */
 let tilted = false, reasonAt = 0;
 function buildFrame(){
-  const w = $("#win"), p = C.photos[0];
-  if (p && p.src && p.src !== NO_PHOTO){ const im = new Image(); im.src = p.src; im.alt = p.caption || "Our photo"; w.appendChild(im); }
-  else { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} + ${ini(C.from)}` : "us"; w.appendChild(b); }
+  const w = $("#win");
+  { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} + ${ini(C.from)}` : "us"; w.appendChild(b); }   // photos only play on the projector
   dragOrTap($("#frame"), tilt, (dx, dy) => Math.abs(dx) > 30);
   $("#env").addEventListener("click", openEnv);
   writeLines($("#reasonList"), C.reasons, -1);
@@ -1208,11 +1113,6 @@ async function runShow(){
 let boxOpen = false, coaxed = 0, said = false;
 function buildAsk(){
   $("#question").textContent = C.question; $("#question").hidden = true;
-  $("#dials").innerHTML = [0,1,2,3].map(i => `<button class="dial" type="button" data-d="${i}" aria-label="Number ${i + 1}: 0">0</button>`).join("");
-  $$(".dial").forEach(b => { b.addEventListener("click", () => turnDial(b, 1)); b.addEventListener("keydown", e => {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown"){ e.preventDefault(); turnDial(b, e.key === "ArrowUp" ? 1 : -1); } }); });
-  $("#unlockBtn").addEventListener("click", tryUnlock);
-  $("#ringbox").disabled = true;
   $("#ringbox").addEventListener("click", openBox);
   $("#yesBtn").addEventListener("click", sayYes);
   $("#coaxBtn").addEventListener("click", () => {
@@ -1220,25 +1120,8 @@ function buildAsk(){
     else sayYes();
   });
 }
-let unlocked2 = false;
-function resetDials(){ $("#haveNums").textContent = "Your numbers: " + clues.map((c, i) => found.has(c) ? C.code[i] : "?").join(" · "); }
-function turnDial(b, dir){
-  if (unlocked2) return; ensureAudio(); const v = (+b.textContent + dir + 10) % 10; b.textContent = v; b.setAttribute("aria-label", `Number ${+b.dataset.d + 1}: ${v}`);
-  if (ctx) noise(.03, 3200, .12, 4); $("#lockSay").textContent = "";
-}
-async function tryUnlock(){
-  if (unlocked2) return; ensureAudio();
-  const got = $$(".dial").map(b => b.textContent).join("");
-  if (got !== C.code){ const d = $("#dials"); d.classList.remove("bad"); void d.offsetWidth; d.classList.add("bad"); if (ctx) noise(.15, 300, .2, 2);
-    $("#lockSay").textContent = "Click… nope, still locked. Try the numbers in the order you found them."; return; }
-  unlocked2 = true; $("#lockSay").textContent = ""; $("#unlockBtn").hidden = true;
-  const pl = $("#padlock"); pl.classList.add("open"); if (ctx){ click(); ding(1568, .05, .08); }
-  await sleep(reduce ? 0 : 500); pl.classList.add("gone");
-  await sleep(reduce ? 0 : 700); $("#lockUi").hidden = true;
-  $("#askSub").textContent = "Unlocked! Now open the little box."; $("#ringbox").disabled = false; $("#boxHalo").hidden = false;
-}
 async function openBox(){
-  if (boxOpen || !unlocked2) return; boxOpen = true; ensureAudio();
+  if (boxOpen) return; boxOpen = true; ensureAudio();
   const r = $("#ringbox"); r.classList.add("shake", "done"); if (ctx) noise(.3, 900, .1, 2);
   await sleep(reduce ? 0 : 520); r.classList.remove("shake");
   $("#boxart").classList.add("open"); if (ctx){ noise(.08, 2400, .2, 3); [1568, 1976, 2349, 2794, 3136].forEach((f, i) => ding(f, .1 + i * .07, .07)); }
@@ -1312,15 +1195,14 @@ async function runAutoplay(){
   await sleep(1600); await ring(); await sleep(1200); await readNote(); await sleep(1400);
   go("lights"); await sleep(900); await pull(); await sleep(1400);
   go("map"); await sleep(600); await unroll(); await sleep(1500);
-  go("cushion"); await sleep(700); await autoFind("cushion"); await liftCushion(); await sleep(900); await solveJig(); await sleep(2400); for (let i = 1; i < C.photos.length; i++){ await nextPhoto(); await sleep(800); } await sleep(900);
+  go("cushion"); await sleep(700); await autoFind("cushion"); await liftCushion(); await sleep(1600);
   go("frame"); await sleep(700); await autoFind("frame"); await tilt(); await sleep(1200); await openEnv(); await sleep(1200);
   go("jar"); await sleep(700); await autoFind("jar"); await openJar(); await sleep(1300);
   go("book"); await sleep(700); await autoFind("book"); { const p = openBook(); await sleep(3600); letterRun = false; await p; } showLetter(); await sleep(1300);
   go("trail"); await sleep(800); await walkTrail(); await sleep(1500);
   go("show"); await playShow(); await sleep(800);
   go("ask"); await sleep(1000);
-  for (const [i, b] of $$(".dial").entries()){ for (let k = 0; k < +C.code[i]; k++){ turnDial(b, 1); await sleep(90); } await sleep(200); }
-  await tryUnlock(); await sleep(900); await openBox(); await sleep(1800); if (C.question){ await sayYes(); await sleep(1600); }
+  await openBox(); await sleep(1800); if (C.question){ await sayYes(); await sleep(1600); }
   go("end");
   await sleep(4200);
   if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
