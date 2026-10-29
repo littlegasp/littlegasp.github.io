@@ -198,8 +198,10 @@ body[data-bg="room"] #bg{background-image:url(img/window.webp);background-positi
 .tk-band svg{width:22px;height:22px;flex:none}
 .tk-route{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:6px;padding:14px 16px 4px}
 .tk-route small,.tk-row small,.tk-stub small{display:block;font:700 .62rem/1 var(--body);letter-spacing:.12em;color:#A7899A;margin-bottom:4px}
-.tk-city{font:400 clamp(1.05rem,4.6vw,1.45rem)/1.05 var(--display);overflow-wrap:anywhere}
+.ticket{container-type:inline-size}
+.tk-city{font:400 clamp(.8rem,5.4cqw,1.45rem)/1.05 var(--display);overflow-wrap:anywhere}
 .tk-route .to{text-align:right}
+.tk-city.long{font-size:clamp(.72rem,4cqw,1.1rem)}
 .tk-arc{width:64px;height:30px;margin-bottom:4px}
 .tk-row{display:flex;gap:16px;padding:10px 16px 0;align-items:flex-end}
 .tk-row b{font:600 1rem/1.1 var(--body)}
@@ -211,7 +213,12 @@ body[data-bg="room"] #bg{background-image:url(img/window.webp);background-positi
 .stamp{position:absolute;right:30%;bottom:14px;transform:rotate(-12deg) scale(2.2);opacity:0;border:3px solid var(--accent);color:var(--accent);border-radius:10px;padding:5px 10px;font:700 .95rem/1 var(--body);letter-spacing:.1em;background:rgba(255,246,230,.85);pointer-events:none}
 .stamp.on{animation:stampin .5s cubic-bezier(.3,1.6,.5,1) forwards}
 @keyframes stampin{to{opacity:1;transform:rotate(-12deg) scale(1)}}
-.cal.small{transform:none;width:min(88vw,340px);margin:4px auto 0;padding:8px 10px 10px}
+.cal.small{transform:none;width:min(88vw,340px);margin:0 auto;padding:8px 10px 10px}
+.passart .cal{display:none}
+.passart.picking .cal{display:block}
+.passart.picking .ticket{position:absolute;visibility:hidden}
+.tk-date{cursor:pointer;width:100%;background:transparent;text-align:left;font-family:var(--hand)}
+.tk-date.set{background:#FFE9F0}
 .cal.small::before{display:none}
 .cal.small .grid button{border-radius:8px;font-size:.88rem}
 
@@ -249,6 +256,24 @@ body[data-bg="room"] #bg{background-image:url(img/window.webp);background-positi
   .name{font-size:clamp(3.2rem,5vw,5rem)}
   h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
 }
+/* phones (and tall screens): every scene is exactly one screen, no scrolling; the art shrinks to the room the words leave */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene.two{height:100%;min-height:0;justify-content:center;gap:10px;padding:52px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene.two>.art{flex:1 1 auto;min-height:110px;width:100%;container-type:size}
+  .scene.two>.words{flex:none;gap:8px;padding:14px 16px 16px}
+  .mapbox{width:min(96cqw,calc(96cqh*.939),460px)}
+  .callart{width:min(84cqw,calc((100cqh - 44px)/.62),400px)}
+  .win{height:min(100cqh,600px)}
+  .parcelart{width:min(80cqw,96cqh,380px)}
+  .passart{width:min(94cqw,calc(100cqh*1.75),440px);min-height:0}
+  .passart .cal{width:min(92cqw,calc(96cqh*1.02),360px)}
+  .whisper{font-size:1.4rem}
+  .name{font-size:clamp(2.4rem,11vw,3.6rem)}
+  .bubbles{max-height:min(26dvh,260px)}
+  .paper{max-height:min(34dvh,340px)}
+  .btn{padding:14px 26px}
+}
+@media (max-height:600px){ .sub{font-size:.92rem} .kick{font-size:.72rem} }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
@@ -345,22 +370,23 @@ body[data-bg="room"] #bg{background-image:url(img/window.webp);background-positi
             <div class="to"><small>TO</small><span class="tk-city" id="tkTo"></span></div>
           </div>
           <div class="tk-row"><div><small>PASSENGER</small><b id="tkName"></b></div></div>
-          <div class="tk-row"><div class="tk-date" id="tkDate">pick a date ♥</div></div>
+          <div class="tk-row"><button type="button" class="tk-date" id="tkDate">pick a date ♥</button></div>
         </div>
         <div class="tk-stub"><div><small>SEAT</small><b>Next to me</b></div><div><small>GATE</small><b>My arms</b></div><svg viewBox="0 0 80 28" aria-hidden="true"><g fill="#2A1F5C"><rect x="0" width="3" height="28"/><rect x="6" width="1.5" height="28"/><rect x="10" width="4" height="28"/><rect x="17" width="1.5" height="28"/><rect x="21" width="3" height="28"/><rect x="27" width="5" height="28"/><rect x="35" width="1.5" height="28"/><rect x="39" width="3" height="28"/><rect x="45" width="1.5" height="28"/><rect x="49" width="4" height="28"/><rect x="56" width="2" height="28"/><rect x="61" width="3" height="28"/><rect x="67" width="1.5" height="28"/><rect x="71" width="4" height="28"/><rect x="77" width="2" height="28"/></g></svg></div>
         <span class="stamp" id="stamp">CONFIRMED ♥</span>
+      </div>
+      <div class="cal small" id="cal" role="group" aria-label="Pick a date">
+        <div class="calhead"><button type="button" id="prevM" aria-label="Previous month">‹</button><span id="calMonth"></span><button type="button" id="nextM" aria-label="Next month">›</button></div>
+        <div class="grid" id="grid"></div>
       </div>
     </div></div>
     <div class="words">
       <p class="kick">Landed · 0 km to go</p>
       <p class="question" id="question" tabindex="-1"></p>
-      <p class="sub" id="askSub">My plane unfolded into your ticket. Pick the day on the calendar.</p>
-      <div class="cal small" id="cal" role="group" aria-label="Pick a date">
-        <div class="calhead"><button type="button" id="prevM" aria-label="Previous month">‹</button><span id="calMonth"></span><button type="button" id="nextM" aria-label="Next month">›</button></div>
-        <div class="grid" id="grid"></div>
-      </div>
-      <p class="answer" id="answer" aria-live="polite"></p>
+      <p class="sub" id="askSub">My plane unfolded into your ticket.</p>
+      <button class="btn" id="pickBtn" hidden><span class="lbl">Pick the date 📅</span></button>
       <button class="btn" id="lockDate" hidden><span class="lbl">That's the day 💗</span></button>
+      <button class="linkish" id="changeDate" hidden>Change the date</button>
       <button class="btn" data-next id="afterAsk" hidden><span class="lbl"></span></button>
     </div>
   </section>
@@ -504,6 +530,7 @@ function build(d){
   $("#tkFrom").textContent = C.fromCity || C.from || "Me";
   $("#tkTo").textContent = C.toCity || C.to;
   $("#tkName").textContent = C.to;
+  ["#tkFrom", "#tkTo"].forEach(k => $(k).classList.toggle("long", $(k).textContent.length > 11));
   $("#callTitle").textContent = (C.from || "Someone special") + " is calling…";
   $("#question").textContent = C.question;
   $("#endTitle").textContent = C.from ? `${C.to} & ${C.from}` : `See you soon, ${C.to}`;
@@ -900,6 +927,12 @@ async function unfoldTicket(){
   if (!reduce){ lp.classList.add("go"); if (ctx) noise(.5, 900, .05, .6); await sleep(900); }
   tk.classList.add("open"); if (ctx){ noise(.25, 3200, .04, 1.4); ding(1319, .25, .07); }
   await sleep(reduce ? 0 : 700); sparkleAt(tk);
+  if (!locked) showNext($("#pickBtn"));
+}
+function openCal(){
+  if (locked) return; ensureAudio(); if (ctx) click();
+  $(".passart").classList.add("picking"); $("#pickBtn").hidden = $("#lockDate").hidden = $("#changeDate").hidden = true;
+  $("#askSub").textContent = "Tap the day we meet.";
 }
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 function buildAsk(){
@@ -907,6 +940,8 @@ function buildAsk(){
   $("#prevM").addEventListener("click", () => { calM--; if (calM < 0){ calM = 11; calY--; } drawCal(); });
   $("#nextM").addEventListener("click", () => { calM++; if (calM > 11){ calM = 0; calY++; } drawCal(); });
   $("#lockDate").addEventListener("click", lockDate);
+  $("#pickBtn").addEventListener("click", openCal); $("#changeDate").addEventListener("click", openCal);
+  $("#tkDate").addEventListener("click", () => { if (unfolded) openCal(); });
   drawCal();
 }
 function drawCal(){
@@ -926,14 +961,14 @@ function drawCal(){
 function pickDate(dt){
   if (locked) return; ensureAudio(); picked2 = dt; drawCal(); ding(1175 + dt.getDate() * 12, 0, .08);
   const days = Math.round((dt - new Date(new Date().toDateString())) / 864e5);
-  $("#answer").textContent = `${dt.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" })} · ${days === 0 ? "today!" : days === 1 ? "tomorrow!" : days + " days to go"}`;
-  const tkd = $("#tkDate"); tkd.textContent = dt.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }); tkd.classList.add("set"); pop(tkd);
-  $("#askSub").textContent = "Happy with this date? Lock it in.";
-  $("#lockDate").hidden = false;
+  const tkd = $("#tkDate"); tkd.textContent = dt.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }); tkd.classList.add("set");
+  $(".passart").classList.remove("picking"); pop(tkd);
+  $("#askSub").textContent = (days === 0 ? "That's today!" : days === 1 ? "That's tomorrow!" : `${days} days to go.`) + " Happy with this date?";
+  $("#lockDate").hidden = false; $("#changeDate").hidden = false;
 }
 async function lockDate(){
   if (locked || !picked2) return; locked = true; ensureAudio(); drawCal();
-  $("#lockDate").hidden = true; hearts(50); chimeUp(); $("#stamp").classList.add("on"); if (ctx) noise(.12, 500, .2, 1);
+  $("#lockDate").hidden = true; $("#changeDate").hidden = true; hearts(50); chimeUp(); $("#stamp").classList.add("on"); if (ctx) noise(.12, 500, .2, 1);
   if (navigator.vibrate && !isAuto) try { navigator.vibrate([30, 60, 30]); } catch(e){}
   const when = picked2.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
   reply("date", `“${C.question}” → ${when}`);
@@ -1013,7 +1048,7 @@ async function runAutoplay(){
   go(current + 1); await sleep(900); { const p = openParcel(); await sleep(4200); letterRun = false; await p; } await sleep(1000);   // stop 3
   await fly();
   go(current + 1); await sleep(2200);   // the ticket
-  const d = new Date(); d.setDate(d.getDate() + 12); calY = d.getFullYear(); calM = d.getMonth(); drawCal(); await sleep(600); pickDate(new Date(d.getFullYear(), d.getMonth(), d.getDate())); await sleep(1400); await lockDate(); await sleep(1800);
+  const d = new Date(); d.setDate(d.getDate() + 12); calY = d.getFullYear(); calM = d.getMonth(); drawCal(); openCal(); await sleep(900); pickDate(new Date(d.getFullYear(), d.getMonth(), d.getDate())); await sleep(1400); await lockDate(); await sleep(1800);
   go(current + 1); await sleep(4500);
   if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
   else location.reload();
