@@ -984,7 +984,9 @@ async function liftCushion(){
 let tilted = false, reasonAt = 0;
 function buildFrame(){
   const w = $("#win");
-  { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} + ${ini(C.from)}` : "us"; w.appendChild(b); }   // photos only play on the projector
+  const p = C.photos.find(x => x.src);   // the first photo hangs in the frame; the rest play on the projector
+  if (p){ const im = new Image(); im.src = p.src; im.alt = p.caption || "Our photo"; w.appendChild(im); }
+  else { const b = document.createElement("b"); const ini = s => (s || "").trim().charAt(0).toUpperCase(); b.textContent = C.from ? `${ini(C.to)} + ${ini(C.from)}` : "us"; w.appendChild(b); }
   dragOrTap($("#frame"), tilt, (dx, dy) => Math.abs(dx) > 30);
   $("#env").addEventListener("click", openEnv);
   writeLines($("#reasonList"), C.reasons, -1);
@@ -1083,7 +1085,7 @@ function endTrail(){
 /* ---------- 7c. the balcony projector: the photos play by themselves ---------- */
 let showRun = null;
 function buildShow(){
-  const real = C.photos.filter(p => p.src && p.src !== NO_PHOTO);
+  const all = C.photos.filter(p => p.src && p.src !== NO_PHOTO), real = all.length > 1 ? all.slice(1) : all;   // photo 1 is already in the frame
   const slides = real.length ? real.map(p => ({ img: p.src, cap: p.caption || "" })) : C.reasons.slice(0, 4).map(r => ({ txt: r }));
   slides.push({ txt: C.from ? `${C.to} & ${C.from}\n— to be continued —` : "To be continued…" });
   const sc = $("#screen");
