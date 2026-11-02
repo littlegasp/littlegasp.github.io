@@ -211,6 +211,21 @@ body.sunny #gloom{opacity:0 !important}
   h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
   .paper{max-width:470px}
 }
+/* phones (and tall screens): every scene is exactly one screen, no scrolling; the art shrinks to the room the words leave, a long letter scrolls inside the paper */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene.two{height:100%;min-height:0;gap:10px;padding:56px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene.two>.art{flex:1 1 auto;min-height:90px;width:100%;container-type:size}
+  .scene.two>.words{flex:none;gap:8px;padding:14px 16px 16px}
+  .pup,[data-scene="meter"] .pup{width:min(70cqw,100cqh)}
+  .heartbox{width:min(72cqw,96cqh)}
+  .pane{width:min(70cqw,96cqh*.8,330px)}
+  .jarbox{width:min(52cqw,96cqh*.75)}
+  .menu{max-height:100cqh;overflow-y:auto;overscroll-behavior:contain;padding:16px 16px 12px}
+  .menu label{padding:7px 2px}
+  .scene[data-scene=letter]{height:100%;min-height:0;padding:56px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene[data-scene=letter] .paper{flex:0 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;background-attachment:local}
+  .btn{padding:14px 26px}
+}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
