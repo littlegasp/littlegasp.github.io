@@ -142,7 +142,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 .track.now::before{opacity:1}
 .track.played{color:var(--cream-dk)}
 .lyric{font:500 italic clamp(1.5rem,6.6vw,2rem)/1.15 var(--serif);color:var(--cream);min-height:2.3em;display:flex;align-items:center;justify-content:center;max-width:22ch}
-.lyric:empty{display:none}
+
 .tracks[hidden]{display:none}
 
 /* 5. side B: the gatefold of photos */
@@ -177,6 +177,14 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 .question{font:500 italic clamp(1.7rem,7.2vw,2.3rem)/1.12 var(--serif);color:var(--cream);overflow-wrap:anywhere;text-wrap:balance}
 .answers{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 .answers[hidden]{display:none}
+/* slots that swap their content keep one fixed size, so the record above never jumps */
+.stack{display:grid;place-items:center;width:100%}
+.stack>*{grid-area:1/1}
+.off{visibility:hidden;opacity:0;pointer-events:none}
+.lyricbox{height:3.45em;font:500 italic clamp(1.5rem,6.6vw,2rem)/1.15 var(--serif)}
+.lyricbox .sub{font-style:normal}
+.lyricbox .lyric{min-height:0;max-height:100%;font-size:inherit}
+.tracks.pre{opacity:.45}
 #deck,.sleevebox,.gate{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 
 /* 8. our song */
@@ -209,7 +217,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
   .gate{width:min(96cqw,100cqh*1.25,520px)}
   .inner{width:min(90cqw,100cqh*.82,430px)}
   .tracks .track{padding:3px 8px;font-size:.9rem}
-  .lyric{min-height:1.2em;font-size:clamp(1.3rem,6vw,1.7rem)}
+  .lyricbox{font-size:clamp(1.3rem,6vw,1.7rem)}
   .btn{padding:14px 24px}
 }
 @media (max-height:660px){ .tracks .track:not(.now){display:none} .name{font-size:2.8rem} }
@@ -285,11 +293,9 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
     <div class="art"></div>
     <div class="words">
       <p class="kick" id="playKick">Drop the needle</p>
-      <p class="lyric" id="lyric" aria-live="polite"></p>
-      <p class="sub" id="playSub">Lift the arm and set it down on the record.</p>
-      <ol class="tracks" id="tracks" hidden></ol>
-      <button class="btn" id="nextTrack" hidden>Next track</button>
-      <button class="btn" data-next id="afterPlay" hidden><span class="lbl"></span></button>
+      <div class="lyricbox stack"><p class="sub" id="playSub">Lift the arm and set it down on the record.</p><p class="lyric off" id="lyric" aria-live="polite"></p></div>
+      <ol class="tracks pre" id="tracks"></ol>
+      <div class="stack"><button class="btn off" id="nextTrack">Next track</button><button class="btn off" data-next id="afterPlay"><span class="lbl"></span></button></div>
     </div>
   </section>
 
@@ -321,11 +327,13 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
     <div class="words">
       <p class="kick">Hidden track</p>
       <p class="question" id="question" tabindex="-1"></p>
-      <div class="answers" id="answers" hidden>
-        <button class="btn" id="yesBtn" type="button">Yes</button>
-        <button class="btn ghost" id="againBtn" type="button">Play it once more first</button>
+      <div class="stack">
+        <div class="answers off" id="answers">
+          <button class="btn" id="yesBtn" type="button">Yes</button>
+          <button class="btn ghost" id="againBtn" type="button">Play it once more first</button>
+        </div>
+        <p class="sub" id="askSub">Wait for it. The needle is still moving.</p>
       </div>
-      <p class="sub" id="askSub">Wait for it. The needle is still moving.</p>
     </div>
   </section>
 
@@ -455,6 +463,11 @@ function build(d){
 
 /* ---------- scenes ---------- */
 const LABEL = { cover: "", play: "Put it on the turntable", sideb: "Flip to side B", notes: "Read the liner notes", ask: "Let it play to the end", end: "" };
+/* long reasons shrink to fit the fixed lyric box */
+function fitLyric(ly){
+  ly.style.fontSize = ""; let f = parseFloat(getComputedStyle(ly).fontSize);
+  while (ly.scrollHeight > ly.parentElement.clientHeight + 1 && f > 12) { f -= 1; ly.style.fontSize = f + "px"; }
+}
 /* shrink the name on the record label until it fits */
 function fitLabels(){
   $$(".disc .label b").forEach(b => {
@@ -545,26 +558,26 @@ async function dropNeedle(){
   if (dropped) return; dropped = true; hand("");
   await moveArm(thetaFor(trackR(0) + 1.2), 500); crackle(); await sleep(250);
   $("#platter").classList.add("on"); startMusic(); playing = true;
-  $("#playKick").textContent = "Side A"; $("#playSub").hidden = true; $("#tracks").hidden = false;
+  $("#playKick").textContent = "Side A"; $("#playSub").classList.add("off"); $("#tracks").classList.remove("pre");
   await playTrack(0);
 }
 
 /* ---------- Side A: every track is a reason ---------- */
 function buildTracks(){
   const ol = $("#tracks");
-  C.reasons.forEach((r, i) => { const li = document.createElement("li"); li.className = "track"; li.innerHTML = "<span></span>"; li.querySelector("span").textContent = r; ol.appendChild(li); });
+  C.reasons.forEach((r, i) => { const li = document.createElement("li"); li.className = i ? "track" : "track now"; li.innerHTML = "<span></span>"; li.querySelector("span").textContent = r; ol.appendChild(li); });
   $("#nextTrack").addEventListener("click", () => { if (!armBusy) playTrack(trackAt + 1); });
 }
 async function playTrack(i){
   if (i >= C.reasons.length) return;
   trackAt = i; const lis = $$("#tracks .track");
   lis.forEach((li, k) => { li.classList.toggle("now", k === i); li.classList.toggle("played", k < i); });
-  const ly = $("#lyric"); ly.classList.remove("fade-in"); ly.textContent = ""; $("#nextTrack").hidden = true;
+  const ly = $("#lyric"); ly.classList.remove("fade-in"); ly.classList.add("off"); $("#nextTrack").classList.add("off");
   await moveArm(thetaFor(trackR(i)), i ? 900 : 300); if (i) crackle(.5);
-  ly.textContent = "“" + C.reasons[i] + "”"; void ly.offsetWidth; ly.classList.add("fade-in");
+  ly.textContent = "“" + C.reasons[i] + "”"; fitLyric(ly); ly.classList.remove("off"); void ly.offsetWidth; ly.classList.add("fade-in");
   await sleep(isAuto ? 900 : 1400);
-  if (i < C.reasons.length - 1){ $("#nextTrack").hidden = false; $("#nextTrack").textContent = "Next track"; }
-  else { $("#afterPlay").hidden = false; }
+  if (i < C.reasons.length - 1) $("#nextTrack").classList.remove("off");
+  else { $("#nextTrack").classList.add("off"); $("#afterPlay").classList.remove("off"); }
 }
 
 /* ---------- Side B: the gatefold ---------- */
@@ -612,7 +625,7 @@ $("#notesSkip").addEventListener("click", showNotes);
 function buildAsk(){
   $("#yesBtn").addEventListener("click", sayYes);
   $("#againBtn").addEventListener("click", async () => {   // no pressure: the record simply plays again, then asks again
-    $("#answers").hidden = true; $("#askSub").hidden = false; $("#askSub").textContent = "Playing it once more…";
+    $("#answers").classList.add("off"); $("#askSub").classList.remove("off"); $("#askSub").textContent = "Playing it once more…";
     $("#sideLbl").textContent = "SIDE A";
     for (let i = 0; i < C.reasons.length; i++){ await moveArm(thetaFor(trackR(i)), 600); $("#askSub").textContent = "“" + C.reasons[i] + "”"; await sleep(1500); }
     await hiddenTrack(true);
@@ -620,11 +633,11 @@ function buildAsk(){
 }
 async function hiddenTrack(again){
   if (!playing){ $("#platter").classList.add("on"); playing = true; startMusic(); }
-  $("#answers").hidden = true; $("#askSub").hidden = false; $("#askSub").textContent = again ? "And here it is again." : "Wait for it. The needle is still moving.";
+  $("#answers").classList.add("off"); $("#askSub").classList.remove("off"); $("#askSub").textContent = again ? "And here it is again." : "Wait for it. The needle is still moving.";
   $("#question").style.opacity = "0"; $("#sideLbl").textContent = "HIDDEN TRACK";
   await moveArm(thetaFor(11), isAuto ? 1200 : 2400); crackle(.7);
   $("#question").style.transition = "opacity 1.2s"; $("#question").style.opacity = "1";
-  await sleep(900); $("#askSub").hidden = true; $("#answers").hidden = false;
+  await sleep(900); $("#askSub").classList.add("off"); $("#answers").classList.remove("off");
 }
 async function sayYes(){
   $("#yesBtn").disabled = true; ensureAudio(); chime();
@@ -732,7 +745,7 @@ async function runAutoplay(){
   await sleep(1200);
   if (seq.includes("sideb")){ go("sideb"); for (let i = 1; i < C.photos.length; i++){ await sleep(1500); showPrint(i); } await sleep(1500); }
   if (seq.includes("notes")){ go("notes"); await sleep(3800); showNotes(); await sleep(1500); }
-  go("ask"); while ($("#answers").hidden) await sleep(200); await sleep(1600); await sayYes(); await sleep(5000);
+  go("ask"); while ($("#answers").classList.contains("off")) await sleep(200); await sleep(1600); await sayYes(); await sleep(5000);
   if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
   else location.reload();
 }
