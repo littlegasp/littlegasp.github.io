@@ -307,6 +307,23 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   .name{font-size:clamp(3.2rem,5vw,5rem)}
   h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
 }
+/* phones (and tall screens): every scene is exactly one screen, no scrolling; the art shrinks to the room the words leave */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene.two{height:100%;min-height:0;gap:10px;padding:56px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene.two>.art{flex:1 1 auto;min-height:90px;width:100%;container-type:size}
+  .scene.two>.words{flex:none;gap:8px;padding:14px 16px 16px}
+  .dove{width:auto;max-width:min(78cqw,400px);max-height:100cqh}
+  .env{width:min(88cqw,94cqh*502/377,460px)}
+  .stage{max-height:100cqh}
+  .pola-wrap{width:min(62cqw,(100cqh - 130px)*4/5.1,260px)}
+  .keep{width:min(80cqw,96cqh*503/595,380px)}
+  .skywin{width:min(80cqw,94cqh*.8,360px)}
+  .bundle{width:min(80cqw,96cqh*583/578,380px)}
+  .frame{width:min(84cqw,94cqh*.8,420px)}
+  .reply{padding-bottom:96px;max-height:100cqh}
+  .reply textarea{min-height:80px}
+  .btn{padding:14px 26px}
+}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
