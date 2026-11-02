@@ -392,6 +392,24 @@ const DESIGNS = {
     letterHint: "Riya,\n\nThere are a lot of miles between us, but you're still my favourite place... (stop 3: it arrives in a parcel)",
     questionHint: "e.g. When do we meet? (the plane lands as their boarding pass and they pick the date)", yesHint: "e.g. Counting every single day till then."
   },
+  "love-catcher": {
+    occasion: "love", forWho: ["girlfriend","boyfriend","wife","husband"],   // writing ideas (create/ideas.js); the pick also sets the pink (her) or teal (him) machine
+    genderFromWho: true,
+    name: "Love Catcher",
+    path: "/love-catcher/",
+    price: 149,
+    regularPrice: 0,
+    offerLabel: "",
+    offerEnds: "",
+    noNumber: true,
+    maxPhotos: 4, maxReasons: 4,       // up to 8 plush toys in the claw machine, one photo or reason each
+    song: "A bouncy arcade music-box tune already plays on this design.",
+    photosHint: "Each photo rides inside a plush toy in the claw machine. When they catch it, it pops out of the prize hatch as a polaroid.",
+    reasonsTitle: "Reasons inside the toys (one per toy they catch)",
+    reasonsExamples: ["The way you laugh at your own jokes","You always save me the last bite","How you make ordinary days fun","Your 2am voice notes"],
+    letterHint: "Meera,\n\nNo reason, no occasion. I just wanted you to know... (it's inside the jackpot gift box)",
+    questionHint: "e.g. Can I keep you forever? (if they tap No, the claw grabs the No button)", yesHint: "e.g. Best prize I ever won."
+  },
   "love-letter": {
     occasion: "love", forWho: ["wife","husband","girlfriend","boyfriend"],   // writing ideas (create/ideas.js)
     name: "Sealed with Love",
@@ -443,6 +461,7 @@ $("#photoMax").textContent = "up to " + MAXP;
 if (D.photosHint){ $("#photosHint").textContent = D.photosHint; $("#photosHint").hidden = false; }
 $("#reasonMax").textContent = MAXR;
 $("#numberLabel").textContent = D.numberLabel || "Special number";
+if (D.noNumber){ $("#f-number").hidden = true; $("#f-number").previousElementSibling.hidden = true; }
 if (D.numberHint) $("#f-number").placeholder = D.numberHint;
 if (D.questionHint) $("#f-question").placeholder = D.questionHint;
 if (D.yesHint) $("#f-yes").placeholder = D.yesHint;
