@@ -327,6 +327,28 @@ canvas#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-in
   #endTitle{font-size:clamp(2.4rem,3.2vw,3.6rem)}
   h2{font-size:clamp(1.9rem,2.4vw,2.6rem)}
 }
+/* phones (and tall screens): every scene is exactly one screen, no scrolling; the art shrinks to the room the words leave */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene.two{height:100%;min-height:0;gap:10px;padding:58px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene.two>.art{flex:1 1 auto;min-height:120px;width:100%;container-type:size}
+  .scene.two>.words{flex:none;gap:8px;padding:14px 16px 16px}
+  .doorart{gap:2cqh;max-height:100cqh}
+  .bell{height:min(58cqh,280px)}
+  .slip{width:min(46cqw,30cqh*1.24,230px)}
+  .mapbtn{width:min(84cqw,96cqh*.71,380px)}
+  .stage,.trail{height:min(98cqh,98cqw*16/9,560px)}
+  .sofa{width:min(78cqw,96cqh/1.02,360px)}
+  .wall{width:min(62cqw,(100cqh - 22px)/1.5,300px)}
+  .jar{width:min(56cqw,96cqh*.8,290px)}
+  .book{width:min(84cqw,92cqh*1.37,440px)}
+  .boxart{width:min(70cqw,96cqh,320px)}
+  .cinema{width:min(86cqw,(100cqh - 70px)*1.1,440px)}
+  .beam{height:clamp(24px,9cqh,90px)}
+  .hug{width:min(56cqw,96cqh*.42,240px)}
+  .paper{max-height:min(30dvh,300px)}
+  .stage .hand,.trail .hand{white-space:normal;width:max-content;max-width:90%;text-align:center;font-size:1.05rem}
+  .btn{padding:14px 26px}
+}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
 }
