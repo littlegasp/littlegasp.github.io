@@ -388,6 +388,17 @@ body[data-scene="thali"] .moon{opacity:0}
   .name{font-size:clamp(3.4rem,5.4vw,6rem)} .sub{font-size:1.12rem}
 }
 @media (max-height:640px){ :root{--c:min(calc(50 * var(--vw)),190px)} .scene{gap:12px} }
+/* phones (and tall screens): no scrolling to reach a button; the thali scene sits higher (no moon there), a long letter scrolls inside the scroll */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene{padding-bottom:max(18px,env(safe-area-inset-bottom))}
+  .scene.center[data-scene="thali"]{padding-top:60px;gap:12px}
+  .scene[data-scene="moon"]{gap:10px;padding-bottom:10px}
+  .scene[data-scene="letter"]{height:calc(100 * var(--vh));min-height:0;padding-top:calc(4 * var(--vh) + 70px);gap:12px}
+  .scene[data-scene="letter"] .scroll{flex:0 1 auto;min-height:0;display:flex;flex-direction:column}
+  .scene[data-scene="letter"] #letterBody{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:.8em}
+  .scene[data-scene="letter"] #letterBody.over{-webkit-mask-image:linear-gradient(#000 calc(100% - 2.2em),transparent);mask-image:linear-gradient(#000 calc(100% - 2.2em),transparent)}
+  body .scene[data-scene="letter"] .scroll p{font-size:1.18rem}
+}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   .reveal p{opacity:1}
@@ -830,6 +841,7 @@ function go(name){
   dots.setAttribute("aria-label", `Step ${idx+1} of ${flow.length}`);
   if (!isAuto){ STAGE.querySelector("main").scrollTo(0,0); const h = sceneEl(name).querySelector("h1,h2"); if (h) h.focus({preventScroll:true}); }
   requestAnimationFrame(fitProps);
+  if (name === "letter") requestAnimationFrame(() => { const b = $("#letterBody"); b.classList.toggle("over", b.scrollHeight > b.clientHeight + 2); });
   if (idx > flow.indexOf("moon")){ moon.classList.remove("away"); moon.classList.add("up","small"); roofs.classList.add("dim"); }
   onEnter[name] && onEnter[name]();
 }
