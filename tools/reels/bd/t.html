@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Cap;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2)}
+@font-face{font-family:Fig;font-weight:800;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-800-normal.woff2)}
+*{margin:0;box-sizing:border-box}
+body{width:1080px;height:1920px;overflow:hidden;position:relative;background:radial-gradient(120% 70% at 50% 30%,#4A2A7A,#1A1538 70%);font-family:Cap,'Noto Color Emoji';color:#fff}
+.spark{position:absolute;border-radius:50%;background:#FFC857;box-shadow:0 0 18px 6px rgba(255,200,87,.6)}
+#c{position:absolute;left:70px;right:70px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.h{font:400 112px/1.08 Cap,'Noto Color Emoji'}
+.h b{color:#FFC857;font-weight:400}
+.s{font:800 58px Fig;color:#F7A8C2;margin-top:50px}
+.n{font:400 560px/1 Cap;color:#FFC857;text-shadow:0 0 60px rgba(255,200,87,.55)}
+.nl{font:400 84px/1.1 Cap,'Noto Color Emoji';margin-top:10px}
+.logo{width:150px;height:150px;border-radius:34px;margin-bottom:60px}
+</style></head><body><div id="sp"></div><div id="c"></div>
+<script>
+const sp=document.getElementById('sp');for(let i=0;i<26;i++){const d=document.createElement('i');d.className='spark';const s=4+Math.random()*8;d.style.cssText+=`width:${s}px;height:${s}px;left:${Math.random()*1080}px;top:${Math.random()*1920}px;opacity:${.3+Math.random()*.6}`;sp.appendChild(d)}
+const SC={
+ hook:'<div class="h" id="a">3 things only a <b>sibling</b> would hide in a</div><div class="h" id="b" style="margin-top:20px"><b>Bhai Dooj</b> surprise 🪔</div><div class="s" id="c3">#3 is the gift.</div>',
+ n1:'<div class="n" id="a">1</div><div class="nl" id="b">Their childhood crimes 😂</div>',
+ n2:'<div class="n" id="a">2</div><div class="nl" id="b">A wish in sparklers ✨</div>',
+ n3:'<div class="n" id="a">3</div><div class="nl" id="b">The real gift,<br>under gold foil 🎁</div>',
+ end:'<img class="logo" id="a" src="logo.png"><div class="h" id="b">Send it before<br><b>Bhai Dooj</b> 🪔</div><div class="s" id="c3" style="color:#FFC857">Diwali Night · Try it free · link in bio</div>'};
+let cur=null;
+function render(k,t){if(cur!==k){cur=k;document.getElementById('c').innerHTML=SC[k]}
+ const ap=(id,st,num)=>{const e=document.getElementById(id);if(!e)return;const u=Math.max(0,Math.min(1,(t-st)/.25)),o=1-Math.pow(1-u,3);
+  e.style.opacity=o;e.style.transform=num?`scale(${1.9-.9*o}) rotate(${(1-o)*-10}deg)`:`translateY(${(1-o)*50}px)`};
+ if(k==='hook'){ap('a',0);ap('b',.35);ap('c3',.9)}
+ else if(k==='end'){ap('a',0);ap('b',.2);ap('c3',.7)}
+ else {ap('a',0,1);ap('b',.18)}
+ document.querySelectorAll('.spark').forEach((s,i)=>s.style.transform=`translateY(${-t*40*(1+i%3)}px)`);}
+</script></body></html>

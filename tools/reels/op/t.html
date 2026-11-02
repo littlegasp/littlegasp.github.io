@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Cap;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2)}
+@font-face{font-family:Fig;font-weight:800;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-800-normal.woff2)}
+*{margin:0;box-sizing:border-box}
+body{width:1080px;height:1920px;overflow:hidden;position:relative;font-family:Cap,'Noto Color Emoji'}
+#bg{position:absolute;inset:0}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.6}
+#c{position:absolute;left:80px;right:80px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.w{display:inline-block;font:400 130px/1.08 Cap,'Noto Color Emoji';margin:0 14px;opacity:0;transform:translateY(40px) scale(.9)}
+.line{display:block}
+.st{position:relative}.st::after{content:"";position:absolute;left:-4%;top:55%;height:14px;width:var(--s,0%);background:#E8457A;border-radius:7px;transform:rotate(-3deg)}
+.sub{font:800 54px Fig;color:#FFC857;margin-top:60px;opacity:0}
+.logo{width:150px;height:150px;border-radius:34px;margin-bottom:60px;opacity:0}
+</style></head><body><div id="bg"></div><div id="c"></div>
+<script>
+const SC={
+ a:{bg:'#FDEFF4',ink:'#2A1F5C',lines:[["Diwali","isn't","about"],["the",'<span class="st" id="shop">shopping.</span>']]},
+ b:{bg:'#2A1F5C',ink:'#FDEFF4',lines:[["It's","about"],["the","<b style=\"font-weight:400;color:#FFC857\">people.</b>"]]},
+ e:{bg:'#2A1F5C',ink:'#FDEFF4',logo:1,lines:[["Light","someone"],["up","this"],["Diwali","🪔"]],sub:"Little Gasp · Try it free · link in bio"}};
+let cur=null;
+function setup(k){const s=SC[k];cur=k;
+ document.getElementById('bg').style.background=s.bg;
+ document.getElementById('bg').innerHTML=k==='a'?'<div class="blob" style="width:700px;height:700px;background:#F7A8C2;left:-250px;top:-200px"></div><div class="blob" style="width:600px;height:600px;background:#FFC857;right:-220px;bottom:-150px;opacity:.45"></div>':'<div class="blob" style="width:700px;height:700px;background:#E8457A;left:-300px;bottom:-250px;opacity:.35"></div><div class="blob" style="width:600px;height:600px;background:#FFC857;right:-250px;top:-200px;opacity:.25"></div>';
+ const c=document.getElementById('c');c.style.color=s.ink;
+ c.innerHTML=(s.logo?'<img class="logo" src="logo.png">':'')+s.lines.map(l=>'<span class="line">'+l.map(w=>`<span class="w">${w}</span>`).join('')+'</span>').join('')+(s.sub?`<div class="sub">${s.sub}</div>`:'');}
+function render(k,t){if(cur!==k)setup(k); if(k==='a')t+=0.45;
+ const ws=[...document.querySelectorAll('.w')];
+ ws.forEach((w,i)=>{const u=Math.max(0,Math.min(1,(t-.12-i*.17)/.28)),e=1-Math.pow(1-u,3);w.style.opacity=e;w.style.transform=`translateY(${(1-e)*40}px) scale(${.9+.1*e})`});
+ const sh=document.getElementById('shop');if(sh)sh.style.setProperty('--s',Math.max(0,Math.min(108,(t-1.45)/.35*108))+'%');
+ const lg=document.querySelector('.logo');if(lg)lg.style.opacity=Math.min(1,t/.3);
+ const sb=document.querySelector('.sub');if(sb)sb.style.opacity=Math.max(0,Math.min(1,(t-1.4)/.4));}
+</script></body></html>

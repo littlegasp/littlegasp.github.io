@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Fig;font-weight:400;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-400-normal.woff2)}
+@font-face{font-family:Fig;font-weight:600;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2)}
+@font-face{font-family:Fig;font-weight:700;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-700-normal.woff2)}
+*{margin:0;box-sizing:border-box}
+body{width:360px;height:640px;overflow:hidden;font-family:Fig,'Noto Color Emoji',sans-serif;background:#ECE5DD;position:relative}
+.top{height:64px;background:#2F5D5A;color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px}
+.av{width:38px;height:38px;border-radius:50%;background:#F4A6BC;display:flex;align-items:center;justify-content:center;font:700 17px Fig;color:#7A1F45}
+.nm{font:700 16px Fig}.st{font:400 12px Fig;opacity:.85;min-height:15px}
+.wall{position:absolute;inset:64px 0 58px 0;padding:14px 10px;display:flex;flex-direction:column;gap:10px;background:#ECE5DD radial-gradient(circle at 20% 30%,rgba(0,0,0,.025) 2px,transparent 3px) 0 0/26px 26px}
+.day{align-self:center;background:#E1F2FB;color:#4A6370;font:600 11px Fig;padding:4px 10px;border-radius:8px;opacity:0;transition:none}
+.b{align-self:flex-end;background:#DCF8C6;border-radius:10px 10px 2px 10px;padding:8px 10px 6px;font:400 17px Fig;color:#111;box-shadow:0 1px 1px rgba(0,0,0,.12);display:none;max-width:80%}
+.meta{display:flex;justify-content:flex-end;gap:4px;font:400 10px Fig;color:#7A8A84;margin-top:2px}
+.tk{font:700 12px Fig;letter-spacing:-3px;color:#8A9A94}.tk.blue{color:#34B7F1}
+.bar{position:absolute;left:0;right:0;bottom:0;height:58px;display:flex;align-items:center;gap:8px;padding:8px}
+.in{flex:1;height:42px;border-radius:21px;background:#fff;padding:0 16px;display:flex;align-items:center;font:400 16px Fig;color:#111}
+.in i{display:inline-block;width:2px;height:20px;background:#2F5D5A;margin-left:1px}
+.in .ph{color:#999}
+.send{width:42px;height:42px;border-radius:50%;background:#2F5D5A;display:flex;align-items:center;justify-content:center;color:#fff;font:700 18px Fig}
+.dots{align-self:center;font:600 13px Fig;color:#7A8A84;opacity:0}
+</style></head><body>
+<div class="top"><div class="av">R</div><div><div class="nm">Riya 💗</div><div class="st" id="st">online</div></div></div>
+<div class="wall"><div class="day" style="opacity:1">TODAY</div>
+<div class="b" id="b">I love you ❤️<div class="meta"><span>9:41 pm</span><span class="tk" id="tk">✓</span></div></div>
+<div class="day" id="d1">2 hours later</div>
+<div class="day" id="d2">Next morning</div>
+<div class="dots" id="dots">…no reply</div>
+</div>
+<div class="bar"><div class="in" id="in"><span class="ph">Message</span></div><div class="send">➤</div></div>
+<script>
+const MSG=[..."I love you ❤️"];
+function render(t){
+  const inp=document.getElementById('in'), b=document.getElementById('b'), tk=document.getElementById('tk'), st=document.getElementById('st');
+  if(t<0.6){inp.innerHTML='<span class="ph">Message</span>'}
+  else if(t<2.4){const n=Math.min(MSG.length,Math.floor((t-.6)/0.12)+1); inp.innerHTML=MSG.slice(0,n).join('')+'<i></i>'}
+  else inp.innerHTML='<span class="ph">Message</span>';
+  b.style.display=t>=2.4?'block':'none';
+  tk.textContent=t<3.6?'✓':'✓✓'; tk.className='tk'+(t>=5?' blue':'');
+  st.textContent=t<6.5?'online':(t<9.5?'last seen just now':'last seen today at 9:42 pm');
+  document.getElementById('d1').style.opacity=t>=8.5?1:0;
+  document.getElementById('d2').style.opacity=t>=11.5?1:0;
+  document.getElementById('dots').style.opacity=t>=13.5?1:0;
+}
+render(0);
+</script></body></html>

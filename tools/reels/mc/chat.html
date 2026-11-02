@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Fig;font-weight:400;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-400-normal.woff2)}
+@font-face{font-family:Fig;font-weight:600;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-600-normal.woff2)}
+@font-face{font-family:Fig;font-weight:700;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-700-normal.woff2)}
+@font-face{font-family:Fig;font-weight:800;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-800-normal.woff2)}
+@font-face{font-family:Cap;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2)}
+*{margin:0;box-sizing:border-box}
+body{width:360px;height:640px;overflow:hidden;font-family:Fig,'Noto Color Emoji',sans-serif;background:#ECE5DD;position:relative}
+.top{height:70px;background:#2F5D5A;color:#fff;display:flex;align-items:center;gap:10px;padding:22px 12px 8px}
+.av{width:38px;height:38px;border-radius:50%;background:#F4A6BC;display:flex;align-items:center;justify-content:center;font:700 17px Fig;color:#7A1F45}
+.nm{font:700 17px Fig}.st{font:400 12px Fig;opacity:.85;min-height:15px}
+.wall{position:absolute;top:70px;left:0;right:0;bottom:58px;overflow:hidden;padding:16px 12px;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;background:#ECE5DD radial-gradient(circle at 20% 30%,rgba(0,0,0,.025) 2px,transparent 3px) 0 0/26px 26px}
+.b{max-width:82%;border-radius:12px;padding:9px 12px 6px;font:500 21px/1.25 Fig;color:#111;box-shadow:0 1px 1px rgba(0,0,0,.12);display:none}
+.in{align-self:flex-start;background:#fff;border-radius:12px 12px 12px 3px}
+.out{align-self:flex-end;background:#DCF8C6;border-radius:12px 12px 3px 12px}
+.meta{display:flex;justify-content:flex-end;gap:4px;font:400 10px Fig;color:#7A8A84;margin-top:2px}
+.tk{font:700 12px Fig;letter-spacing:-3px;color:#34B7F1}
+.link{padding:5px}
+.link img{width:100%;height:118px;object-fit:cover;border-radius:8px;display:block}
+.link .lt{font:700 15px/1.2 Fig;margin:7px 5px 2px}.link .ld{font:400 12px Fig;color:#667;margin:0 5px 2px}
+.typing{align-self:flex-start;background:#fff;border-radius:12px;padding:12px 14px;display:none;gap:5px}
+.typing i{width:8px;height:8px;border-radius:50%;background:#9AA}
+.bar{position:absolute;left:0;right:0;bottom:0;height:58px;display:flex;align-items:center;gap:8px;padding:8px;background:#ECE5DD}
+.inp{flex:1;height:42px;border-radius:21px;background:#fff;padding:0 16px;display:flex;align-items:center;font:400 17px Fig;color:#999}
+.send{width:42px;height:42px;border-radius:50%;background:#2F5D5A;color:#fff;display:flex;align-items:center;justify-content:center;font:700 18px Fig}
+#fin{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.55);border:3px solid #fff;box-shadow:0 0 0 2px rgba(42,31,92,.3);display:none}
+#endc{position:absolute;left:14px;right:14px;top:84px;box-shadow:0 10px 30px rgba(0,0,0,.3);background:#2A1F5C;color:#fff;border-radius:18px;padding:14px 16px;text-align:center;display:none}
+#endc h3{font:400 26px Cap}#endc p{font:800 14px Fig;color:#FFC857;margin-top:6px}
+</style></head><body>
+<div class="top"><div class="av">R</div><div><div class="nm">Riya 💗</div><div class="st" id="st">online</div></div></div>
+<div class="wall" id="wall">
+ <div class="b in" id="m1">Kab aaoge? 🥺<div class="meta">11:48 pm</div></div>
+ <div class="b out" id="m2">Abhi nahi aa sakta yaar… 735 km hai 😔<div class="meta">11:49 pm <span class="tk">✓✓</span></div></div>
+ <div class="b out" id="m3">But wait. Open this ✈️<div class="meta">11:49 pm <span class="tk">✓✓</span></div></div>
+ <div class="b out link" id="m4"><img src="file:///home/claude/littlegasp.github.io/miss-you/img/share.jpg"><div class="lt">Someone far away is missing you 💌</div><div class="ld">littlegasp.com</div><div class="meta">11:49 pm <span class="tk">✓✓</span></div></div>
+ <div class="typing" id="ty"><i></i><i></i><i></i></div>
+ <div class="b in" id="m5">I picked our date. 10 Nov ✈️<div class="meta">12:03 am</div></div>
+ <div class="b in" id="m6">Ab mana mat karna 😤💗<div class="meta">12:03 am</div></div>
+</div>
+<div class="bar"><div class="inp">Message</div><div class="send">➤</div></div>
+<div id="fin"></div>
+<div id="endc"><h3>Miss You</h3><p>Try it free · link in bio</p></div>
+<script>
+const S=id=>document.getElementById(id);
+function show(id,on){S(id).style.display=on?(id==='ty'?'flex':'block'):'none'}
+// phase A: t in [0,5.4]   phase B: t in [10,15]  (B = after the link was opened)
+function render(t){
+  if(t<10){
+    show('m1',t>=0.2); show('m2',t>=1.4); show('m3',t>=2.6); show('m4',t>=3.3); show('ty',false); show('m5',false); show('m6',false);
+    S('st').textContent=t<1.2?'online':'typing…';
+    const f=S('fin'),l=S('m4').getBoundingClientRect();
+    if(t>=4.2&&t<5.4&&l.width){f.style.display='block';f.style.left=(l.left+l.width/2)+'px';f.style.top=(l.top+l.height/2)+'px';const u=(t-4.6);f.style.transform=`scale(${u>0&&u<.25?.75:1})`}else f.style.display='none';
+    S('endc').style.display='none';
+  } else {
+    const u=t-10;
+    ['m1','m2','m3','m4'].forEach(x=>show(x,true));
+    show('ty',u>=0.3&&u<1.3); show('m5',u>=1.3); show('m6',u>=2.2);
+    S('st').textContent=u<1.3?'typing…':'online';
+    S('fin').style.display='none';
+    S('endc').style.display=u>=3.2?'block':'none';
+  }
+}
+render(0);
+</script></body></html>

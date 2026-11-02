@@ -1,0 +1,74 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Cap;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/caprasimo/files/caprasimo-latin-400-normal.woff2)}
+@font-face{font-family:Fig;font-weight:800;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/figtree/files/figtree-latin-800-normal.woff2)}
+@font-face{font-family:Cav;font-weight:700;src:url(file:///tmp/claude-0/fonts/node_modules/@fontsource/caveat/files/caveat-latin-700-normal.woff2)}
+*{margin:0;box-sizing:border-box}
+body{width:1080px;height:1920px;overflow:hidden;background:#2a1a12;position:relative}
+#world{position:absolute;left:0;top:0;width:900px;height:1600px;transform-origin:0 0;background:url(file:///home/claude/littlegasp.github.io/anniversary/img/road.webp) 0 0/900px 1600px}
+.stone{position:absolute;width:44px;transform:translate(-50%,-92%)}
+.stone img{width:100%;display:block;filter:drop-shadow(0 3px 3px rgba(0,0,0,.35))}
+.stone b{position:absolute;left:0;right:0;top:46%;text-align:center;font:800 15px Fig;color:#2A1F5C}
+#rider{position:absolute;width:150px;transform:translate(-50%,-88%)}
+#rider img{width:100%;display:block;filter:drop-shadow(0 6px 5px rgba(0,0,0,.4))}
+#rider.left img{transform:scaleX(-1)}
+.pol{position:absolute;width:210px;background:#FFFBF2;padding:12px 12px 10px;box-shadow:0 10px 24px rgba(0,0,0,.35);transform-origin:50% 100%}
+.pol img{width:100%;height:170px;object-fit:cover;display:block}
+.pol p{font:700 25px/1.05 Cav;color:#2A1F5C;text-align:center;margin-top:8px}
+.pol i{position:absolute;left:50%;top:-10px;width:60px;height:20px;margin-left:-30px;background:rgba(255,200,87,.85);transform:rotate(-4deg)}
+#yr{position:absolute;left:0;right:0;top:120px;text-align:center;color:#fff;font:400 190px/1 Cap;text-shadow:0 8px 34px rgba(0,0,0,.55),0 0 4px rgba(0,0,0,.4);height:200px;overflow:hidden}
+#yr span{display:block;position:absolute;left:0;right:0}
+#vig{position:absolute;inset:0;background:radial-gradient(130% 80% at 50% 50%,transparent 55%,rgba(20,8,4,.45));pointer-events:none}
+#topg{position:absolute;left:0;right:0;top:0;height:420px;background:linear-gradient(rgba(20,8,4,.55),transparent);pointer-events:none}
+#end{position:absolute;left:0;right:0;bottom:0;height:900px;background:linear-gradient(transparent,rgba(30,12,6,.9) 55%);opacity:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:300px;text-align:center}
+#end h1{font:400 128px/1.05 Cap;color:#fff}
+#end p{font:800 50px Fig;color:#FFC857;margin-top:28px}
+</style></head><body>
+<div id="world"><div id="stones"></div><div id="pols"></div><div id="rider"><img src="file:///home/claude/littlegasp.github.io/anniversary/img/ride.webp"></div></div>
+<div id="vig"></div><div id="topg"></div>
+<div id="yr"><span id="y0"></span><span id="y1"></span></div>
+<div id="end"><h1>7 years.<br>One ride. 🛵</h1><p>Memory Lane · Try it free · link in bio</p></div>
+<script>
+const ROAD=[[250,1600],[300,1530],[420,1470],[515,1400],[555,1300],[520,1200],[420,1130],[320,1065],[285,990],[320,915],[420,855],[520,795],[560,720],[525,650],[430,600],[345,555],[335,490],[405,440],[505,400],[535,345],[470,295],[385,262],[372,212],[430,165],[530,125],[575,70],[548,25],[505,-10]];
+function catmull(P,seg=14){const out=[];for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||p2;for(let s=0;s<seg;s++){const t=s/seg,t2=t*t,t3=t2*t;out.push([0,1].map(j=>.5*(2*p1[j]+(-p0[j]+p2[j])*t+(2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2+(-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3)))}}out.push(P[P.length-1]);return out}
+const pts=catmull(ROAD),len=[0];for(let i=1;i<pts.length;i++)len.push(len[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));const L=len[len.length-1];
+function at(f){const d=f*L;let i=1;while(i<len.length-1&&len[i]<d)i++;const a=pts[i-1],b=pts[i],u=(d-len[i-1])/((len[i]-len[i-1])||1);return[a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u]}
+const STOPS=[["2019","We met at the college fest",1],["2020","Our first ride to Lonavala",2],["2021","You met my family",3],["2022","The proposal by the sea",4],["2023","Our wedding, the best day",1],["2024","Our own little home",2],["2026","Still choosing you",3]];
+const SA=STOPS.map((_,i)=>.1+i/6*.8);
+document.getElementById('stones').innerHTML=SA.map((f,i)=>{const p=at(f);return `<div class="stone" style="left:${p[0]}px;top:${p[1]}px"><img src="file:///home/claude/littlegasp.github.io/anniversary/img/milestone.webp"><b>${i+1}</b></div>`}).join('');
+document.getElementById('pols').innerHTML=SA.map((f,i)=>{const p=at(f),side=p[0]>430?-1:1;return `<div class="pol" id="p${i}" style="left:${p[0]+side*150-105}px;top:${p[1]<560?p[1]+30:p[1]-290}px;transform-origin:50% ${p[1]<560?'0':'100%'};opacity:0"><i></i><img src="file:///home/claude/littlegasp.github.io/anniversary/img/demo-${STOPS[i][2]}.svg"><p>${STOPS[i][1]}</p></div>`}).join('');
+// timeline: travel 1.5s between stops, hold 1.3s at each stop
+const T0=.4, TRAV=1.5, HOLD=1.3, keys=[];let t=0;
+keys.push([0,.03]);t=T0+ (SA[0]-.03)/(SA[1]-SA[0])*TRAV;keys.push([t,SA[0]]);
+for(let i=0;i<SA.length;i++){t+=HOLD;keys.push([t,SA[i]]);if(i<SA.length-1){t+=TRAV;keys.push([t,SA[i+1]])}}
+const TEND=t; t+=2.2; keys.push([t,1.04]); const TOUT=t;
+const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+function fAt(T){for(let i=1;i<keys.length;i++){if(T<=keys[i][0]){const[a,fa]=keys[i-1],[b,fb]=keys[i];const u=(T-a)/((b-a)||1);return fa+(fb-fa)*ease(Math.max(0,Math.min(1,u)))}}return keys[keys.length-1][1]}
+window.TOTAL=TOUT+3.6;
+let lastYear=null,yChange=-9,prevYear='';
+function render(T){
+  const f=fAt(T),p=at(Math.min(f,1)),q=at(Math.min(f+.004,1));
+  const r=document.getElementById('rider');r.style.left=p[0]+'px';r.style.top=p[1]+'px';
+  r.classList.toggle('left',q[0]<p[0]-.2);r.style.opacity=f>1.0?Math.max(0,1-(f-1)/.03):1;
+  // which stop reached
+  let k=-1;for(let i=0;i<SA.length;i++){if(f>=SA[i]-.002)k=i}
+  for(let i=0;i<SA.length;i++){const el=document.getElementById('p'+i);
+    if(i>k){el.style.opacity=0;continue}
+    const arr=keys.findIndex(kk=>Math.abs(kk[1]-SA[i])<1e-6),ta=keys[arr][0],age=T-ta;
+    const pop=Math.min(1,age/.35),s=i===k&&T<TEND+.1&&age<HOLD?(.6+.4*(1-Math.pow(1-pop,3))+.06*Math.sin(Math.min(1,pop)*Math.PI)):.55;
+    el.style.opacity=1;el.style.transform=`rotate(${i%2?4:-4}deg) scale(${i===k&&age<HOLD+.3?Math.max(.55,s- Math.max(0,age-HOLD)/.3*.45):.55})`}
+  // year counter
+  const year=k<0?'':STOPS[k][0];
+  if(year!==lastYear){prevYear=lastYear||'';lastYear=year;yChange=T}
+  const a=Math.min(1,(T-yChange)/.35),e=1-Math.pow(1-a,3);
+  const y0=document.getElementById('y0'),y1=document.getElementById('y1');
+  y1.textContent=year;y1.style.transform=`translateY(${(1-e)*200}px)`;y0.textContent=prevYear;y0.style.transform=`translateY(${-e*200}px)`;
+  document.getElementById('yr').style.opacity=T>TOUT+.4?Math.max(0,1-(T-TOUT-.4)/.5):1;
+  // camera
+  let Z=1.55*1.2,cx=p[0],cy=p[1]-180;
+  if(T>TEND){const u=ease(Math.min(1,(T-TEND)/(TOUT-TEND+.6)));Z=1.2+(1.86-1.2)*(1-u);cx=cx+(450-cx)*u;cy=cy+(800-cy)*u}
+  let tx=540-cx*Z,ty=960-cy*Z;tx=Math.min(0,Math.max(1080-900*Z,tx));ty=Math.min(0,Math.max(1920-1600*Z,ty));
+  document.getElementById('world').style.transform=`translate(${tx}px,${ty}px) scale(${Z})`;
+  document.getElementById('end').style.opacity=T>TOUT?Math.min(1,(T-TOUT)/.6):0;
+}
+render(0);
+</script></body></html>
