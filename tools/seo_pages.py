@@ -6,7 +6,7 @@ Prices here must match the homepage/editor DESIGNS and Apps Script PRICES."""
 import json, html, os
 
 SITE = "https://littlegasp.com"
-CSSV = "13"   # keep in step with ?v= on style.css / site.js everywhere
+CSSV = "14"   # keep in step with ?v= on style.css / site.js everywhere
 TODAY = "2026-11-02"
 
 DESIGN = {  # key: (name, price)
