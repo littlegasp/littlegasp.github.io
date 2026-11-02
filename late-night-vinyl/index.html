@@ -82,11 +82,11 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 @keyframes fadein{from{opacity:0;transform:translateY(6px)}}
 
 /* 1. the room */
-.room{position:relative;width:min(84vw,58dvh*.5625,420px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;box-shadow:0 22px 50px rgba(0,0,0,.6)}
+.room{position:relative;width:min(84vw,58dvh*.5625,420px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;container-type:inline-size;box-shadow:0 22px 50px rgba(0,0,0,.6)}
 .room img{width:100%;height:100%;object-fit:cover;display:block}
 .room .lamp{position:absolute;left:36%;top:30%;width:60%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,206,130,.35),transparent);mix-blend-mode:screen;animation:flicker 4s ease-in-out infinite;pointer-events:none}
 @keyframes flicker{30%{opacity:.85}60%{opacity:1}75%{opacity:.9}}
-.tag{position:absolute;left:31%;top:72%;transform:translate(-50%,-50%) rotate(-6deg);background:var(--cream);color:var(--ink);font:700 1.3rem/1.05 var(--hand);padding:8px 12px 10px;border-radius:3px;
+.tag{position:absolute;left:40%;top:77%;transform:translate(-50%,-50%) rotate(-6deg);background:var(--cream);color:var(--ink);font:700 clamp(.72rem,6.6cqw,1.4rem)/1.05 var(--hand);white-space:nowrap;padding:8px 12px 10px;border-radius:3px;
   box-shadow:0 6px 14px rgba(0,0,0,.5);cursor:pointer;white-space:nowrap}
 .tag::before{content:"";position:absolute;left:50%;top:-10px;width:1px;height:12px;background:var(--cream-dk)}
 .tag .glow{position:absolute;inset:-8px;border-radius:8px;box-shadow:0 0 0 2px rgba(233,184,114,.9);animation:pulse 1.8s ease-in-out infinite;pointer-events:none}
