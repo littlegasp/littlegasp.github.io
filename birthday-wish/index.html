@@ -206,6 +206,23 @@ canvas#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:non
   .card .big{font-size:1.7rem}
 }
 @media (max-height:640px) and (max-width:759px){ .scene{gap:10px;padding-top:50px} .words{padding:14px} }
+/* phones (and tall screens): every scene is exactly one screen, no scrolling; the art shrinks to the room the words leave, a long letter scrolls inside its card */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene.two{height:100%;min-height:0;gap:10px;padding:56px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene.two>.art{flex:1 1 auto;min-height:90px;width:100%;container-type:size}
+  .scene.two>.words{flex:none;gap:8px;padding:14px 16px 16px}
+  .open-bear{width:min(64cqw,98cqh*780/897)}
+  .cakebox{width:min(80cqw,96cqh*784/860)}
+  .sky{width:min(58cqw,98cqh*634/1250)}
+  .pol{width:min(66cqw,(100cqh - 60px)*.95,300px)}
+  .giftrow{width:min(86cqw,100cqh*2)}
+  .cutzone{width:min(70cqw,96cqh*800/810)}
+  .letter{max-height:min(40dvh,360px);overflow-y:auto;overscroll-behavior:contain}
+  .signbear{width:min(58cqw,98cqh*624/935)}
+  .signtext{font-size:calc(min(58cqw,98cqh*624/935) * .13)}
+  .end-bear{width:min(56cqw,98cqh*577/915)}
+  .btn{padding:14px 26px}
+}
 @media (prefers-reduced-motion: reduce){ *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important} .reveal p{opacity:1} }
 </style>
 </head>
