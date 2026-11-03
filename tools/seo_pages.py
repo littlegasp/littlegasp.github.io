@@ -6,7 +6,7 @@ Prices here must match the homepage/editor DESIGNS and Apps Script PRICES."""
 import json, html, os
 
 SITE = "https://littlegasp.com"
-CSSV = "14"   # keep in step with ?v= on style.css / site.js everywhere
+CSSV = "15"   # keep in step with ?v= on style.css / site.js everywhere
 TODAY = "2026-11-03"
 
 DESIGN = {  # key: (name, price)
@@ -15,6 +15,7 @@ DESIGN = {  # key: (name, price)
   "anniversary": ("Memory Lane", 149), "karwa-chauth": ("Karwa Chauth Moon", 149),
   "diwali": ("Diwali Night", 149), "garba-circle": ("Garba Circle", 149),
   "proposal": ("Ring Hunt", 149), "miss-you": ("Miss You", 149),
+  "late-night-vinyl": ("Late Night Vinyl", 149),
 }
 
 COMMON_FAQ = [
@@ -204,6 +205,28 @@ PAGES = [
   faq=[("Is it only for couples?", "No. Choose partner, family or sibling (Bhai Dooj) and all the wording changes to fit."),
        ("Can I send it to family abroad?", "Yes. It's a link, so it reaches anyone anywhere instantly.")],
  ),
+ dict(slug="romantic-surprise-website", designs=["late-night-vinyl"],
+  title="Romantic Surprise Website, Just Because | Little Gasp",
+  desc="A just-because romantic surprise: a record made for them. Your reasons play as the tracklist, your photos are Side B, your letter the liner notes.",
+  h1="A romantic surprise for no reason at all",
+  lead="Not a birthday, not an anniversary. Just a quiet night and something that says \"I was thinking about you\". <b>Late Night Vinyl</b> is a personalised surprise website for your girlfriend, boyfriend, wife or husband: a record made just for them, with their name on the label.",
+  plays_title="What happens when they open it",
+  plays=["A dim room, rain on the window, and a record leaning on the shelf with a note: \"Play me.\"",
+         "Your first photo is the album cover, with their name as the title.",
+         "They slide the record out, lift the arm and drop the needle. The music starts, softly crackling.",
+         "Side A: every reason you love them is one track. The needle moves inward with each one.",
+         "They flip to Side B, and your photos open one by one with your captions.",
+         "Inside the sleeve, your letter types itself out as the liner notes.",
+         "At the end, a hidden track: your question. They can say yes, or \"Play it once more first\". Their answer comes to your email.",
+         "It ends with two people slow dancing in lamplight."],
+  ideas_title="Reasons that sound like song titles",
+  ideas=["\"The way you hum when you think no one's listening\"", "\"How you make an ordinary Tuesday feel like a weekend\"",
+         "\"Your hand finding mine in every crowd\"", "\"Our 2 a.m. talks\"",
+         "Keep each one short, like a track name. The longer things belong in the liner notes.",
+         "Upload the song that's yours, and it starts the moment they drop the needle."],
+  faq=[("Is it only for girlfriends?", "No. The record, the room and the words work for anyone you love: girlfriend, boyfriend, wife or husband."),
+       ("Can I use our own song?", "Yes. Upload your MP3 or M4A and it plays from the moment they drop the needle. Otherwise a soft late-night piano tune plays.")],
+ ),
  dict(slug="navratri-garba-surprise", designs=["garba-circle"],
   title="Navratri Surprise, Garba Circle Website | Little Gasp",
   desc="A Navratri surprise: tap the dancing couple to light all nine nights, each opening a photo or reason, then play a dandiya round to the beat.",
@@ -257,10 +280,11 @@ CARD_TEXT = {
  "garba-circle": ("navratri-garba-surprise", "Light all nine nights of Navratri, then a dandiya round."),
  "proposal": ("proposal-surprise-website", "A treasure hunt with a torch, a projector film and a ring box."),
  "miss-you": ("long-distance-relationship-gift", "A paper plane flies to them, with a surprise at every stop."),
+ "late-night-vinyl": ("romantic-surprise-website", "A record made just for them: your reasons are the tracklist."),
 }
 LINK_NAME = {p["slug"]: p["h1"].replace("A ","").replace("An ","") for p in PAGES}
 SHORT = {"digital-surprise-gifts":"All digital surprises","apology-website":"Apology website","birthday-surprise-website":"Birthday surprise website",
- "digital-love-letter":"Digital love letter","anniversary-surprise-website":"Anniversary surprise","proposal-surprise-website":"Proposal surprise website","long-distance-relationship-gift":"Long-distance relationship gift","karwa-chauth-gift-for-wife":"Karwa Chauth gift for wife",
+ "digital-love-letter":"Digital love letter","anniversary-surprise-website":"Anniversary surprise","proposal-surprise-website":"Proposal surprise website","long-distance-relationship-gift":"Long-distance relationship gift","romantic-surprise-website":"Romantic surprise, just because","karwa-chauth-gift-for-wife":"Karwa Chauth gift for wife",
  "diwali-surprise-website":"Diwali & Bhai Dooj surprise","navratri-garba-surprise":"Navratri surprise"}
 
 def esc(s): return html.escape(s, quote=True)

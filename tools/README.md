@@ -23,6 +23,9 @@ Python 3 with `playwright` (Chromium), `Pillow`, and `ffmpeg` for the reels.
 - `build.py` (+ `parts.py`) writes `miss-you/index.html` from its parts. Edit there, rebuild, then check with `t4.py` (plays the whole journey at 4 phone sizes and measures overflow per state).
 - `mkcard.py`, `mkpin.py`, `card.html`, `pin-miss-you.html` – the homepage card, screen still and Pinterest pin images. Same method works for new designs.
 
+## late-night-vinyl/
+- `prep.py` turns the Canva kit export into the template's webp art; `mkimages.py` makes the homepage card, screen still and Pinterest pin.
+
 ## reels/ – Instagram reels (delivered WITHOUT music; the owner adds songs in Instagram)
 - `rec-<design>.py` + `flow-auto-log.py` – record a design playing in Chromium, frame by frame, and log scene times.
 - Each folder is one reel: `t.html` (or `chat.html`, `ride.html`, `l.html`) is an HTML timeline with a `render(t)` function; `render.py`/`mk.py` screenshots it frame by frame and joins the frames with ffmpeg; `hook.py` makes the opening hook.
