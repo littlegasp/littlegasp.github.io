@@ -31,7 +31,12 @@ names=[c[0] for c in CH]; plan=[]   # (src frame, label)
 for k,(nm,lab,sp) in enumerate(CH):
     a=M[nm]; b=M[names[k+1]] if k+1<len(CH) else min(N, M["end"]+96)
     t=a
-    while t<b: plan.append((int(t),lab)); t+=sp
+    while t<b:
+        plan.append((int(t),lab))
+        if nm=="tracks":   # linger on each reason, skip quickly while the needle moves between tracks
+            st=Image.open(D+"sf/%05d.jpg"%int(t)).convert("L").crop((150,1380,930,1560))
+            t+= 0.8 if st.getextrema()[1]>60 else 2.6
+        else: t+=sp
 HOOKN=114; XF=10; LF=9; OUTN=100
 out=[]
 n=0

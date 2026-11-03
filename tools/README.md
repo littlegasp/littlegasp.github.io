@@ -29,5 +29,5 @@ Python 3 with `playwright` (Chromium), `Pillow`, and `ffmpeg` for the reels.
 ## reels/ – Instagram reels (delivered WITHOUT music; the owner adds songs in Instagram)
 - `rec-<design>.py` + `flow-auto-log.py` – record a design playing in Chromium, frame by frame, and log scene times.
 - Each folder is one reel: `t.html` (or `chat.html`, `ride.html`, `l.html`) is an HTML timeline with a `render(t)` function; `render.py`/`mk.py` screenshots it frame by frame and joins the frames with ffmpeg; `hook.py` makes the opening hook.
-  `anr` Memory Lane ride, `llr` Sealed with Love split, `myr`/`mc` Miss You chat, `op` Diwali opinion, `ed` editor time-lapse, `bd` Bhai Dooj countdown, `prr` Ring Hunt, `ml`, `sw` earlier tests.
+  `anr` Memory Lane ride, `llr` Sealed with Love split, `myr`/`mc` Miss You chat, `op` Diwali opinion, `ed` editor time-lapse, `bd` Bhai Dooj countdown, `prr` Ring Hunt, `lnv` Late Night Vinyl "tracklist" (record with `rec-vinyl-story.py`, then `lnv/overlays.py` + `lnv/compose.py`; chapters named like a record's tracklist), `ml`, `sw` earlier tests.
 - Owner's rule: every reel needs a different storyboard, format and hook; no prices (except the ₹200 carousel); never say "AI-made".
