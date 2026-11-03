@@ -136,7 +136,7 @@ img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 /* tracklist + lyric */
 .tracks{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:2px;text-align:left;counter-reset:t}
 .track{display:flex;gap:10px;align-items:baseline;padding:5px 8px;border-radius:8px;font:500 .95rem/1.3 var(--body);color:var(--muted);transition:background .4s,color .4s;counter-increment:t}
-.track::before{content:"A" counter(t);font:600 .72rem var(--body);letter-spacing:.1em;color:var(--amber);opacity:.7;min-width:1.8em}
+.track::before{content:attr(data-n);font:600 .72rem var(--body);letter-spacing:.1em;color:var(--amber);opacity:.7;min-width:1.8em}
 .track span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .track.now{background:rgba(233,184,114,.14);color:var(--cream)}
 .track.now::before{opacity:1}
@@ -565,7 +565,7 @@ async function dropNeedle(){
 /* ---------- Side A: every track is a reason ---------- */
 function buildTracks(){
   const ol = $("#tracks");
-  C.reasons.forEach((r, i) => { const li = document.createElement("li"); li.className = i ? "track" : "track now"; li.innerHTML = "<span></span>"; li.querySelector("span").textContent = r; ol.appendChild(li); });
+  C.reasons.forEach((r, i) => { const li = document.createElement("li"); li.className = i ? "track" : "track now"; li.dataset.n = "A" + (i + 1); li.innerHTML = "<span></span>"; li.querySelector("span").textContent = r; ol.appendChild(li); });
   $("#nextTrack").addEventListener("click", () => { if (!armBusy) playTrack(trackAt + 1); });
 }
 async function playTrack(i){
