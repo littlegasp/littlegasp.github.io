@@ -8,7 +8,7 @@ Common setup: serve the repo on port 8765 (`python3 -m http.server 8765` from th
 Python 3 with `playwright` (Chromium), `Pillow`, and `ffmpeg` for the reels.
 
 ## Generators (part of the site workflow)
-- `seo_pages.py` – builds every search landing page (`*-surprise-website/`, `digital-love-letter/` …). Edit its data and rerun; keep `CSSV` and prices in step with the homepage.
+- `seo_pages.py` – builds every search landing page (`*-surprise-website/`, `digital-love-letter/` …). Edit its data and rerun; keep `CSSV` and prices in step with the homepage. It also builds the guides (`GUIDES`: `surprise-website-vs-e-card/`, `long-distance-surprise-ideas/`, `how-to-write-an-apology/`) and `llms.txt` (from `DESIGN`, `PAGES`, `GUIDES`), so a new live design shows up there after a rerun.
 - `prepare-art.py` – trims/converts Canva exports into the webp art the templates use.
 
 ## audit/ – checks to run before pushing

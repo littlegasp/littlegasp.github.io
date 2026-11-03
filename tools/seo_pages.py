@@ -7,7 +7,7 @@ import json, html, os
 
 SITE = "https://littlegasp.com"
 CSSV = "14"   # keep in step with ?v= on style.css / site.js everywhere
-TODAY = "2026-11-02"
+TODAY = "2026-11-03"
 
 DESIGN = {  # key: (name, price)
   "birthday-cake": ("Birthday Cake", 99), "birthday-wish": ("Make a Wish", 149),
@@ -371,11 +371,207 @@ def build(p):
 {how}
 <section class="blk glass"><h2>Questions people ask</h2>{faq_html}</section>
 <section class="blk glass"><h2>More surprise ideas</h2><div class="more">{more}</div>
+<h2 style="margin-top:22px">Guides</h2><div class="more">{"".join(f'<a href="/{x["slug"]}/">{esc(x["short"])}</a>' for x in GUIDES)}</div>
 <p style="margin-top:16px">Little Gasp is an online gift studio from Mumbai, India, making interactive surprise websites. <a href="/about.html">About us</a>.</p></section>
 </main>
 </body>
 </html>
 """
+
+# ---------- Guides (articles): honest, useful, written by the studio ----------
+# Same look as the landing pages. Article + BreadcrumbList + FAQPage JSON-LD, author = the founder.
+# No made-up numbers, reviews or customer stories here (site rule 6).
+AUTHOR = {"@type":"Person","name":"Aniket Nandkumar Gurav","jobTitle":"Founder, Little Gasp","url":SITE+"/about.html"}
+GUIDES = [
+ dict(slug="surprise-website-vs-e-card", published="2026-11-03", design="love-letter",
+  short="Surprise website vs e-card",
+  title="Surprise Website vs E-card vs Video vs Gift | Little Gasp",
+  desc="An honest comparison of a surprise website, an e-card, a video message and a physical gift: cost, effort, distance, and which one fits your moment.",
+  h1="Surprise website vs e-card, video message or a physical gift",
+  lead="You want to make someone feel special and you have four obvious options. Each one is good at something different. Here is an honest side-by-side, including when a surprise website is <b>not</b> the right pick.",
+  table=(["", "E-card", "Video message", "Physical gift", "Surprise website"],
+   [["What it costs", "Often free or low cost", "Free if you record it yourself", "The gift, plus wrapping and delivery", "₹99 or ₹149 on Little Gasp"],
+    ["Time to make", "A few minutes", "Minutes to hours, retakes included", "Shopping time, plus days for delivery", "About five minutes"],
+    ["Reaches another city", "Instantly", "Instantly", "Days, and only if delivery reaches them", "Instantly"],
+    ["What they do with it", "Read it once", "Watch it once", "Hold it, use it, keep it", "Play through it: tap, swipe, unwrap"],
+    ["Your photos and words", "One message", "Your face and voice", "A note card, at most", "Up to 5 photos, 6 notes and a full letter"],
+    ["Can they answer you", "No", "Only by replying separately", "No", "Yes, many designs send their answer to your email"],
+    ["Feels personal", "Depends on what you write", "Very, if you are comfortable on camera", "Very, if you choose well", "Very: your words, your photos, their name"]]),
+  sections=[
+   ("When an e-card is enough", "<p>For a colleague's birthday or a quick festival wish to many people, an e-card is fine. It's fast, and nobody expects more.</p>"),
+   ("When a video message is better", "<p>If you are comfortable on camera, nothing beats your own face and voice. A video works especially well for grandparents and family who would rather see you than read.</p>"),
+   ("When a physical gift wins", "<p>If you're in the same city and they've been wanting something specific, give them the thing. A surprise website doesn't replace a hug or a present they can hold. It works well alongside one, though: send the link the night before and hand over the gift the next day.</p>"),
+   ("When a surprise website is the right pick", "<ul><li>You're in a different city or country, or the day has already started.</li><li>You have more to say than fits in a card, but writing a long text feels flat.</li><li>You want them to take their time with every line, not scroll past it.</li><li>You're asking something (sorry, a date, a question) and want an honest answer back.</li></ul>"),
+   ("Our honest take", "<p>We make surprise websites, so we're not neutral. But the reason we started is simple: a message they <i>do</i> something with stays with them longer than one they just read. If that's not what your moment needs, pick one of the other three. You can try any of our designs free before deciding.</p>"),
+  ],
+  faq=[("Is a surprise website better than an e-card?", "It depends on the moment. An e-card is quicker and fine for light occasions. A surprise website takes about five minutes, holds your photos, notes and a full letter, and they play through it, so it suits birthdays, anniversaries, apologies and long distance."),
+       ("Can I send a surprise website with a physical gift?", "Yes. Many people send the link at midnight and give the gift in person later. The website carries the words; the gift carries the hug."),
+       ("Do I need technical skills to make a surprise website?", "No. On Little Gasp you pick a design, type your words, add photos and watch the preview. There's no coding and nothing to install.")]),
+ dict(slug="long-distance-surprise-ideas", published="2026-11-03", design="miss-you",
+  short="Long-distance surprise guide",
+  title="How to Surprise a Long-Distance Partner | Little Gasp",
+  desc="A step-by-step guide to planning a surprise for a long-distance partner: timing across cities, what to say, photos to pick, and a plan to meet next.",
+  h1="How to plan a surprise for a long-distance partner",
+  lead="Distance makes the small things big. A good long-distance surprise isn't about how much you spend. It's about timing, words they can come back to, and a clear sign that you're planning to close the gap.",
+  steps=[("Pick the moment, in their time zone", "Midnight on their birthday, the morning of a hard exam, the night before your anniversary. If they're abroad, work out their local time and set an alarm for yours."),
+         ("Choose photos that tell a story", "Pick three to five photos in order: the first time you met, a trip, an ordinary day, the last time you said goodbye. Write one line under each one."),
+         ("Write what you miss, specifically", "\"I miss you\" is true but vague. \"I miss your voice when you're half asleep on a call\" is the one they'll remember. Write five or six of these, one line each."),
+         ("Add one letter, not ten texts", "Put the longer feelings in one letter. Start with their name, say what this distance has been like for you, and end with what you're looking forward to."),
+         ("End with a plan, not just a wish", "The best long-distance surprises end with something real: a date you'll meet, a call booked for tonight, or a question like \"When do we meet?\" that they can answer."),
+         ("Send it, then stay reachable", "Don't send it and go to sleep. Be around for the reply, the call, or the voice note that follows.")],
+  sections=[
+   ("Small ideas that work across any distance", "<ul><li>Order their favourite food to their door at dinner time, then video-call and eat together.</li><li>Watch the same film at the same time and keep a call open.</li><li>Send a voice note for each day you're apart until you meet.</li><li>Send a letter they can open again on bad days. On Little Gasp, <b>Miss You</b> sends a paper plane from your city to theirs, with a stop for your photos, your reasons and your letter, and it lands as a boarding pass where they pick the day you meet.</li></ul>"),
+  ],
+  faq=[("What is a good surprise for a long-distance boyfriend or girlfriend?", "Something they can open at the right moment and come back to: your photos in order, specific things you miss, a letter, and a plan to meet. A surprise website like Miss You puts all of that in one link that reaches them instantly."),
+       ("How do I make a long-distance birthday special?", "Send something at midnight their time, order a small treat to their door, stay on a call while they open it, and end with a date for when you'll celebrate together.")]),
+ dict(slug="how-to-write-an-apology", published="2026-11-03", design="apology",
+  short="How to write an apology",
+  title="How to Write an Apology That Lands | Little Gasp",
+  desc="What to write in an apology to your partner or friend: name what you did, own how it felt for them, skip the excuses, promise something small and real.",
+  h1="What to write in an apology that actually lands",
+  lead="A sorry that doesn't land usually fails in the same few ways: it's vague, it explains too much, or it asks to be forgiven too soon. Here's a simple way to write one that's honest and easy to accept.",
+  steps=[("Name exactly what you did", "\"I'm sorry I cancelled on Saturday at the last minute\" works. \"Sorry for everything\" sounds like you don't know what went wrong."),
+         ("Say how it felt for them", "\"You'd planned the whole evening and I made you feel like it didn't matter.\" This shows you understand, which is most of what they're waiting for."),
+         ("Leave out the explanation, for now", "Reasons can wait for a calmer conversation. In the first message, an explanation reads like an excuse."),
+         ("Don't add a \"but\"", "\"I'm sorry, but you also…\" cancels the sorry. If something needs talking about, talk about it later, separately."),
+         ("Promise something small and real", "\"Next time I'll tell you a day before, not an hour before\" is believable. \"It will never happen again\" usually isn't."),
+         ("Let them take their time", "Don't ask \"are we okay?\" in the same message. Give them a way to answer when they're ready.")],
+  sections=[
+   ("Lines you can adapt", "<ul><li>\"I'm sorry I snapped at you in front of your friends. You didn't deserve that.\"</li><li>\"I forgot something that mattered to you, and I'm sorry.\"</li><li>\"I should have listened instead of trying to fix it.\"</li><li>\"I'll call when I'm running late, every time.\"</li></ul>"),
+   ("If a text gets left on seen", "<p>Sometimes the same words land better in a different format. <b>Mend the Heart</b> on Little Gasp lets them put a broken heart back together, with one of your sorries on each piece, then tell you honestly how they feel on a forgive-o-meter. It never pushes for a yes: \"I need a minute\" is always an answer.</p>"),
+  ],
+  faq=[("How do I apologise to my girlfriend or boyfriend after a fight?", "Wait until you're both calmer, then name what you did, say how it made them feel, skip the excuses and promise one small specific change. Give them time to answer instead of asking to be forgiven straight away."),
+       ("Should I explain why I did it?", "Not in the first apology. Explanations sound like excuses at that point. Once they feel heard, a calm conversation about why is much easier.")]),
+]
+
+GCSS = """
+.lp .byline{font-size:.92rem;color:var(--muted);margin-top:6px}
+.lp .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:8px}
+.lp table{border-collapse:collapse;width:100%;min-width:640px;font-size:.95rem}
+.lp th,.lp td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--line)}
+.lp thead th{font-weight:700;background:rgba(255,255,255,.55)}
+.lp tbody th{font-weight:600;color:var(--muted);white-space:nowrap}
+.lp td:last-child,.lp th:last-child{background:rgba(255,200,87,.16)}
+.lp .cmp{display:none}
+@media(max-width:700px){.lp .tw{display:none}.lp .cmp{display:grid;gap:12px}
+ .lp .opt{border:1px solid var(--line);border-radius:18px;padding:14px 16px;background:rgba(255,255,255,.5)}
+ .lp .opt.ours{background:rgba(255,200,87,.18)}
+ .lp .opt h3{margin:0 0 6px;font-size:1.15rem}
+ .lp .opt dl{margin:0;display:grid;grid-template-columns:42% 1fr;gap:8px 12px;font-size:.92rem;line-height:1.35}
+ .lp .opt dt{color:var(--muted);font-weight:600;font-size:.84rem}.lp .opt dd{margin:0}}
+.lp ol.steps{counter-reset:s;list-style:none;padding:0}
+.lp ol.steps li{counter-increment:s;position:relative;padding-left:46px;margin:14px 0}
+.lp ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:50%;background:var(--butter);display:grid;place-items:center;font-weight:700}
+.lp ol.steps b{display:block}
+"""
+
+def fdate(d):
+    import datetime; return datetime.date.fromisoformat(d).strftime("%-d %B %Y")
+
+def build_guide(g):
+    slug, k = g["slug"], g["design"]
+    n, pr = DESIGN[k]
+    faq = g["faq"]
+    crumbs = [{"@type":"ListItem","position":1,"name":"Little Gasp","item":SITE+"/"},
+              {"@type":"ListItem","position":2,"name":"Digital surprises","item":url(HUB_SLUG)},
+              {"@type":"ListItem","position":3,"name":g["short"],"item":url(slug)}]
+    art = {"@type":"Article","@id":url(slug)+"#article","mainEntityOfPage":url(slug),"headline":g["h1"],"description":g["desc"],
+           "image":f"{SITE}/{k}/img/share.jpg","datePublished":g["published"],"dateModified":TODAY,"inLanguage":"en-IN",
+           "author":AUTHOR,"publisher":{"@id":SITE+"/#org"},"isPartOf":{"@id":SITE+"/#website"}}
+    if "steps" in g:
+        howto = {"@type":"HowTo","name":g["h1"],"step":[{"@type":"HowToStep","position":i+1,"name":a,"text":b} for i,(a,b) in enumerate(g["steps"])]}
+    else: howto = None
+    graph = [art, {"@type":"BreadcrumbList","itemListElement":crumbs},
+             {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in faq]}]
+    if howto: graph.append(howto)
+    ld = json.dumps({"@context":"https://schema.org","@graph":graph}, ensure_ascii=False, indent=1)
+    body = ""
+    if "table" in g:
+        head, rows = g["table"]
+        th = "".join(f"<th scope=\"col\">{esc(h)}</th>" for h in head)
+        trs = "".join("<tr><th scope=\"row\">"+esc(r[0])+"</th>"+"".join(f"<td>{esc(c)}</td>" for c in r[1:])+"</tr>" for r in rows)
+        cards = "".join(f'<div class="opt{" ours" if j==len(head)-1 else ""}"><h3>{esc(head[j])}</h3><dl>' + "".join(f"<dt>{esc(r[0])}</dt><dd>{esc(r[j])}</dd>" for r in rows) + "</dl></div>" for j in range(1, len(head)))
+        body += f'<section class="blk glass"><h2>Side by side</h2><div class="tw"><table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table></div><div class="cmp">{cards}</div></section>'
+    if "steps" in g:
+        lis = "".join(f"<li><b>{esc(a)}</b>{esc(b)}</li>" for a,b in g["steps"])
+        body += f'<section class="blk glass"><h2>Step by step</h2><ol class="steps">{lis}</ol></section>'
+    for h, t in g["sections"]:
+        body += f'<section class="blk glass"><h2>{esc(h)}</h2>{t}</section>'
+    faq_html = "".join(f"<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>" for q,a in faq)
+    more = "".join(f'<a href="/{s}/">{esc(SHORT[s])}</a>' for s in SHORT) 
+    gmore = "".join(f'<a href="/{x["slug"]}/">{esc(x["short"])}</a>' for x in GUIDES if x["slug"] != slug)
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{esc(g["title"])}</title>
+<meta name="description" content="{esc(g["desc"])}">
+<link rel="canonical" href="{url(slug)}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Little Gasp">
+<meta property="og:title" content="{esc(g["h1"])}">
+<meta property="og:description" content="{esc(g["desc"])}">
+<meta property="og:url" content="{url(slug)}">
+<meta property="og:image" content="{SITE}/{k}/img/share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FDEFF4">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<script type="application/ld+json">
+{ld}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css?v={CSSV}">
+<style>{CSS}{GCSS}</style>
+</head>
+<body>
+<script src="/site.js?v={CSSV}"></script>
+<!-- generated by tools/seo_pages.py, edit there -->
+<main class="wrap page lp">
+<section class="hero2 glass">
+ <div>
+  <p class="crumbs"><a href="/">Little Gasp</a> › <a href="/{HUB_SLUG}/">Digital surprises</a> › {esc(g["short"])}</p>
+  <h1>{esc(g["h1"])}</h1>
+  <p class="byline">By <a href="/about.html">Aniket Gurav</a>, founder of Little Gasp, Mumbai · Updated {fdate(TODAY)}</p>
+  <p class="lead">{g["lead"]}</p>
+  <div class="acts"><a class="btn" href="/create/?d={k}">Try {esc(n)}, free preview</a><a class="btn glassy" href="/{k}/" target="_blank" rel="noopener">Play the demo</a></div>
+ </div>
+ <img class="shot" src="/img/cards/{k}.webp" alt="{esc(n)} surprise website on a phone" width="1200" height="900">
+</section>
+{body}
+<section class="blk glass"><h2>Questions people ask</h2>{faq_html}</section>
+<section class="blk glass"><h2>More guides</h2><div class="more">{gmore}</div>
+<h2 style="margin-top:22px">Surprise ideas</h2><div class="more">{more}</div>
+<p style="margin-top:16px">Little Gasp is an online gift studio from Mumbai, India, making interactive surprise websites. <a href="/about.html">About us</a>.</p></section>
+</main>
+</body>
+</html>
+"""
+
+def build_llms():
+    lines = ["# Little Gasp", "",
+     "> Little Gasp (littlegasp.com) is an online gift studio from Mumbai, India. It makes personalised, interactive surprise websites: the buyer adds photos, short notes and a letter, watches the full preview free, pays once, and sends one private link that the other person taps and plays through on a phone or laptop.", "",
+     "- No app needed; the link opens in any browser and stays live for at least 12 months.",
+     "- Customer surprise pages are private (only people with the link) and hidden from search engines.",
+     "- Payment by UPI, card or net banking through Razorpay; the link appears instantly and is emailed.",
+     "- Buyers can upload their own song (MP3/M4A) on every design.",
+     "- Founder: Aniket Nandkumar Gurav, Mumbai. Instagram @littlegasp.co. Email littlegasp.orders@gmail.com.", "",
+     "## Designs (one-time price in INR)", ""]
+    for k,(n,pr) in DESIGN.items():
+        lines.append(f"- [{n}]({SITE}/{k}/): {strip(CARD_TEXT[k][1])} ₹{pr}. Occasion page: {url(CARD_TEXT[k][0])}")
+    lines += ["", "## Surprise ideas by occasion", ""]
+    for p in PAGES: lines.append(f"- [{SHORT[p['slug']]}]({url(p['slug'])}): {p['desc']}")
+    lines += ["", "## Guides", ""]
+    for g in GUIDES: lines.append(f"- [{g['h1']}]({url(g['slug'])}): {g['desc']}")
+    lines += ["", "## Company", "", f"- [About Little Gasp]({SITE}/about.html)", f"- [Make a surprise (editor)]({SITE}/create/)",
+              f"- [Terms]({SITE}/terms.html)", f"- [Refunds]({SITE}/refund.html)", f"- [Privacy]({SITE}/privacy.html)", f"- [Contact]({SITE}/contact.html)", ""]
+    return "\n".join(lines)
 
 if __name__ == "__main__":
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -383,3 +579,8 @@ if __name__ == "__main__":
         d = os.path.join(root, p["slug"]); os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w").write(build(p))
         print("wrote", p["slug"])
+    for g in GUIDES:
+        d = os.path.join(root, g["slug"]); os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w").write(build_guide(g))
+        print("wrote guide", g["slug"])
+    open(os.path.join(root, "llms.txt"), "w").write(build_llms()); print("wrote llms.txt")
