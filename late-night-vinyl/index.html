@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Someone made you a record</title>
+<meta name="description" content="Someone made you a record. Every track is a reason they love you. Put it on, late at night.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Little Gasp">
+<meta property="og:title" content="Someone made you a record 🎶">
+<meta property="og:description" content="Every track is a reason they love you. Turn the lights low, your sound on, and drop the needle.">
+<meta property="og:image" content="https://littlegasp.com/late-night-vinyl/img/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" as="image" href="img/room.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Figtree:wght@400;600;700&family=Caveat:wght@500;700&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0E2326; --night-2:#163236; --amber:#E9B872; --amber-dk:#B9853F; --cream:#F2E6D0; --cream-dk:#D9C7A6; --wine:#8F2B33; --wine-dk:#6A1C24; --ink:#1B1716; --muted:#B9AE9B;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  --type:"Courier Prime","Courier New",monospace;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body,button,a{touch-action:manipulation}
+html,body{height:100%;margin:0}
+body{font-family:var(--body);font-size:17px;line-height:1.5;color:var(--cream);background:var(--night);overflow:hidden;-webkit-tap-highlight-color:transparent}
+#bg{position:fixed;inset:0;z-index:0;background:var(--night) url(img/room.webp) center 40% / cover no-repeat;filter:blur(18px) brightness(.45) saturate(1.05);transform:scale(1.1)}
+#rain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.35}
+main{position:relative;z-index:2;height:100%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+main[hidden]{display:none}
+.loader{position:relative;z-index:2;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font:500 italic 2rem var(--serif);color:var(--cream)}
+
+.scene{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:64px 16px 26px}
+.scene[hidden]{display:none}
+.art{position:relative;display:flex;align-items:center;justify-content:center;flex:none}
+.words{width:min(100%,440px);display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 20px 20px;border-radius:18px;
+  background:rgba(14,35,38,.78);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 12px 34px rgba(0,0,0,.45),inset 0 0 0 1px rgba(233,184,114,.18)}
+h1,h2{font-family:var(--serif);font-weight:600;margin:0;line-height:1.02;color:var(--cream);letter-spacing:.005em;text-wrap:balance}
+h1{font-size:clamp(2.4rem,10vw,3.2rem)}
+h2{font-size:clamp(1.8rem,7.4vw,2.4rem)}
+h1:focus,h2:focus,.question:focus{outline:none}
+p{margin:0}
+.name{font-style:italic;font-weight:500;color:var(--amber);font-size:clamp(3rem,14vw,4.4rem);overflow-wrap:anywhere}
+.kick{font:600 .74rem var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--amber)}
+.sub{color:var(--muted);max-width:34ch}
+.whisper{font:600 italic 1.5rem/1.15 var(--serif);color:var(--cream)}
+.whisper:empty{display:none}
+.btn{appearance:none;border:0;cursor:pointer;font:600 1rem/1 var(--body);letter-spacing:.02em;color:var(--ink);background:var(--amber);padding:15px 28px;border-radius:999px;
+  box-shadow:0 4px 0 var(--amber-dk);position:relative;transition:transform .1s,box-shadow .1s;white-space:nowrap;user-select:none;-webkit-user-select:none}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--amber-dk)}
+.btn.ghost{background:transparent;color:var(--cream);box-shadow:inset 0 0 0 1.5px rgba(242,230,208,.6)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn[hidden]{display:none}
+.linkish{appearance:none;border:0;background:none;font:600 .9rem var(--body);color:var(--amber);text-decoration:underline;cursor:pointer;padding:4px}
+.linkish[hidden]{display:none}
+.plain{appearance:none;border:0;padding:0;background:none;cursor:pointer;display:block;color:inherit}
+img{-webkit-user-drag:none;user-select:none;-webkit-user-select:none}
+:is(.btn,.linkish,.icon-btn,.plain,.track):focus-visible{outline:2px solid var(--amber);outline-offset:4px}
+.dots{position:fixed;top:calc(env(safe-area-inset-top,0px) + 16px);left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:20}
+.dots[hidden]{display:none}
+.dots span{width:6px;height:6px;border-radius:50%;background:var(--cream);opacity:.3;transition:opacity .3s,width .3s}
+.dots span.on{opacity:.9;width:18px;border-radius:3px}
+.icon-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:21;width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
+  background:rgba(14,35,38,.8);color:var(--amber);font-size:1.05rem;box-shadow:inset 0 0 0 1px rgba(233,184,114,.4)}
+.icon-btn[hidden]{display:none}
+.made{font-size:.8rem;color:var(--muted)}
+.made a{color:var(--amber);font-weight:600}
+.fade-in{animation:fadein 1s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}}
+
+/* 1. the room */
+.room{position:relative;width:min(84vw,58dvh*.5625,420px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;container-type:inline-size;box-shadow:0 22px 50px rgba(0,0,0,.6)}
+.room img{width:100%;height:100%;object-fit:cover;display:block}
+.room .lamp{position:absolute;left:36%;top:30%;width:60%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(255,206,130,.35),transparent);mix-blend-mode:screen;animation:flicker 4s ease-in-out infinite;pointer-events:none}
+@keyframes flicker{30%{opacity:.85}60%{opacity:1}75%{opacity:.9}}
+.tag{position:absolute;left:40%;top:77%;transform:translate(-50%,-50%) rotate(-6deg);background:var(--cream);color:var(--ink);font:700 clamp(.72rem,6.6cqw,1.4rem)/1.05 var(--hand);white-space:nowrap;padding:8px 12px 10px;border-radius:3px;
+  box-shadow:0 6px 14px rgba(0,0,0,.5);cursor:pointer;white-space:nowrap}
+.tag::before{content:"";position:absolute;left:50%;top:-10px;width:1px;height:12px;background:var(--cream-dk)}
+.tag .glow{position:absolute;inset:-8px;border-radius:8px;box-shadow:0 0 0 2px rgba(233,184,114,.9);animation:pulse 1.8s ease-in-out infinite;pointer-events:none}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(233,184,114,0)}}
+
+/* 2. the sleeve: photo 1 is the album cover; the record slides out to the right */
+.sleevebox{position:relative;width:min(70vw,44dvh,360px);aspect-ratio:1;margin-right:18%}
+.sleeve{position:absolute;inset:0;z-index:2;background:var(--night-2) center / cover no-repeat;box-shadow:0 18px 40px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.06);overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:9% 8%;text-align:left}
+.sleeve::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 35%,rgba(10,20,22,.82));pointer-events:none}
+.sleeve::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.08) 50%,transparent 60%);pointer-events:none}
+.sleeve .t{position:relative;font:500 italic clamp(1.6rem,9cqw,2.6rem)/1 var(--serif);color:var(--cream)}
+.sleeve .a{position:relative;font:600 clamp(.55rem,2.6cqw,.78rem)/1.3 var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-top:6px}
+.sleeve .vol{position:absolute;right:8%;top:8%;font:600 clamp(.55rem,2.6cqw,.75rem)/1 var(--body);letter-spacing:.2em;color:var(--cream);opacity:.85}
+.sleeve .vol:empty{display:none}
+.sleevebox{container-type:inline-size}
+.out{position:absolute;inset:3%;z-index:1;transform:translateX(22%);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.sleevebox{user-select:none;-webkit-user-select:none}
+.out .hint{position:absolute;left:84%;top:50%;transform:translateY(-50%);font:700 1.2rem var(--hand);color:var(--amber);white-space:nowrap;animation:nudge 1.6s ease-in-out infinite;pointer-events:none}
+@keyframes nudge{50%{transform:translate(8px,-50%)}}
+
+/* the record (drawn, so it can spin and carry their name on the label) */
+.disc{position:relative;width:100%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,#111 0 3%,transparent 3.2%),
+    radial-gradient(circle,var(--wine) 0 31%,#0b0b0b 31.5% 33%,transparent 33.2%),
+    repeating-radial-gradient(circle,#141414 0 1.1px,#1f1f1f 1.1px 2.2px),#151515;
+  box-shadow:0 10px 26px rgba(0,0,0,.6),inset 0 0 0 2px #0a0a0a}
+.disc .label{position:absolute;inset:34%;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;color:var(--cream);padding:6%}
+.disc .label b{font:500 italic clamp(.6rem,4.4cqw,1.1rem)/1 var(--serif);white-space:nowrap;padding:0 .08em}
+.disc .label i{font:600 normal clamp(.4rem,2.2cqw,.6rem)/1 var(--body);letter-spacing:.2em;opacity:.85}
+.sheen{position:absolute;inset:0;border-radius:50%;pointer-events:none;background:conic-gradient(from 20deg,transparent 0 8%,rgba(255,255,255,.10) 12%,transparent 18% 50%,rgba(255,255,255,.08) 62%,transparent 68%)}
+
+/* 3. the turntable from above: the painted deck, our record on the platter, our tonearm */
+.deck{position:relative;width:min(88vw,50dvh,460px);aspect-ratio:1;border-radius:12px;overflow:hidden;box-shadow:0 22px 50px rgba(0,0,0,.6);touch-action:none;container-type:inline-size}
+.deck>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.platter{position:absolute;left:50%;top:48.3%;width:56%;aspect-ratio:1;transform:translate(-50%,-50%)}
+.platter .spin{width:100%;height:100%}
+.platter.on .spin{animation:spin 1.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.platter.flip .spin{animation:flip .9s ease both}
+@keyframes flip{50%{transform:scaleX(0)}}
+.arm{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.arm .grab{pointer-events:auto;cursor:grab}
+.deck .hand{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);font:700 clamp(.9rem,4.4cqw,1.2rem)/1 var(--hand);color:var(--cream);background:rgba(14,35,38,.85);padding:5px 12px 6px;border-radius:999px;pointer-events:none;white-space:nowrap;transition:opacity .4s}
+.deck .hand.off{opacity:0}
+
+/* tracklist + lyric */
+.tracks{list-style:none;margin:0;padding:0;width:100%;display:flex;flex-direction:column;gap:2px;text-align:left;counter-reset:t}
+.track{display:flex;gap:10px;align-items:baseline;padding:5px 8px;border-radius:8px;font:500 .95rem/1.3 var(--body);color:var(--muted);transition:background .4s,color .4s;counter-increment:t}
+.track::before{content:"A" counter(t);font:600 .72rem var(--body);letter-spacing:.1em;color:var(--amber);opacity:.7;min-width:1.8em}
+.track span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track.now{background:rgba(233,184,114,.14);color:var(--cream)}
+.track.now::before{opacity:1}
+.track.played{color:var(--cream-dk)}
+.lyric{font:500 italic clamp(1.5rem,6.6vw,2rem)/1.15 var(--serif);color:var(--cream);min-height:2.3em;display:flex;align-items:center;justify-content:center;max-width:22ch}
+
+.tracks[hidden]{display:none}
+
+/* 5. side B: the gatefold of photos */
+.gate{position:relative;width:min(88vw,50dvh*1.25,520px);aspect-ratio:5/4;background:linear-gradient(90deg,#173438,#1C3C41 49.6%,#0F2528 50%,#1C3C41 50.4%,#173438);border-radius:6px;
+  box-shadow:0 22px 50px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.05);overflow:hidden;container-type:inline-size;touch-action:pan-y}
+.gate .strip{position:absolute;inset:0;display:flex;transition:transform .7s cubic-bezier(.3,.9,.3,1)}
+.gate figure{flex:0 0 100%;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4%;padding:8% 10%}
+.gate .print{background:#F6EFE2;padding:3.2% 3.2% 0;box-shadow:0 10px 22px rgba(0,0,0,.5);transform:rotate(-1.5deg);max-width:78%}
+.gate figure:nth-child(even) .print{transform:rotate(1.4deg)}
+.gate .print img{display:block;width:100%;height:auto;max-height:44cqw;object-fit:cover;filter:sepia(.12) contrast(1.04)}
+.gate figcaption{font:700 clamp(1rem,5cqw,1.4rem)/1.15 var(--hand);color:var(--ink);padding:5% 3% 6%;text-align:center}
+.gate figcaption:empty{padding:3% 0 0}
+.gnav{display:flex;align-items:center;gap:14px}
+.gnav[hidden]{display:none}
+.round{width:46px;height:46px;border-radius:50%;background:transparent;color:var(--cream);box-shadow:inset 0 0 0 1.5px rgba(242,230,208,.55);font:600 1.2rem/1 var(--body)}
+.round:disabled{opacity:.3}
+.gcount{font:600 .8rem var(--body);letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+
+/* 6. liner notes: the letter, typed on the inner sleeve */
+.inner{position:relative;width:min(84vw,52dvh*.82,430px);aspect-ratio:.82;background:var(--cream);color:var(--ink);border-radius:3px;box-shadow:0 22px 50px rgba(0,0,0,.6);
+  padding:10% 9% 8%;text-align:left;display:flex;flex-direction:column;gap:4%;container-type:inline-size}
+.inner::before{content:"";position:absolute;left:50%;top:-1px;width:16%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--night);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.inner .head{font:600 clamp(.55rem,2.6cqw,.72rem)/1 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--wine)}
+.notes{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:8%}
+.notes p{font:400 clamp(.82rem,3.9cqw,1.02rem)/1.55 var(--type);margin:0 0 .7em;opacity:0;transition:opacity .6s}
+.notes p.in{opacity:1}
+.notes p.sign{font:700 clamp(1.2rem,6cqw,1.6rem)/1 var(--hand);color:var(--wine);text-align:right}
+.notes .caret::after{content:"▍";animation:blink .8s steps(2) infinite;color:var(--wine)}
+@keyframes blink{50%{opacity:0}}
+
+/* 7. the hidden track */
+.question{font:500 italic clamp(1.7rem,7.2vw,2.3rem)/1.12 var(--serif);color:var(--cream);overflow-wrap:anywhere;text-wrap:balance}
+.answers{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.answers[hidden]{display:none}
+/* slots that swap their content keep one fixed size, so the record above never jumps */
+.stack{display:grid;place-items:center;width:100%}
+.stack>*{grid-area:1/1}
+.off{visibility:hidden;opacity:0;pointer-events:none}
+.lyricbox{height:3.45em;font:500 italic clamp(1.5rem,6.6vw,2rem)/1.15 var(--serif)}
+.lyricbox .sub{font-style:normal}
+.lyricbox .lyric{min-height:0;max-height:100%;font-size:inherit}
+.tracks.pre{opacity:.45}
+#deck,.sleevebox,.gate{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+
+/* 8. our song */
+.dance{position:relative;width:min(84vw,58dvh*.5625,420px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;box-shadow:0 22px 50px rgba(0,0,0,.6)}
+.dance img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;animation:slowzoom 14s ease-in-out infinite alternate}
+@keyframes slowzoom{to{transform:scale(1.06)}}
+
+/* laptops: full screen, art | words */
+@media (min-width:760px) and (min-aspect-ratio:1/1){
+  #bg{background-image:url(img/bg-wide.webp);filter:brightness(.55) saturate(1.05);transform:none;background-position:center}
+  .scene.two{display:grid;grid-template-columns:36vw 32vw;column-gap:4vw;justify-content:center;align-items:center;align-content:center;padding:70px 4vw 40px}
+  .scene.two[hidden]{display:none}
+  .scene.two>.art{grid-column:1}
+  .scene.two>.words{grid-column:2;width:100%;max-width:470px;justify-self:center}
+  .room,.dance{width:min(26vw,84dvh*.5625)}
+  .sleevebox{width:min(24vw,60dvh)}
+  .deck{width:min(34vw,76dvh)}
+  .gate{width:min(36vw,70dvh*1.25)}
+  .inner{width:min(28vw,78dvh*.82)}
+  h1{font-size:clamp(2.8rem,3.6vw,4rem)} .name{font-size:clamp(3.4rem,5.4vw,5.4rem)} h2{font-size:clamp(2rem,2.6vw,2.8rem)}
+}
+/* phones (and tall screens): every scene is exactly one screen, no scrolling; the art shrinks to the room the words leave */
+@media (max-width:759px), (max-aspect-ratio:999/1000){
+  .scene.two{height:100%;min-height:0;gap:10px;padding:52px 12px max(12px,env(safe-area-inset-bottom))}
+  .scene.two>.art{flex:1 1 auto;min-height:130px;width:100%;container-type:size}
+  .scene.two>.words{flex:none;gap:8px;padding:14px 16px 16px}
+  .room,.dance{width:min(92cqw,100cqh*.5625,420px)}
+  .sleevebox{width:min(64cqw,92cqh,360px)}
+  .deck{width:min(96cqw,100cqh,460px)}
+  .gate{width:min(96cqw,100cqh*1.25,520px)}
+  .inner{width:min(90cqw,100cqh*.82,430px)}
+  .tracks .track{padding:3px 8px;font-size:.9rem}
+  .lyricbox{font-size:clamp(1.3rem,6vw,1.7rem)}
+  .btn{padding:14px 24px}
+}
+@media (max-height:660px){ .tracks .track:not(.now){display:none} .name{font-size:2.8rem} }
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<nav class="dots" id="dots" aria-label="Progress" hidden></nav>
+<button class="icon-btn" id="muteBtn" hidden aria-pressed="false" aria-label="Mute music">♪</button>
+<div class="loader" id="loader"><p id="loaderText">Dimming the lights…</p></div>
+
+<!-- the turntable is one element that moves between the scenes that show it -->
+<div hidden id="deckHome">
+  <div class="deck" id="deck">
+    <img src="img/deck.webp" alt="A vintage turntable seen from above">
+    <div class="platter" id="platter"><div class="spin"><div class="disc" id="deckDisc"><div class="label"><b data-to></b><i id="sideLbl">SIDE A</i></div></div></div><div class="sheen"></div></div>
+    <svg class="arm" id="arm" viewBox="0 0 100 100" aria-hidden="true"><g transform="translate(1.5 1.3)">
+      <circle cx="79" cy="24" r="5.2" fill="#2a2a2a" stroke="#9aa3a9" stroke-width=".8"/>
+      <g id="armRot">
+        <circle cx="79" cy="16.5" r="3.4" fill="#3a3a3a" stroke="#8d969c" stroke-width=".6"/>
+        <line x1="79" y1="19" x2="79" y2="57" stroke="#c9d0d4" stroke-width="1.6" stroke-linecap="round"/>
+        <line x1="79" y1="19" x2="79" y2="57" stroke="#ffffff" stroke-opacity=".5" stroke-width=".5" stroke-linecap="round" transform="translate(-.4 0)"/>
+        <rect x="76.6" y="56" width="4.8" height="6.4" rx=".8" fill="#2b2b2b" stroke="#9aa3a9" stroke-width=".5"/>
+        <rect x="81.2" y="57.5" width="2.6" height=".9" rx=".4" fill="#9aa3a9"/>
+        <rect class="grab" x="70" y="10" width="18" height="56" fill="transparent"/>
+      </g>
+      <circle cx="79" cy="24" r="2" fill="#c9d0d4"/>
+    </g></svg>
+    <span class="hand" id="deckHand"></span>
+  </div>
+</div>
+
+<main hidden>
+  <!-- 1. A record for you -->
+  <section class="scene two" data-scene="open">
+    <div class="art">
+      <div class="room">
+        <img src="img/room.webp" alt="A dim living room at night with a record player by the lamp">
+        <span class="lamp"></span>
+        <button class="plain tag" id="tag" type="button">Play me. <span id="tagFrom"></span><span class="glow"></span></button>
+      </div>
+    </div>
+    <div class="words">
+      <p class="kick">Late at night, for</p>
+      <h1 tabindex="-1" class="name" data-to></h1>
+      <p class="whisper" id="openLine">Someone left you a record.</p>
+      <p class="sub">Dim the lights, turn your sound on, then tap the note on the record.</p>
+    </div>
+  </section>
+
+  <!-- 2. The cover -->
+  <section class="scene two" data-scene="cover" hidden>
+    <div class="art">
+      <div class="sleevebox" id="sleevebox">
+        <div class="out" id="out"><div class="disc"><div class="label"><b data-to></b><i>SIDE A</i></div></div><span class="hint">pull →</span></div>
+        <div class="sleeve" id="sleeve"><span class="vol" id="vol"></span><p class="t" data-to></p><p class="a" id="byline"></p></div>
+      </div>
+    </div>
+    <div class="words">
+      <p class="kick">The cover</p>
+      <h2 tabindex="-1" id="coverTitle">A record, just for you</h2>
+      <p class="sub" id="coverSub">Slide the record out of its sleeve.</p>
+      <button class="btn" data-next id="afterCover" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 3. Drop the needle, then Side A -->
+  <section class="scene two" data-scene="play" hidden>
+    <div class="art"></div>
+    <div class="words">
+      <p class="kick" id="playKick">Drop the needle</p>
+      <div class="lyricbox stack"><p class="sub" id="playSub">Lift the arm and set it down on the record.</p><p class="lyric off" id="lyric" aria-live="polite"></p></div>
+      <ol class="tracks pre" id="tracks"></ol>
+      <div class="stack"><button class="btn off" id="nextTrack">Next track</button><button class="btn off" data-next id="afterPlay"><span class="lbl"></span></button></div>
+    </div>
+  </section>
+
+  <!-- 4. Side B: the gatefold of photos -->
+  <section class="scene two" data-scene="sideb" hidden>
+    <div class="art"><div class="gate" id="gate"><div class="strip" id="strip"></div></div></div>
+    <div class="words">
+      <p class="kick">Side B</p>
+      <h2 tabindex="-1">The pictures</h2>
+      <div class="gnav" id="gnav"><button class="plain round" id="gPrev" type="button" aria-label="Previous photo">‹</button><span class="gcount" id="gcount"></span><button class="plain round" id="gNext" type="button" aria-label="Next photo">›</button></div>
+      <button class="btn" data-next id="afterB" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 5. Liner notes: the letter -->
+  <section class="scene two" data-scene="notes" hidden>
+    <div class="art"><div class="inner"><p class="head">Liner notes</p><div class="notes" id="notes"></div></div></div>
+    <div class="words">
+      <p class="kick">Inside the sleeve</p>
+      <h2 tabindex="-1">A few words</h2>
+      <button class="linkish" id="notesSkip" hidden>Show it all</button>
+      <button class="btn" data-next id="afterNotes" hidden><span class="lbl"></span></button>
+    </div>
+  </section>
+
+  <!-- 6. The hidden track -->
+  <section class="scene two" data-scene="ask" hidden>
+    <div class="art"></div>
+    <div class="words">
+      <p class="kick">Hidden track</p>
+      <p class="question" id="question" tabindex="-1"></p>
+      <div class="stack">
+        <div class="answers off" id="answers">
+          <button class="btn" id="yesBtn" type="button">Yes</button>
+          <button class="btn ghost" id="againBtn" type="button">Play it once more first</button>
+        </div>
+        <p class="sub" id="askSub">Wait for it. The needle is still moving.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Our song -->
+  <section class="scene two" data-scene="end" hidden>
+    <div class="art"><div class="dance"><img src="img/dance.webp" alt="A couple slow dancing in a lamp-lit room"></div></div>
+    <div class="words">
+      <p class="kick">Our song. Always.</p>
+      <h1 tabindex="-1" id="endTitle"></h1>
+      <p class="whisper" id="endLine"></p>
+      <p class="sub" id="endFrom"></p>
+      <button class="btn ghost" id="replay"><span class="lbl">Play the record again</span></button>
+      <p class="made">Made with love on <a href="https://littlegasp.com/" target="_blank" rel="noopener">Little Gasp</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ============ SETUP: same Apps Script URL as the other designs ============ */
+const API_URL = "https://script.google.com/macros/s/AKfycbzR__a_UBYTb91zvNU-iw9UzEF35M75D3P0WX_PKeWlaBKD-wiVUHpqhsrb9V2iHoqY/exec";
+/* Default music: our own synthesised late-night electric piano with a soft vinyl crackle (SONG.src empty).
+   It starts when the needle drops. A buyer's own song (d.song) plays instead, and falls back to ours if it won't load. */
+const SONG = { src: "", volume: .85, credit: "Original Late Night Vinyl tune by Little Gasp" };
+/* ========================================================================= */
+
+const DEMO = {
+  to: "Ananya", from: "Kabir", number: "4",
+  photos: [
+    { src: "img/demo-1.svg", caption: "Where our soundtrack started" },
+    { src: "img/demo-2.svg", caption: "The night we didn't want to end" },
+    { src: "img/demo-3.svg", caption: "Still choosing you" }
+  ],
+  reasons: ["The way you hum when you think no one's listening","How you make an ordinary Tuesday feel like a weekend","Your hand finding mine in every crowd","The way you look at me across a room","You, exactly as you are"],
+  letter: ["Ananya,","I made this for the nights when I can't find the right words out loud.","Put it on when the world gets too loud. Every track is something I don't say often enough.","Thank you for being my favourite song."],
+  question: "Will you go on a weekend away with me?",
+  yesReply: "Pack light. I'll bring the records."
+};
+const DEFAULT_REASONS = ["Your laugh","The way you say my name","Just you"];
+const DEFAULT_Q = "Will you dance with me?";
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const qs = new URLSearchParams(location.search);
+const id = qs.get("id"), isPreview = qs.has("preview"), isAuto = qs.has("autoplay");
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (isAuto) HTMLElement.prototype.focus = function(){};    // never pull the homepage around
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let C, seq = [], current = 0;
+
+/* ---------- load ---------- */
+function waitForPreviewData(){
+  return new Promise(res => {
+    addEventListener("message", e => { if (e.origin === location.origin && e.data && e.data.type === "lg-data") res(e.data.data); });
+    parent.postMessage({ type: "lg-ready" }, location.origin);
+  });
+}
+function addWatermark(){
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' width='280' height='180'><text x='10' y='105' transform='rotate(-25 140 90)' font-family='Arial,sans-serif' font-weight='700' font-size='22' fill='rgba(242,230,208,0.3)'>PREVIEW · Little Gasp</text></svg>";
+  const wm = document.createElement("div"); wm.setAttribute("aria-hidden", "true");
+  wm.style.cssText = "position:fixed;inset:0;pointer-events:none;z-index:50;background-image:url(\"data:image/svg+xml," + encodeURIComponent(svg) + "\")";
+  const band = document.createElement("div"); band.textContent = "PREVIEW · Unlock to remove watermark";
+  band.style.cssText = "position:fixed;left:0;right:0;bottom:0;z-index:51;pointer-events:none;background:rgba(14,35,38,.92);color:#F2E6D0;font:700 13px/1 Figtree,system-ui,sans-serif;text-align:center;padding:9px 6px;letter-spacing:.04em";
+  document.body.append(wm, band);
+}
+async function start(){
+  try {
+    let d = DEMO;
+    if (isPreview){ d = await waitForPreviewData(); addWatermark(); }
+    else if (id && !isAuto){
+      const res = await fetch(API_URL + "?id=" + encodeURIComponent(id)); d = await res.json();
+      if (!d || d.error) throw new Error(d && d.error);
+    }
+    build(d);
+    if (isAuto) runAutoplay();
+  } catch (e) {
+    $("#loaderText").textContent = "This link doesn't look right. Please check it, or message @littlegasp.co on Instagram.";
+  }
+}
+setTimeout(start, 0);
+
+function build(d){
+  const t = v => String(v || "").trim();
+  C = { to: t(d.to) || "you", from: t(d.from), number: t(d.number).replace(/[^0-9]/g, "").slice(0, 3),
+    photos: (d.photos || []).filter(p => p && p.src !== undefined).slice(0, 5),
+    reasons: (d.reasons || []).map(t).filter(Boolean).slice(0, 6),
+    letter: (d.letter || []).map(t).filter(Boolean),
+    question: t(d.question), yesReply: t(d.yesReply) };
+  if (id) C.photos = C.photos.filter(p => p.src);
+  if (!C.reasons.length) C.reasons = DEFAULT_REASONS;
+  if (!C.question) C.question = DEFAULT_Q;
+
+  document.title = "A record for " + C.to;
+  $$("[data-to]").forEach(e => e.textContent = C.to);
+  $("#tagFrom").textContent = C.from ? "– " + C.from : "";
+  $("#byline").textContent = C.from ? "a record by " + C.from : "a record for you";
+  $("#vol").textContent = C.number ? "VOL. " + C.number : "";
+  const cover = C.photos[0] && C.photos[0].src;
+  if (cover) $("#sleeve").style.backgroundImage = `url("${cover.replace(/"/g, "%22")}")`;
+  $("#question").textContent = C.question;
+  $("#endTitle").textContent = C.from ? `${C.to} & ${C.from}` : C.to;
+  $("#endLine").textContent = C.yesReply || "Then this one's ours.";
+  $("#endFrom").textContent = C.from ? "Always yours, " + C.from : "";
+
+  seq = ["open", "cover", "play"];
+  if (C.photos.length) seq.push("sideb");
+  if (C.letter.length) seq.push("notes");
+  seq.push("ask", "end");
+  const dots = $("#dots"); seq.forEach(() => dots.appendChild(document.createElement("span")));
+  buildOpen(); buildCover(); buildDeck(); buildTracks(); buildGate(); buildAsk();
+
+  if (!isAuto){
+    const own = d.song && d.song.src, src = own || SONG.src;
+    if (src){
+      song = new Audio(src); song.loop = true; song.preload = "auto"; song.volume = own ? .9 : SONG.volume;
+      song.addEventListener("error", () => {
+        if (own && SONG.src && !song.src.endsWith(SONG.src)){ song.src = SONG.src; song.volume = SONG.volume; if (musicOn) song.play().catch(() => {}); return; }
+        song = null; if (musicOn) Music.start();
+      });
+    }
+    document.addEventListener("visibilitychange", () => {
+      if (ctx) document.hidden ? ctx.suspend() : ctx.resume();
+      if (song && musicOn) document.hidden ? song.pause() : (!muted && song.play().catch(() => {}));
+    });
+  }
+  $("#loader").remove(); document.querySelector("main").hidden = false; dots.hidden = false;
+  rainStart(); go(0);
+}
+
+/* ---------- scenes ---------- */
+const LABEL = { cover: "", play: "Put it on the turntable", sideb: "Flip to side B", notes: "Read the liner notes", ask: "Let it play to the end", end: "" };
+/* long reasons shrink to fit the fixed lyric box */
+function fitLyric(ly){
+  ly.style.fontSize = ""; let f = parseFloat(getComputedStyle(ly).fontSize);
+  while (ly.scrollHeight > ly.parentElement.clientHeight + 1 && f > 12) { f -= 1; ly.style.fontSize = f + "px"; }
+}
+/* shrink the name on the record label until it fits */
+function fitLabels(){
+  $$(".disc .label b").forEach(b => {
+    const w = b.parentElement.clientWidth; if (!w) return;
+    let f = w * .26; b.style.fontSize = f + "px";
+    const room = w * .8;
+    while (b.offsetWidth > room && f > 7) { f -= .5; b.style.fontSize = f + "px"; }
+  });
+}
+addEventListener("resize", () => requestAnimationFrame(fitLabels));
+function go(i){
+  if (typeof i === "string") i = seq.indexOf(i);
+  current = i; const name = seq[i];
+  $$("[data-scene]").forEach(s => s.hidden = s.dataset.scene !== name);
+  $$("#dots span").forEach((s, k) => s.classList.toggle("on", k === current));
+  const sc = document.querySelector(`[data-scene="${name}"]`);
+  if (name === "play" || name === "ask") sc.querySelector(".art").appendChild($("#deck"));
+  requestAnimationFrame(fitLabels);
+  document.querySelector("main").scrollTo(0, 0);
+  const nx = seq[i + 1];
+  sc.querySelectorAll("[data-next] .lbl").forEach(b => { if (nx) b.textContent = LABEL[nx] || "Continue"; });
+  const h = sc.querySelector("h1,h2,.question");
+  if (h && !isPreview) h.focus({ preventScroll: true });
+  if (name === "play") startPlay();
+  if (name === "sideb") showPrint(0);
+  if (name === "notes") typeNotes();
+  if (name === "ask") hiddenTrack();
+  if (name === "end") finale();
+}
+function nextScene(){ ensureAudio(); unlockSong(); if (seq[current + 1]) go(current + 1); }
+$$("[data-next]").forEach(b => b.addEventListener("click", nextScene));
+$("#replay").addEventListener("click", () => location.reload());
+const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+function tween(ms, fn){
+  if (reduce || ms <= 0){ fn(1); return Promise.resolve(); }
+  return new Promise(res => { const t0 = performance.now();
+    const step = now => { const k = Math.min(1, (now - t0) / ms); fn(ease(k)); k < 1 ? requestAnimationFrame(step) : res(); }; requestAnimationFrame(step); });
+}
+
+/* ---------- 1. the note on the record ---------- */
+function buildOpen(){
+  $("#tag").addEventListener("click", () => { ensureAudio(); unlockSong(); rustle(); go("cover"); });
+}
+
+/* ---------- 2. slide the record out of the sleeve ---------- */
+let outDone = false, dx = 22;
+function buildCover(){
+  const out = $("#out"), box = $("#sleevebox"); let x0 = null;
+  const setX = v => { out.style.transform = `translateX(${v}%)`; };
+  const finish = async () => {
+    if (outDone) return; outDone = true; out.querySelector(".hint").remove(); ensureAudio(); slide();
+    const from = dx; await tween(700, k => setX(from + (66 - from) * k));
+    $("#coverSub").textContent = C.photos[0] && C.photos[0].caption ? "“" + C.photos[0].caption + "”" : "Every track on it is something I love about you.";
+    $("#afterCover").hidden = false;
+  };
+  out.addEventListener("pointerdown", e => { if (outDone) return; x0 = e.clientX - (dx - 22) / 100 * box.getBoundingClientRect().width; out.setPointerCapture && out.setPointerCapture(e.pointerId); out.style.cursor = "grabbing"; });
+  out.addEventListener("pointermove", e => { if (x0 === null || outDone) return; const w = box.getBoundingClientRect().width;
+    dx = Math.max(22, Math.min(66, 22 + (e.clientX - x0) / w * 100)); setX(dx); if (dx > 44) finish(); });
+  out.addEventListener("pointerup", e => { if (x0 === null) return; const moved = Math.abs(e.clientX - x0); x0 = null;
+    if (outDone) return; if (moved < 8) finish(); else { const from = dx; tween(300, k => setX(from + (22 - from) * k)); dx = 22; } });
+  out.addEventListener("click", e => { if (e.detail === 0) finish(); });
+  window.pullRecord = finish;
+}
+
+/* ---------- 3. the tonearm: geometry in the deck's 0–100 square ---------- */
+const P = [80.5, 25.3], CEN = [50, 48.3], ARM = 36, REC = 28;    // pivot, platter centre, arm length, record radius (all in % of the deck)
+let theta = 0, dropped = false, playing = false, trackAt = -1, armBusy = false;
+const stylus = th => { const r = th * Math.PI / 180; return [P[0] - Math.sin(r) * ARM, P[1] + Math.cos(r) * ARM]; };
+const radiusAt = th => { const s = stylus(th); return Math.hypot(s[0] - CEN[0], s[1] - CEN[1]); };
+function thetaFor(r){ let a = 0, b = 50; for (let i = 0; i < 30; i++){ const m = (a + b) / 2; radiusAt(m) > r ? a = m : b = m; } return (a + b) / 2; }
+function setArm(th){ theta = th; $("#armRot").setAttribute("transform", `rotate(${th.toFixed(2)} 79 24)`); }   // the drawing sits in a group shifted by (1.5, 1.3), so its own pivot is (79, 24)
+async function moveArm(to, ms){ const a = theta; armBusy = true; await tween(ms, k => setArm(a + (to - a) * k)); armBusy = false; }
+const trackR = i => { const n = C.reasons.length; return n > 1 ? 26 - i * (14 / (n - 1)) : 22; };
+function buildDeck(){
+  setArm(0);
+  const deck = $("#deck"); let dragging = false;
+  const angleOf = e => { const r = deck.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * 100, y = (e.clientY - r.top) / r.height * 100;
+    return Math.max(0, Math.min(thetaFor(10), Math.atan2(-(x - P[0]), y - P[1]) * 180 / Math.PI)); };
+  $("#arm .grab").addEventListener("pointerdown", e => { if (dropped || armBusy) return; dragging = true; deck.setPointerCapture && deck.setPointerCapture(e.pointerId); ensureAudio(); unlockSong(); hand(""); });
+  deck.addEventListener("pointermove", e => { if (dragging) setArm(angleOf(e)); });
+  deck.addEventListener("pointerup", () => { if (!dragging) return; dragging = false;
+    if (radiusAt(theta) < REC - .5) dropNeedle(); else { moveArm(0, 400); hand("drag the arm onto the record"); } });
+  deck.addEventListener("click", e => { if (!dropped && !armBusy && !dragging && (e.detail === 0 || e.target.closest(".grab"))) dropNeedle(); });
+}
+function hand(t){ const h = $("#deckHand"); h.textContent = t || ""; h.classList.toggle("off", !t); }
+function startPlay(){ if (!dropped){ hand("drag the arm onto the record"); } }
+async function dropNeedle(){
+  if (dropped) return; dropped = true; hand("");
+  await moveArm(thetaFor(trackR(0) + 1.2), 500); crackle(); await sleep(250);
+  $("#platter").classList.add("on"); startMusic(); playing = true;
+  $("#playKick").textContent = "Side A"; $("#playSub").classList.add("off"); $("#tracks").classList.remove("pre");
+  await playTrack(0);
+}
+
+/* ---------- Side A: every track is a reason ---------- */
+function buildTracks(){
+  const ol = $("#tracks");
+  C.reasons.forEach((r, i) => { const li = document.createElement("li"); li.className = i ? "track" : "track now"; li.innerHTML = "<span></span>"; li.querySelector("span").textContent = r; ol.appendChild(li); });
+  $("#nextTrack").addEventListener("click", () => { if (!armBusy) playTrack(trackAt + 1); });
+}
+async function playTrack(i){
+  if (i >= C.reasons.length) return;
+  trackAt = i; const lis = $$("#tracks .track");
+  lis.forEach((li, k) => { li.classList.toggle("now", k === i); li.classList.toggle("played", k < i); });
+  const ly = $("#lyric"); ly.classList.remove("fade-in"); ly.classList.add("off"); $("#nextTrack").classList.add("off");
+  await moveArm(thetaFor(trackR(i)), i ? 900 : 300); if (i) crackle(.5);
+  ly.textContent = "“" + C.reasons[i] + "”"; fitLyric(ly); ly.classList.remove("off"); void ly.offsetWidth; ly.classList.add("fade-in");
+  await sleep(isAuto ? 900 : 1400);
+  if (i < C.reasons.length - 1) $("#nextTrack").classList.remove("off");
+  else { $("#nextTrack").classList.add("off"); $("#afterPlay").classList.remove("off"); }
+}
+
+/* ---------- Side B: the gatefold ---------- */
+let printAt = 0;
+function buildGate(){
+  const strip = $("#strip");
+  C.photos.forEach(p => {
+    const f = document.createElement("figure"), pr = document.createElement("div"), im = document.createElement("img"), cap = document.createElement("figcaption");
+    pr.className = "print"; im.alt = p.caption || "A photo of you two"; im.src = p.src || "img/demo-1.svg"; im.onerror = () => { im.src = "img/demo-1.svg"; };
+    cap.textContent = p.caption || ""; pr.append(im, cap); f.appendChild(pr); strip.appendChild(f);
+  });
+  $("#gPrev").addEventListener("click", () => showPrint(printAt - 1));
+  $("#gNext").addEventListener("click", () => showPrint(printAt + 1));
+  let x0 = null; const g = $("#gate");
+  g.addEventListener("pointerdown", e => { x0 = e.clientX; });
+  g.addEventListener("pointerup", e => { if (x0 === null) return; const dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 30) showPrint(printAt + (dx < 0 ? 1 : -1)); else showPrint(printAt + 1); });
+  if (C.photos.length < 2) $("#gnav").hidden = true;
+}
+function showPrint(i){
+  const n = C.photos.length; if (!n) return; i = Math.max(0, Math.min(n - 1, i)); printAt = i;
+  $("#strip").style.transform = `translateX(${-100 * i}%)`;
+  $("#gcount").textContent = `${i + 1} / ${n}`; $("#gPrev").disabled = i === 0; $("#gNext").disabled = i === n - 1;
+  if (i) slide(.4);
+  if (i === n - 1) $("#afterB").hidden = false;
+}
+
+/* ---------- liner notes: the letter, typed ---------- */
+let notesRun = false;
+async function typeNotes(){
+  const box = $("#notes"); if (box.childElementCount) return;
+  const lines = [...C.letter]; if (C.from) lines.push(C.from);
+  lines.forEach((l, i) => { const p = document.createElement("p"); if (C.from && i === lines.length - 1) p.className = "sign"; p.dataset.t = l; box.appendChild(p); });
+  notesRun = true; $("#notesSkip").hidden = false;
+  for (const p of box.querySelectorAll("p")){
+    if (!notesRun) break; p.classList.add("in", "caret"); const full = p.dataset.t;
+    for (let k = 1; k <= full.length && notesRun; k += reduce ? full.length : 2){ p.textContent = full.slice(0, k); if (ctx && k % 6 === 1) key(); await sleep(isAuto ? 8 : 28); }
+    p.textContent = full; p.classList.remove("caret"); p.scrollIntoView({ block: "nearest" }); await sleep(isAuto ? 120 : 380);
+  }
+  showNotes();
+}
+function showNotes(){ notesRun = false; $$("#notes p").forEach(p => { p.textContent = p.dataset.t; p.classList.add("in"); p.classList.remove("caret"); }); $("#notesSkip").hidden = true; $("#afterNotes").hidden = false; }
+$("#notesSkip").addEventListener("click", showNotes);
+
+/* ---------- the hidden track ---------- */
+function buildAsk(){
+  $("#yesBtn").addEventListener("click", sayYes);
+  $("#againBtn").addEventListener("click", async () => {   // no pressure: the record simply plays again, then asks again
+    $("#answers").classList.add("off"); $("#askSub").classList.remove("off"); $("#askSub").textContent = "Playing it once more…";
+    $("#sideLbl").textContent = "SIDE A";
+    for (let i = 0; i < C.reasons.length; i++){ await moveArm(thetaFor(trackR(i)), 600); $("#askSub").textContent = "“" + C.reasons[i] + "”"; await sleep(1500); }
+    await hiddenTrack(true);
+  });
+}
+async function hiddenTrack(again){
+  if (!playing){ $("#platter").classList.add("on"); playing = true; startMusic(); }
+  $("#answers").classList.add("off"); $("#askSub").classList.remove("off"); $("#askSub").textContent = again ? "And here it is again." : "Wait for it. The needle is still moving.";
+  $("#question").style.opacity = "0"; $("#sideLbl").textContent = "HIDDEN TRACK";
+  await moveArm(thetaFor(11), isAuto ? 1200 : 2400); crackle(.7);
+  $("#question").style.transition = "opacity 1.2s"; $("#question").style.opacity = "1";
+  await sleep(900); $("#askSub").classList.add("off"); $("#answers").classList.remove("off");
+}
+async function sayYes(){
+  $("#yesBtn").disabled = true; ensureAudio(); chime();
+  reply("yes", "Yes: " + C.question);
+  await sleep(isAuto ? 300 : 700); go("end");
+}
+function finale(){ rainSoft(); }
+
+/* ---------- replies: only real, paid links send anything ---------- */
+function reply(kind, text){
+  if (!id || isPreview || isAuto) return Promise.resolve(true);
+  return fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "reply", id, kind, text }) })
+    .then(r => r.json()).then(j => !!(j && j.ok)).catch(() => false);
+}
+
+/* ---------- sound: the buyer's song, or our own late-night electric piano ---------- */
+let ctx, master, muted = false, song = null, musicOn = false, unlocked = false, hissNode = null;
+function ensureAudio(){
+  if (isAuto) return;
+  const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+  if (!ctx){ ctx = new AC(); master = ctx.createGain(); master.gain.value = muted ? 0 : .55; master.connect(ctx.destination); }
+  if (ctx.state === "suspended") ctx.resume();
+}
+function unlockSong(){
+  if (unlocked || !song) return; unlocked = true;
+  song.muted = true; song.play().then(() => { if (!musicOn){ song.pause(); song.currentTime = 0; } song.muted = muted; }).catch(() => {});
+}
+function startMusic(){
+  if (isAuto || musicOn) return; musicOn = true; ensureAudio(); hiss();
+  if (song){ song.muted = muted; song.currentTime = 0; song.play().catch(() => { song = null; Music.start(); }); }
+  else Music.start();
+  $("#muteBtn").hidden = false;
+}
+function noise(len = .2, f = 2000, vol = .12, q = 1, type = "bandpass", when){
+  if (!ctx) return; const n = Math.floor(ctx.sampleRate * len), b = ctx.createBuffer(1, n, ctx.sampleRate), a = b.getChannelData(0);
+  for (let i = 0; i < n; i++) a[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 2);
+  const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+  s.buffer = b; fl.type = type; fl.frequency.value = f; fl.Q.value = q; g.gain.value = vol; s.connect(fl); fl.connect(g); g.connect(master); s.start(when || 0);
+}
+function hiss(){   // the quiet surface noise of a record, with the odd pop
+  if (!ctx || hissNode) return; const n = ctx.sampleRate * 2, b = ctx.createBuffer(1, n, ctx.sampleRate), a = b.getChannelData(0);
+  for (let i = 0; i < n; i++) a[i] = (Math.random() * 2 - 1) * .5 + (Math.random() < .0004 ? (Math.random() - .5) * 6 : 0);
+  const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+  s.buffer = b; s.loop = true; fl.type = "bandpass"; fl.frequency.value = 3200; fl.Q.value = .6; g.gain.value = .018; s.connect(fl); fl.connect(g); g.connect(master); s.start(); hissNode = s;
+}
+function crackle(v = 1){ if (!ctx) return; for (let i = 0; i < 6; i++) noise(.03, 2400 + Math.random() * 2000, .05 * v, 2, "bandpass", ctx.currentTime + i * .05 + Math.random() * .03); }
+function rustle(){ noise(.35, 1800, .05, .6); }
+function slide(v = 1){ noise(.6, 900, .06 * v, .5, "lowpass"); }
+function key(){ noise(.03, 3200, .05, 4); }
+function epiano(f, t, vol = .08, len = 2.4){   // soft Rhodes-like voice: sine + bell overtone, slow tremolo
+  if (!ctx) return; const o = ctx.createOscillator(), o2 = ctx.createOscillator(), g = ctx.createGain(), g2 = ctx.createGain(), fl = ctx.createBiquadFilter();
+  o.type = "sine"; o.frequency.value = f; o2.type = "sine"; o2.frequency.value = f * 3.99; fl.type = "lowpass"; fl.frequency.value = 2200;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .01); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+  g2.gain.setValueAtTime(vol * .18, t); g2.gain.exponentialRampToValueAtTime(0.0001, t + .5);
+  o.connect(g); o2.connect(g2); g.connect(fl); g2.connect(fl); fl.connect(master); o.start(t); o2.start(t); o.stop(t + len + .05); o2.stop(t + .6);
+}
+function bass(f, t, len){ if (!ctx) return; const o = ctx.createOscillator(), g = ctx.createGain(), fl = ctx.createBiquadFilter();
+  o.type = "triangle"; o.frequency.value = f; fl.type = "lowpass"; fl.frequency.value = 400;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.09, t + .02); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+  o.connect(fl); fl.connect(g); g.connect(master); o.start(t); o.stop(t + len + .05); }
+const hz = m => 440 * Math.pow(2, (m - 69) / 12);
+/* our own slow late-night progression in D♭ major, 68 bpm: maj7 and 9th chords, a few melody notes on top */
+const CH = [[61,65,68,72],[58,61,65,68],[54,58,61,65],[56,60,63,66]];   // D♭maj7, B♭m7, G♭maj7, A♭7
+const BS = [37, 34, 30, 32];
+const MEL = [[[80,0],[77,1.5],[75,2.5]], [[73,.5],[75,1.5],[77,3]], [[78,0],[77,1],[73,2.5]], [[75,1],[72,2],[73,3]]];
+const Music = { on:false, bar:0, next:0, timer:null,
+  start(){ if (!ctx || this.on) return; this.on = true; this.bar = 0; this.next = ctx.currentTime + .2; this.tick(); this.timer = setInterval(() => this.tick(), 200); },
+  tick(){ const beat = 60 / 68; while (this.next < ctx.currentTime + 1){ this.play(this.next, this.bar, beat); this.next += 4 * beat; this.bar++; } },
+  play(t, i, beat){
+    const k = i % 4;
+    CH[k].forEach((m, j) => epiano(hz(m), t + j * .03, .045, 4 * beat + .4));
+    epiano(hz(CH[k][2]), t + 2 * beat, .03, 2 * beat);
+    bass(hz(BS[k]), t, 2 * beat); bass(hz(BS[k] + 7), t + 2.5 * beat, 1.4 * beat);
+    if (i < 1) return;
+    MEL[(i + (i > 7 ? 1 : 0)) % 4].forEach(([m, at]) => epiano(hz(m), t + at * beat, .07, 2.4));
+  }
+};
+function chime(){ if (!ctx) return; const t = ctx.currentTime; [73, 77, 80, 85].forEach((m, i) => epiano(hz(m), t + i * .12, .08, 2.6)); }
+$("#muteBtn").addEventListener("click", e => {
+  muted = !muted; if (master) master.gain.value = muted ? 0 : .55; if (song) song.muted = muted;
+  e.currentTarget.setAttribute("aria-pressed", muted); e.currentTarget.setAttribute("aria-label", muted ? "Unmute music" : "Mute music");
+  e.currentTarget.textContent = muted ? "✕" : "♪";
+});
+
+/* ---------- rain on the window (behind everything) ---------- */
+const rc = $("#rain"), rg = rc.getContext("2d"); let drops = [], rainOn = false, rainK = 1;
+function sizeRain(){ const r = Math.min(devicePixelRatio || 1, 2); rc.width = innerWidth * r; rc.height = innerHeight * r; rg.setTransform(r, 0, 0, r, 0, 0); }
+function rainStart(){ if (reduce) return; sizeRain(); addEventListener("resize", sizeRain);
+  drops = Array.from({ length: 70 }, () => ({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, v: 6 + Math.random() * 7, l: 10 + Math.random() * 16 }));
+  rainOn = true; requestAnimationFrame(rainLoop); }
+function rainSoft(){ rainK = .4; }
+function rainLoop(){
+  if (!rainOn) return; rg.clearRect(0, 0, innerWidth, innerHeight); rg.strokeStyle = "rgba(200,220,230,.35)"; rg.lineWidth = 1;
+  rg.beginPath(); drops.forEach(d => { d.y += d.v * rainK; d.x -= .8 * rainK; if (d.y > innerHeight){ d.y = -20; d.x = Math.random() * innerWidth * 1.1; } rg.moveTo(d.x, d.y); rg.lineTo(d.x + 1.2, d.y - d.l); }); rg.stroke();
+  requestAnimationFrame(rainLoop);
+}
+
+/* ---------- homepage showcase (?autoplay): silent, plays itself ---------- */
+async function runAutoplay(){
+  document.body.style.pointerEvents = "none";
+  await sleep(1800); go("cover"); await sleep(1200); await pullRecord(); await sleep(1600);
+  go("play"); await sleep(900);
+  await moveArm(thetaFor(30), 700); await sleep(200); await dropNeedle();
+  for (let i = 1; i < Math.min(3, C.reasons.length); i++){ await sleep(900); await playTrack(i); }
+  await sleep(1200);
+  if (seq.includes("sideb")){ go("sideb"); for (let i = 1; i < C.photos.length; i++){ await sleep(1500); showPrint(i); } await sleep(1500); }
+  if (seq.includes("notes")){ go("notes"); await sleep(3800); showNotes(); await sleep(1500); }
+  go("ask"); while ($("#answers").classList.contains("off")) await sleep(200); await sleep(1600); await sayYes(); await sleep(5000);
+  if (parent !== window) parent.postMessage({ type: "lg-autoplay-done" }, location.origin);
+  else location.reload();
+}
+</script>
+</body>
+</html>
